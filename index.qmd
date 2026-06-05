@@ -1,0 +1,21 @@
+---
+title: "The Living Data Project: Data Rescue Guidebook"
+---
+
+# Welcome
+
+This guide supports graduate student data rescue teams participating in the Living Data Project.
+
+## Goals
+
+After working through and referring back to this guide, students should be better equipped to:
+
+- Assess legacy datasets
+- Create high-quality metadata
+- Apply reproducible workflows
+- Prepare datasets for DataStream and other repositories
+- Practice responsible data stewardship
+
+## How to use this guide
+
+Work through the individual pages using the templates and checklists provided throughout.
