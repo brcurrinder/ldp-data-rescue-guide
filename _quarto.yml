@@ -10,13 +10,13 @@ book:
   chapters:
     - index.qmd
 
-    - part: "Foundations"
+    - part: "Introduction to Data Rescue"
       chapters:
         - chapters/introduction.qmd
         - chapters/data-rescue-goals.qmd
         - chapters/data-rescue-teams-roles-responsibilities.qmd
         
-    - part: "Data Rescue Principles"
+    - part: "Data Stewardship and Preservation"
       chapters:
         - chapters/repositories-doi.qmd
         - chapters/data-metadata.qmd

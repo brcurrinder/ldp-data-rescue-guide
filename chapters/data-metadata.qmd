@@ -1,7 +1,9 @@
 ---
-title: "Data Metadata"
+title: "Introduction to Data and Metadata"
 ---
 
-# Data Metadata
+You will upload two different types of information to the chosen digital repository: data (may consist of a single dataset or multiple datasets) and metadata. 
+
+# Data
 
 Coming soon.
