@@ -1,6 +1,6 @@
 # The Living Data Project: Data Rescue Guidebook
 
-This repository contains a Quarto book intended to support interns, graduate student data rescue teams, and other individuals participating in the Living Data Project.
+This repository contains a Quarto book intended to support interns, graduate student data rescue teams, and other individuals participating in the Living Data Project, an initiative of the Canadian Institute of Ecology and Evolution (CIEE).
 
 ## Goals
 

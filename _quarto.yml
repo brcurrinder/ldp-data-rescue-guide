@@ -2,18 +2,61 @@ project:
   type: book
 
 book:
-  title: "LDP Data Rescue Guide"
-  
+  title: "The Living Data Project: Data Rescue Guidebook"
+  subtitle: "A guide to data rescue for Living Data Project interns and data rescue teams"
+  author: "Living Data Project Members"
+  page-navigation: true
+
   chapters:
     - index.qmd
-    - chapters/getting-started.qmd
-    - chapters/data-rescue-workflow.qmd
-    - chapters/metadata.qmd
-    - chapters/datastream.qmd
-    - chapters/templates.qmd
+
+    - part: "Foundations"
+      chapters:
+        - chapters/introduction.qmd
+        - chapters/data-rescue-goals.qmd
+        - chapters/data-rescue-teams-roles-responsibilities.qmd
+        
+    - part: "Data Rescue Principles"
+      chapters:
+        - chapters/repositories-doi.qmd
+        - chapters/data-metadata.qmd
+        - chapters/digitization-validation.qmd
+
+    - part: "Open Science and Reproducible Research"
+      chapters:
+        - chapters/open-science-reproducible-research.qmd
+        - chapters/collaboration-tools.qmd
+        - chapters/coding-best-practices.qmd
+        
+    - part: "Artificial Intelligence in Data Rescue"
+      chapters:
+        - chapters/ai-intro.qmd
+        - chapters/promises-pitfalls.qmd
+
+    - part: "Data Rescue Workflow"
+      chapters:
+        - chapters/getting-started.qmd
+        - chapters/working-with-data-owners.qmd
+        - chapters/merging-data.qmd
+        - chapters/column-cleanup.qmd
+        - chapters/outlier-detection.qmd
+        - chapters/data-standards.qmd
+        - chapters/raw-data-archiving.qmd
+        - chapters/output-data.qmd
+        - chapters/finalizing-metadata.qmd
+        - chapters/uploading.qmd
+        
+    - part: "Additional Tasks"
+      chapters:
+        - chapters/internship_tasks.qmd
+        - chapters/living_document.qmd
+        
+    - part: "Resources"
+      chapters:
+        - chapters/resources.qmd
 
 format:
   html:
     theme: cosmo
     toc: true
-
+    number-sections: false

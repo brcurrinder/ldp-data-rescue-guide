@@ -4,18 +4,25 @@ title: "The Living Data Project: Data Rescue Guidebook"
 
 # Welcome
 
-This guide supports graduate student data rescue teams participating in the Living Data Project.
+This guidebook supports graduate student data rescue teams and interns participating in the Living Data Project. The Living Data Project is a Canada-wide initiative to preserve and breathe new life into legacy datasets in ecology, evolution and environmental science, and to train graduate students in best practices in data management, reproducible research, synthesis statistics, and scientific collaboration.
+
+# Authorship
+This is a living document. The first draft was written by Luis Francisco Henao Diaz, Freek de Haas and Diane S. Srivastava, but it has subsequently been improved by many members of the Living Data Project including: Dominique Roche, Kerri Finlay, Sally Taylor, and Bryan Currinder.
 
 ## Goals
 
-After working through and referring back to this guide, students should be better equipped to:
+After working through and referring back to this guide, individuals should be better equipped to:
 
 - Assess legacy datasets
 - Create high-quality metadata
 - Apply reproducible workflows
-- Prepare datasets for DataStream and other repositories
+- Prepare datasets for data repositories
 - Practice responsible data stewardship
 
 ## How to use this guide
 
-Work through the individual pages using the templates and checklists provided throughout.
+Navigation
+
+Interactive workbook and reference tool
+
+
