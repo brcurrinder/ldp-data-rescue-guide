@@ -19,7 +19,8 @@ book:
     - part: "Data Stewardship and Preservation"
       chapters:
         - chapters/repositories-doi.qmd
-        - chapters/data-metadata.qmd
+        - chapters/data.qmd
+        - chapters/metadata.qmd
         - chapters/digitization-validation.qmd
 
     - part: "Open Science and Reproducible Research"
@@ -57,6 +58,6 @@ book:
 
 format:
   html:
-    theme: cosmo
+    theme: default
     toc: true
     number-sections: false
