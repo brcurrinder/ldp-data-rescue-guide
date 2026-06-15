@@ -1,0 +1,12 @@
+---
+title: "AI Intro"
+---
+
+# The role of AI in data rescue: promises and pitfalls
+
+Coming soon.
+
+# Validating AI outputs
+
+Coming soon
+

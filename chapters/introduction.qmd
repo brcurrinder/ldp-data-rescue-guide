@@ -1,6 +1,32 @@
 ---
-title: "Introduction"
+title: "Introduction to Data Rescue"
 ---
 
-# Introduction
+# Introduction to Data Rescue and the Living Data Project
 
+The goal of **data rescue** is to retrieve data that has been collected in the past and has high scientific or societal importance for the future. Data rescue can take many forms. In some cases, you will be rescuing data collected by a (retiring) senior researcher who is interested in sharing their lifework with the scientific community but may not have the computational literacy or knowledge of archival standards to do so themselves. In other cases, the researchers who collected the data may not be available for consultation, either because the researcher has died or otherwise cannot be contacted, or the data were collected by a group of people or an organization that lack the time or resources to manage/archive the data. In both of these cases, the dataset has already been identified as being of high importance by a government agency, an NGO, or a group of university academics.
+
+The **Living Data Project** is an initiative of the Canadian Institute of Ecology and Evolution. The aims of the Living Data project are to:
+
+-   Rescue legacy datasets in ecology, evolution, and environmental science pertinent to Canada.
+-   Ensure that legacy datasets are publicly available on secure repositories.
+-   Breathe new life into the datasets through working groups.
+-   Train Canada's next generation of researchers in data and collaboration proficiencies.
+
+This guide to data rescue is a living document, intended to be continually improved by different cohorts of individuals who interact with it. Your role will generally be to collate, clean, and prepare the **data** and **metadata**, and to ensure these are uploaded to the appropriate **data repository**. If the data rescue project is too large for a single group or intern to carry out, you may be conducting your project as part of a relay between multiple groups or interns. For such large projects, the first step may be to decide on which data is the highest priority for rescue and implement a workflow for digitizing and processing the data, and it may require a second group to have the data fully uploaded to the data repository. The key point here is to understand what role you are playing in the overall project, through both discussion with project partners and also the "student deliverables" in your contract. **A data rescue project is not a success until the data are successfully uploaded to an online, secure repository where the data will become publicly accessible.**
+
+The scope of a data rescue project can vary greatly depending on the amount, quality, and complexity of the data you will receive. In this guidebook, we provide you with:
+
+1)  The broad principles, best practices, language, and tools that are used in open science, reproducible research, and data rescue, as well as how these concepts are connected.
+2)  A general workflow and worked example to guide you through the basic steps of a data rescue project.
+3)  Compiled resources, tips, and useful reading based on the experience of previous data rescue projects.
+
+<br>
+
+![*Steps in the data rescue assembly line. First, data must be prioritized for rescue (Step 1). After team creation (Step 2) and metadata creation (Step 3), the data must be transferred and compiled into a logical format (Step 4). After data cleaning and validation (Step 5) is complete, the finalized data and metadata should be archived on a long-term data repository (Step 6). The ultimate goal is to have the rescued data openly available for re-use (Step 7). Image source: Bledsoe et al. 2022, Fig. 2.*](images/Conceptual_fig_Bledsoe_et_al_2022_.png){fig-alt="A cartoon illustration of a stereotypical assembly line, with a moving conveyor belt and many stations, and is intended to illustrate the various steps in the data rescue process. A new dataset or data rescue project enters the assembly line at the top left, before passing through the data prioritization station (1), where it is either prioritized for rescue or shunted out of the assembly line. Prioritized data move on to team creation (2), where the team that will undertake the data rescue is assembled. Here the team is illustrated as three people working collaboratively: data creator/collector/steward, data manager, and data entry technician (see main text). At step (3), the initial metadata are compiled and moved onto a “slide”, where they will rejoin the clean data at the end of the assembly line. Data transfer and compilation (4) is visualised as a robot (a person in real life!) removing floppy disks, data sheets, and other physical records from a box. At the data cleaning and validation step (5), the data pass through a “sanitising station” (imagine pasteurisation, radiation, or strong fan) that removes any debris from the box. Following step 5, the data are rejoined by the metadata sheet before being boxed for archiving (step 6). Finally, the box is labelled with a DOI, closed, and is ready for sharing (step 7)."}
+
+<br>
+
+## References
+
+Ellen K. Bledsoe, Joseph B. Burant, Gracielle T. Higino, Dominique G. Roche, Sandra A. Binning, Kerri Finlay, Jason Pither, Laura S. Pollock, Jennifer M. Sunday, Diane S. Srivastava; Data rescue: saving environmental data from extinction. Proc Biol Sci 1 July 2022; 289 (1979): 20220938. https://doi.org/10.1098/rspb.2022.0938

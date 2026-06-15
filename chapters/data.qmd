@@ -14,7 +14,7 @@ By the end of this chapter, you should be able to:
 
 ## Data Format and Structure
 
-The data you are rescuing will usually be composed of one or more plain-text files, most commonly as a **tab-separated values (.tsv)** file or a **comma-separated values (.csv)** file. These open filed formats are widely supported, easy for software to read, and suitable for long-term preservatin and sharing.
+The data you are rescuing will usually be composed of one or more plain-text files, most commonly as a **tab-separated values (.tsv)** file or a **comma-separated values (.csv)** file. These open file formats are widely supported, easy for software to read, and suitable for long-term preservation and sharing.
 
 Whenever practical, our goal is to organize rescued data into as few files as possible, and ideally into a single, complete data table. Fewer files make datasets easier to understand, manage, document, and share, while reducing the risk that important information becomes separated or lost over time. In some cases, however, multiple linked tables may be the most appropriate structure.
 

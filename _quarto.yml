@@ -35,8 +35,7 @@ book:
         
     - part: "Artificial Intelligence in Data Rescue"
       chapters:
-        - chapters/ai-intro.qmd
-        - chapters/promises-pitfalls.qmd
+        - chapters/ai-overview.qmd
 
     - part: "Data Rescue Workflow"
       chapters:

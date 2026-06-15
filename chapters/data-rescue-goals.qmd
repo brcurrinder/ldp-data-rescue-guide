@@ -4,4 +4,15 @@ title: "Data Rescue Goals"
 
 # Data Rescue Goals
 
-Coming soon.
+The goal of the Living Data Project's data rescue initiative is to ensure that valuable datasets in ecology, evolution and environmental science are not lost to science and made publicly available ‘in perpetuity'. These datasets can be very valuable as historical baselines (i.e. surveys that can be repeated to establish rates of change), as part of a species range projection, as a part of a long term population or evolutionary time series, or as a classic dataset that can be combined with others or re-analysed in different ways to draw out generalities in process and pattern. There are a number of data repositories that provide the infrastructure needed for data to be permanently archived, readily discoverable, and freely accessible (see Repositories & DOIs chapter).
+
+This may seem like a straightforward goal, but to do it well, you need to be a bit of a time traveler. 
+
+First, you have to imagine a researcher in the future that you will never meet, and you need to convey to them all the complexities and subtleties in the data that will allow them to effectively use it. This is like being on a desert island and putting a message in a bottle about your location so that someone could rescue you... all the information has to be on the message (**metadata** and **data**) in that bottle (**repository**).  
+
+You also need to be able to travel backwards in time to when the data was collected. There may be a set of field notebooks where the data was recorded, full of all sorts of valuable bits of information that cannot be effectively captured in the digital version of the data, so you need to also think about how to make sure to maintain all those links so that other people (including the senior researcher) can cross-reference the original and digital datasets. The magic for maintaining these links is the **metadata**, where all of these connections can be explained (see Introduction to Metadata chapter). Finally, in ensuring that the metadata and data that you archive keep all the parts needed to link the past with the future, you will need to balance this against keeping data that has lost its meaning (e.g. habitat codes with no known key).
+
+When you are done, all variables will be clearly defined in a **metadata file** and you will have checked extensively for errors using algorithms (the data is “clean”). Likely, the structure of the data will be long format (the data is “tidy”), meaning a data structure where the rows represent the measurements / examples and the columns refer to the measures/features/variables of the data (see Introduction to Data chapter). If you are not familiar with tidy data formats, you will find the online help pages by Hadley Wickham (creator of the tidyverse packages including dyplr, tidyr, plyr, etc.) to be useful (overview here: https://r4ds.had.co.nz/tidy-data.html). 
+
+Keep in mind that the final product must be understandable by anyone with a general biological background, meaning the database should become self-explanatory and be a stand-alone product. 
+

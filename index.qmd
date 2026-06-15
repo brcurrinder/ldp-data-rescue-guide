@@ -26,11 +26,11 @@ After working through and referring back to this guide, individuals should be be
 
 ## Navigation and Organization
 
-This guide is organized to follow the progression of a typical data rescue project while also introducing the broader principles that underpin responsible data stewardship. The early chapters establish the conceptual foundation for data rescue, including the importance of metadata, open science, reproducibility, and long-term data preservation. These concepts provide the context for understanding not only how to rescue data, but why these practices matter.
+This guidebook is organized to follow the progression of a typical data rescue project while also introducing the broader principles that underpin responsible data stewardship. The early chapters establish the conceptual foundation for data rescue, including the importance of metadata, open science, reproducibility, and long-term data preservation. These concepts provide the context for understanding not only how to rescue data, but why these practices matter.
 
 Building on this foundation, the guide then walks through the major stages of a data rescue project---from preparing for a project and working with data owners, through data cleaning, standardization, documentation, quality assurance, and final publication. While these chapters are presented in a logical sequence, data rescue is often an iterative process. You may find yourself revisiting earlier chapters as new questions arise or as your understanding of a dataset evolves.
 
-Throughout the guide, you'll also encounter content that is specific to particular repositories or Living Data Project activities. These sections build on the general principles presented earlier and demonstrate how those principles are implemented within specific workflows. This approach is intended to help you develop skills that extend beyond any single repository or project and can be applied across a wide range of data rescue efforts.
+Throughout the guide, you'll also encounter content that is specific to particular repositories or Living Data Project activities (e.g. callout sections relevant to individuals working with DataStream). These sections build on the general principles presented earlier and demonstrate how those principles are implemented within specific workflows. This approach is intended to help you develop skills that extend beyond any single repository or project and can be applied across a wide range of data rescue efforts.
 
 ## Learning and reference
 

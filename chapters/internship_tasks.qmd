@@ -4,4 +4,9 @@ title: "Internship Tasks"
 
 # Internship Tasks
 
-Coming soon.
+If you are completing an internship with the Living Data Project, there are typically more tasks to be completed after your data and metadata are uploaded to a data repository.
+
+If you are working with a senior researcher, the Canadian Institute of Ecology and Evolution (CIEE) would like to publish on our website a 300-500 word account of the researcher’s career contribution and how the data rescue project fits in with this career. 
+For other data rescue projects, we would like a 200 word summary of the rescued dataset and its potential future use. If you are working with a government agency, they may also have asked you for a technical report or preliminary statistics. 
+
+You may have planned other future projects that stem from this data rescue, such as data papers or working groups – please keep the CIEE in the loop with all the excellent ways that you manage to breathe life into these datasets.

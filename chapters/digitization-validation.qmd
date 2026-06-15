@@ -1,7 +1,11 @@
 ---
-title: "Digitization Validation"
+title: "Digitization & Validation"
 ---
 
-# Digitization Validation
+# Digitization
+
+Coming soon.
+
+# Validation
 
 Coming soon.

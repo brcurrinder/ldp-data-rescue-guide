@@ -1,7 +1,15 @@
 ---
-title: "Collaboration Tools"
+title: "Collaboration Tools: GitHub and OSF"
 ---
 
-# Collaboration Tools
+# Collaboration Tools: GitHub
+
+## What is version control?
+
+Coming soon.
+
+# Collaboration Tools: The Open Science Framework (OSF)
+
+## The research lifecycle
 
 Coming soon.

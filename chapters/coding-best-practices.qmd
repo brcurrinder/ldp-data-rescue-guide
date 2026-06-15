@@ -1,7 +1,13 @@
 ---
-title: "Coding Best Practices"
+title: "Writing Reproducible Code"
 ---
 
-# Coding Best Practices
+# Best practices & R packages
 
-Coming soon.
+## Raw data vs Processed data
+## Data schemas
+## Commenting
+## Script organization
+## Relative paths - R package 'here'
+## Archiving R package versions - R package 'packrat'
+## Research workflow - R package 'rosf' (for integrating with OSF)

@@ -1,7 +1,12 @@
 ---
-title: "Data Rescue Teams Roles Responsibilities"
+title: "Data Rescue Teams: Roles & Responsibilities"
 ---
 
-# Data Rescue Teams Roles Responsibilities
+# Data Rescue Teams: Roles & Responsibilities
 
-Coming soon.
+In order to conduct your data rescue project, you will work in close contact with a senior researcher and/or a partner organization (hereafter “data owner”), as well as two Living Data Project (LDP) mentors: a postdoctoral fellow training in reproducible research and data management, and a faculty member. 
+
+The role of the data owner is to help you understand how the data were collected and how they might be used in the future, as well as to provide information that allows you to create the metadata. The role of the LDP postdoc is to help you with both the conceptual and technical aspects of data rescue, and you should expect to be in regular contact with them. The role of the LDP faculty member is to make sure that the project is going according to schedule, to facilitate the relationship with other team members, and to help you set priorities and goals. Finally, some but not all projects may have an undergraduate assistant associated with them, primarily to help enter large amounts of data into digital formats. 
+
+Depending on the nature of your project, you should aim to meet with the faculty mentor, postdoc, and data-owner at least three times during the project (at the beginning, mid-point and end) to discuss overall goals and progress. You will probably want to meet with the data owner more often, individually, to understand how the data was collected, what certain codes mean, and limitations of the data. Undergraduate assistants will need a lot of check-ins early on in their activity to make sure that they understand the task and feel empowered to ask you questions about the data entry (even if they are small questions!). Make good use of the your LDP postdoc: they are there to guide you over all the bumps in the road!
+
