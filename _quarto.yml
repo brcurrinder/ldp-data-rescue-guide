@@ -6,6 +6,10 @@ book:
   subtitle: "A guide to data rescue for Living Data Project interns and data rescue teams"
   author: "Living Data Project Members"
   page-navigation: true
+  
+  repo-url: https://github.com/brcurrinder/ldp-data-rescue-guide
+  repo-actions: [source, issue]
+
 
   chapters:
     - index.qmd
