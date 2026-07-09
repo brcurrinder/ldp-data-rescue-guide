@@ -1,0 +1,9 @@
+row,field,value,issue
+2,ActivityStartDate,07/15/2024,Date should use YYYY-MM-DD format.
+2,ActivityStartTime,10:35 AM,"Time should use HH:MM, HH:MM:SS, or HH:MM:SS.sss format."
+2,CharacteristicName,Dissolved oxygen,Value is not listed as an allowed value in the DataStream schema.
+4,ActivityMediaName,Water,Value is not listed as an allowed value in the DataStream schema.
+4,MonitoringLocationLatitude,NA,Required field is blank.
+4,MonitoringLocationLongitude,NA,Required field is blank.
+NA,SourceFile,NA,Column is not defined in the DataStream schema.
+NA,SourceSheet,NA,Column is not defined in the DataStream schema.

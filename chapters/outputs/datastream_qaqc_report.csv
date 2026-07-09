@@ -1,0 +1,14 @@
+row,field,value,issue
+1,MonitoringLocationID,ML-01,Location IDs differ only by capitalization. Review for possible duplicate locations.
+1,MonitoringLocationLatitude/Longitude,"49.85, -123.1","The same MonitoringLocationID has more than one coordinate pair. Review for rounding, precision, or transcription issues."
+1,MonitoringLocationName,Clear Lake,Location names differ only by capitalization. Review for possible duplicate locations.
+2,MonitoringLocationID,ML-01,Location IDs differ only by capitalization. Review for possible duplicate locations.
+2,MonitoringLocationLatitude/Longitude,"49.85012, -123.10009","The same MonitoringLocationID has more than one coordinate pair. Review for rounding, precision, or transcription issues."
+2,MonitoringLocationName,Clear Lake,Location names differ only by capitalization. Review for possible duplicate locations.
+3,MonitoringLocationID,ml-01,Location IDs differ only by capitalization. Review for possible duplicate locations.
+3,MonitoringLocationName,Clear lake,Location names differ only by capitalization. Review for possible duplicate locations.
+3,ResultValue,-1,pH value is outside the expected range of 0 to 14.
+4,ActivityStartTimeZone,NA,"ActivityStartTime is populated, but ActivityStartTimeZone is missing."
+4,MonitoringLocationLatitude/Longitude,"NA, NA",Latitude or longitude is missing. Coordinates should be reviewed before upload.
+5,ResultDetectionQuantitationLimitMeasure,NA,"ResultDetectionCondition is populated, but detection-limit value, unit, or type is missing."
+6,ResultValue,-5,Hardness value is negative. Review as a likely data quality issue.

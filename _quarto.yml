@@ -37,18 +37,25 @@ book:
       chapters:
         - chapters/ai-overview.qmd
 
-    - part: "Data Rescue Workflow"
+    - part: "General Data Rescue Workflow"
       chapters:
         - chapters/getting-started.qmd
         - chapters/working-with-data-owners.qmd
+        - chapters/prepare-metadata.qmd
         - chapters/merging-data.qmd
         - chapters/column-cleanup.qmd
         - chapters/outlier-detection.qmd
         - chapters/data-standards.qmd
         - chapters/raw-data-archiving.qmd
         - chapters/output-data.qmd
-        - chapters/finalizing-metadata.qmd
         - chapters/uploading.qmd
+        
+    - part: "DataStream Data Rescue Workflow"
+      chapters:
+        - chapters/prepare-metadata-datastream.qmd
+        - chapters/prepare-data-datastream.qmd
+        - chapters/data-types-guidance-datastream.qmd
+        - chapters/uploading-datastream.qmd
         
     - part: "Additional Tasks"
       chapters:

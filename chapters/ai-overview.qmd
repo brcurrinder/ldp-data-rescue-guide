@@ -2,11 +2,100 @@
 title: "AI Intro"
 ---
 
-# The role of AI in data rescue: promises and pitfalls
+By the end of this chapter, you should be able to:
+-   Recognize appropriate and inappropriate uses of Artificial Intelligence (AI) in data rescue
+-   Explain the major risks of AI-assisted coding
+-   Apply a general workflow for validating AI-generated code
+-   Document and defend AI-assisted code in a reproducible pipeline
+-   Use AI as a programming assistant rather than as an autonomous agent
 
-Coming soon.
+## Introduction: AI as a tool, not an authority
 
-# Validating AI outputs
+### Opportunities and limitations
 
-Coming soon
+### Scientific responsibility remains with the researcher / data steward
+
+## Where AI fits into data rescue
+
+### Code explanation
+
+### Boilerplate code and refactoring
+
+### Documentation
+
+### Brainstorming and exploration
+
+## Ethical, legal, and privacy considerations
+
+### Confidential or sensitive data
+
+### Copyright and licensing of datasets and code
+
+### Institutional policies on AI use
+
+### Transparency and disclosure when appropriate
+
+
+## Where AI commonly fails
+
+### Hallucinations
+
+### Lack of domain expertise
+
+### Context limitations 
+
+### Over-reliance and "vibe-coding"
+
+### Productivity versus learning
+
+
+## Problem framing versus code generation
+
+### Scientific reasoning versus implementation
+
+### Task decomposition
+
+### Strategic prompting
+
+
+## Validating AI-generated code
+
+### Validation depends on the task
+
+### Reading and understanding code
+
+### Happy path versus edge cases
+
+### Spot checks
+
+### Independent validation
+
+### Summary statistics and visualization
+
+### Regression testing
+
+
+## Example: Validating an AI-assisted data transformation
+
+
+
+## Best practices
+
+### Work incrementally
+
+### Generate tests
+
+### Refactor only after code works
+
+### Never commit code you can't explain
+
+### Document assumptions and decisions
+
+
+## Key takeaways
+
+AI can accelerate implementation, but cannot replace scientific reasoning. It can also decelerate implementation if not adopted critically.
+Every transformation should be transparent, reproducible, and independently validated.
+Responsibility for the code and resulting dataset lies with the researcher.
+
 
