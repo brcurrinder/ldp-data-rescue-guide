@@ -109,37 +109,33 @@ flowchart TD
 ### Importing the DataStream Data Schema into R
 
 Because the data schema is in JSON format, we will use the `jsonlite` package to read the DataStream data schema into R, as well as other packages for manipulating data.
-The following code will load each of the required R packages and install them for you if they are not installed already.
+
+This project uses `renv` to manage R package versions. If you are running this code from the project repository for the first time, restore the project package environment before working through the chapter:
 
 ```{r}
-packages <- c(
-  "jsonlite", # Reads JSON files, including the DataStream schema
-  "dplyr",  # Provides data manipulation functions such as filter() and mutate()
-  "purrr",  # Provides mapping functions used to iterate over schema fields
-  "stringr", # Provides string helpers for detecting blanks and checking patterns
-  "readr", # Writes CSV files
-  "tibble" # Creates tidy data frames called tibbles
-)
+#| eval: false
 
-missing_packages <- packages[
-  !vapply(packages, requireNamespace, logical(1), quietly = TRUE)
-]
+renv::restore()
+```
 
-if (length(missing_packages) > 0) {
-  install.packages(
-    missing_packages,
-    repos = "https://cloud.r-project.org"
-  )
-}
+You only need to run `renv::restore()` once after cloning or downloading the project, or when the project package environment changes. The code chunks in this chapter assume that the required packages have already been installed through `renv`.
 
-invisible(
-  lapply(packages, library, character.only = TRUE)
-)
+```{r}
+#| results: hide
+# Load packages used in this chapter.
+# Package installation is managed by renv for this project.
+library(jsonlite)  # Reads JSON files, including the DataStream schema
+library(dplyr)     # Provides data manipulation functions such as filter() and mutate()
+library(purrr)     # Provides mapping functions used to iterate over schema fields
+library(stringr)   # Provides string helpers for detecting blanks and checking patterns
+library(readr)     # Writes CSV files
+library(tibble)    # Creates tidy data frames called tibbles
 ```
 
 Next, we can create folders for reference files and outputs.
 
 ```{r}
+#| results: hide
 # Create a folder for reference files, such as the downloaded DataStream schema, and a folder for outputs
 # showWarnings = FALSE prevents R from warning us if the folder already exists
 dir.create("data_reference", showWarnings = FALSE)
