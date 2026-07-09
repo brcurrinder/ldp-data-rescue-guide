@@ -19,8 +19,23 @@ The guide helps individuals to:
 - `templates/` — downloadable templates
 - `_quarto.yml` — Quarto book configuration
 
-## Building the Book
+### Reproducible R package environments
 
-```bash
-quarto render
+For chapters that incorporate R code, this guidebook uses `renv` to make the R package environment more reproducible. The package versions needed to run the code are recorded in the project’s `renv.lock` file.
+
+If you clone or download the project repository and open it in RStudio, you can restore the package environment with:
+
+```r
+renv::restore()
 ```
+
+You do not need to run this command when reading the online version of the guidebook. It is only needed if you want to run the code locally in your own RStudio session.
+
+When new packages are added to the project, the project maintainer should update the lockfile with:
+
+```r
+renv::snapshot()
+```
+
+This helps ensure that the book can be rendered consistently on different computers and in GitHub Actions.
+
