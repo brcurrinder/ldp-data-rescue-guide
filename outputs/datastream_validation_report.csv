@@ -1,3 +1,2 @@
 row,field,value,issue
 7,MethodSpeciation,From CaCO3,Value is not listed as an allowed value in the DataStream schema
-8,ResultAnalyticalMethodName,NA,Analytical method information should be populated for lab-analyzed samples

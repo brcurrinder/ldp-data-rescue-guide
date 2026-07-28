@@ -1,5 +1,5 @@
 ---
-title: "The Living Data Project: Data Rescue Guidebook"
+title: "The Living Data Project: Data Rescue Guidebook (Read Me First)"
 ---
 
 # Welcome
@@ -8,7 +8,7 @@ This guidebook supports graduate student data rescue teams and interns participa
 
 # Authorship
 
-This is a living document. The first draft was written by Luis Francisco Henao Diaz, Freek de Haas and Diane S. Srivastava, but it has subsequently been improved by many members of the Living Data Project including: Dominique Roche, Kerri Finlay, Sally Taylor, and Bryan Currinder.
+This is a living document. The first draft was written by Luis Francisco Henao Diaz, Freek de Haas and Diane S. Srivastava, but it has subsequently been improved by many members of the Living Data Project including: Dominique Roche, Kerri Finlay, Sally Taylor, Bryan Currinder, and members of DataStream.
 
 # Goals
 
@@ -26,12 +26,32 @@ After working through and referring back to this guide, individuals should be be
 
 ## Navigation and Organization
 
-This guidebook is organized to follow the progression of a typical data rescue project while also introducing the broader principles that underpin responsible data stewardship. The early chapters establish the conceptual foundation for data rescue, including the importance of metadata, open science, reproducibility, and long-term data preservation. These concepts provide the context for understanding not only how to rescue data, but why these practices matter.
+The guidebook is organized into **parts**, **chapters**, and **sections**. Use the book navigation sidebar to move between parts and chapters, and use the chapter table of contents to jump to sections within the current chapter. To search across the whole guidebook, use the search box or search icon in the book navigation area. On smaller screens, these navigation tools may be collapsed behind menu buttons.
 
-Building on this foundation, the guide then walks through the major stages of a data rescue project---from preparing for a project and working with data owners, through data cleaning, standardization, documentation, quality assurance, and final publication. While these chapters are presented in a logical sequence, data rescue is often an iterative process. You may find yourself revisiting earlier chapters as new questions arise or as your understanding of a dataset evolves.
+```{mermaid}
+flowchart LR
+  A[Guidebook]
+  A --> B[Parts]
+  B --> C[Chapters]
+  C --> D[Sections]
+```
 
-Throughout the guide, you'll also encounter content that is specific to particular repositories or Living Data Project activities (e.g. callout sections relevant to individuals working with DataStream). These sections build on the general principles presented earlier and demonstrate how those principles are implemented within specific workflows. This approach is intended to help you develop skills that extend beyond any single repository or project and can be applied across a wide range of data rescue efforts.
+The guidebook is organized to follow the progression of a typical data rescue project while also introducing the broader principles that underpin responsible data stewardship. The early sections establish the conceptual foundation for data rescue, including the importance of metadata, open science, reproducibility, and long-term data preservation. These concepts provide the context for understanding how to rescue data and why these practices matter. Throughout the guide, you'll also encounter content that is specific to particular repositories or Living Data Project activities (e.g. callout sections relevant to datasets being prepared for DataStream).
 
-## Learning and reference
+Building on this foundation, the guide then walks through the major stages of a data rescue project workflow---from preparing for a project and working with data owners, through data cleaning, standardization, documentation, quality assurance, and final publication. We present this in two formats: as both a [general workflow for any data rescue project](chapters/getting-started.qmd), and as a [workflow specific to datasets intended for DataStream](chapters/prepare-metadata-datastream.qmd). While these workflows are presented in a specific sequence, note that data rescue is often an iterative and context-specific process. You may find yourself revisiting earlier chapters or sections as new questions arise or as your understanding of a dataset evolves.
 
-This guide is intended to be more than a manual. Throughout the guide, you'll find examples, templates, checklists, reflection questions, and practical exercises designed to help you actively work through each stage of a data rescue project. As your project progresses, you can return to relevant chapters whenever you need guidance, best practices, or compiled resources.
+
+## Learning, reference, and R code
+
+Throughout the guide, you'll find worked examples, templates, reflection questions, code, and exercises designed to help you actively work through each stage of a data rescue project. As your project progresses, you can return to relevant chapters whenever you need guidance, code, best practices, or compiled resources.
+
+In the example workflow sections ([General Data Rescue Workflow](chapters/getting-started.qmd) and [DataStream Data Rescue Workflow](chapters/prepare-metadata-datastream.qmd)), numerous sections of R code and relevant outputs are presented. You can view this code as a static object in the guidebook, but we also encourage you to copy the code into your local R environment to follow along. You can quickly copy code and paste it into your R session by clicking on the small clipboard in the top right of each code chunk. While each dataset requires its own specific attention, some of the code presented may be usefully adapted for your project. 
+
+
+## Hover over orange tooltips for more information
+
+This guidebook contains multiple terms and concepts which may be unfamiliar.
+To aid in your understanding, these terms are defined with orange, underlined [tooltips]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A tooltip is a brief, informative message that appears when a user hovers over, focuses on, or interacts with a specific graphical user interface element."} that can be accessed by hovering your cursor over the term.
+
+
+

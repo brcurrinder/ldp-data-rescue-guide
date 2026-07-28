@@ -1,0 +1,36 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+    new bootstrap.Tooltip(el);
+  });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+    new bootstrap.Tooltip(el);
+  });
+});
+</script>
+
+<style>
+.tooltip-term {
+  border-bottom: 2px dotted #fd7e14 !important;
+  color: #fd7e14 !important;
+  cursor: help !important;
+  font-weight: 600;
+}
+
+.tooltip-term::after {
+  content: " ⓘ";
+  font-size: 0.75em;
+  vertical-align: super;
+  color: #fd7e14;
+}
+
+.tooltip-term:hover,
+.tooltip-term:focus {
+  background-color: rgba(253, 126, 20, 0.12);
+}
+</style>

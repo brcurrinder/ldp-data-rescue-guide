@@ -1,0 +1,74 @@
+---
+title: "Uploading to DataStream"
+from: markdown+bracketed_spans
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+After we have prepared a cleaned and validated data package, **your team will almost never upload the dataset to DataStream directly**.
+Instead, your role is to prepare the final data package for the data owner to review.
+This package should include the cleaned and validated dataset, complete metadata, documentation of cleaning decisions, and any supporting files needed to understand or reproduce the workflow.
+
+After reviewing and approving the package, **the data owner will upload the dataset to DataStream.** If needed, DataStream Data Specialists can also help data owners troubleshoot questions or issues that arise during the upload process.
+
+While we will not directly upload the final dataset package, it will still be helpful to be familiar with the process that data owners will follow to upload their datasets to DataStream.
+[You can see DataStream's full documentation on data upload here](https://datastream.org/en-ca/documentation/upload-data).
+To upload **new datasets** to Datastream, data owners will upload two required items along with optional documentation:
+
+- **(Required)** Dataset-level metadata
+  - All fields correspond directly to the [DataStream Metadata Form](https://datastream.org/en-ca/documentation/data-upload-resources#dataset-metadata-form)
+- **(Required)** A single CSV file containing all observations
+  - *This CSV file must adhere to the DataStream data schema*
+- **(Optional)** Attachments related to the dataset (e.g., published papers, reports, QA/QC analyses, monitoring protocols, etc.)
+  - Depending on the nature of the dataset, there may be additional documentation that we will want to incorporate as part of the upload
+
+```{mermaid}
+%%| fig-cap: "DataStream example workflow within the broader data rescue lifecycle."
+flowchart TD
+  S1["Data prioritization<br/><small>Identify high-value or at-risk datasets</small>"]
+
+  S2["Team creation<br/><small>Define roles and responsibilities</small>"]
+
+  S3["Metadata creation<br/><small>Review source files<br/>Create metadata issues table<br/>Create review tables and change log<br/>Draft metadata package</small>"]
+
+  S4["Data transfer & compilation<br/><small>Preserve raw files<br/>Combine source tables<br/>Create inspection table</small>"]
+
+  S5["Data cleaning & validation<br/><small>Clean data<br/>Run QA/QC<br/>Format for DataStream<br/>Run schema validation</small>"]
+
+  U["Update metadata<br/>as issues emerge"]
+
+  R["Prepare package<br/>for data owner review<br/><small>Export final CSV, reports,<br/>validation results, and metadata</small>"]
+
+  S6["Data archiving<br/><small>Data owner uploads finalized<br/>data and metadata to DataStream</small>"]
+
+  S7["Data sharing<br/><small>Archived data are publicly<br/>available for discovery, reuse, and<br/> analysis</small>"]
+
+  S1 --> S2 --> S3 --> S4 --> S5 --> R --> S6 --> S7
+
+  S3 -. "metadata package<br/>is maintained" .-> U
+  S4 -. "source-file and<br/>compilation issues" .-> U
+  S5 -. "cleaning and validation<br/>decisions" .-> U
+  U -. "updated metadata<br/>included in review package" .-> R
+
+  classDef prior fill:#f2f2f2,stroke:#999,color:#666;
+  classDef focusData fill:#fff4e6,stroke:#fd7e14,stroke-width:3px,color:#222;
+  classDef later fill:#f8f9fa,stroke:#bbb,color:#666;
+
+  class S1,S2,S3,S4,S5,U,R prior;
+  class S6 focusData;
+  class S7 later;
+```
+
+<br>
+
+If we have correctly formatted the dataset to adhere to the DataStream data schema and provided all metadata documentation, the data owner should encounter minimal to no friction during the upload process.
+
+We should also provide stable access to the reproducible workflow used to create the cleaned and validated data.
+A common option is to archive the project materials on **GitHub** or the **Open Science Framework** and establish a DOI link to that repository.
+The linked repository should include the original source files, R scripts, metadata, a change log, and a README file explaining how the files are organized and how to rerun the workflow.
+A good option for where to include this DOI will be in the **Data Processing** field in DataStream’s dataset-level metadata.
+
+## Example Data Rescue Project
+
+Look through the linked examples of a data rescue project on DataStream (<https://doi.org/10.25976/0i7h-6k85>) and the associated R scripts published on the Open Science Framework for formatting, cleaning, and validating the data (<https://doi.org/10.17605/OSF.IO/9RXSW>).

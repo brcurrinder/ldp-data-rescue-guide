@@ -83,7 +83,7 @@ A detailed discussion of relational databases is beyond the scope of this guide,
 
 <br>
 
-## Data schemas
+## Data schemas {#data-schemas}
 
 While tidy data is a design philosophy for organizing data, a **data schema** is the specific blueprint or structure of a dataset. It defines what information is stored, how it is organized, and the rules that determine what values are allowed. Just like an architectural blueprint describes the layout of a building before it is constructed, a data schema describes the organization of a dataset before it is populated with data.
 
@@ -113,8 +113,8 @@ Suppose a schema for freshwater data specifies the following rules:
 | `ResultUnit`               | Conditional | Required if `ResultValue` is populated          | Must match the selected `CharacteristicName`: `pH` = `None`, `Conductivity` = `uS/cm`, `TemperatureWater` = `degC`, or `DissolvedOxygen` = `mg/L` |
 | `ResultDetectionCondition` | Conditional | Required if `ResultValue` is blank              | Must be one of: `BelowDetectionLimit`, `NotDetected`, `AboveDetectionLimit`                                                                       |
 | `ResultComment`            |  Optional   | Not conditional                                 | Must be text; 0-500 characters                                                                                                                    |
-
-<br>
+:::
+::: callout-note
 
 Now review the observations below. Which cells would be flagged during data validation?
 

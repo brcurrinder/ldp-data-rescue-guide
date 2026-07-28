@@ -1,10 +1,10 @@
 ---
-title: "Data Rescue Goals"
+title: "Data Rescue Goals & Teams"
 ---
 
-# Data Rescue Goals
+## Data Rescue Goals
 
-The goal of the Living Data Project's data rescue initiative is to ensure that valuable datasets in ecology, evolution and environmental science are not lost to science and made publicly available ‘in perpetuity'. These datasets can be very valuable as historical baselines (i.e. surveys that can be repeated to establish rates of change), as part of a species range projection, as a part of a long term population or evolutionary time series, or as a classic dataset that can be combined with others or re-analysed in different ways to draw out generalities in process and pattern. There are a number of data repositories that provide the infrastructure needed for data to be permanently archived, readily discoverable, and freely accessible (see Repositories & DOIs chapter).
+In ecology, evolution, and the environmental sciences, rescued datasets can be very valuable as historical baselines (i.e. surveys that can be repeated to establish rates of change), as part of a species range projection, as a part of a long term population or evolutionary time series, or as a classic dataset that can be combined with others or re-analysed in different ways to draw out generalities in process and pattern. There are a number of data repositories that provide the infrastructure needed for data to be permanently archived, readily discoverable, and freely accessible (see chapter on [Repositories & DOIs](repositories-doi.qmd) for more information).
 
 This may seem like a straightforward goal, but to do it well, you need to be a bit of a time traveler. 
 
@@ -12,7 +12,18 @@ First, you have to imagine a researcher in the future that you will never meet, 
 
 You also need to be able to travel backwards in time to when the data was collected. There may be a set of field notebooks where the data was recorded, full of all sorts of valuable bits of information that cannot be effectively captured in the digital version of the data, so you need to also think about how to make sure to maintain all those links so that other people (including the senior researcher) can cross-reference the original and digital datasets. The magic for maintaining these links is the **metadata**, where all of these connections can be explained (see Introduction to Metadata chapter). Finally, in ensuring that the metadata and data that you archive keep all the parts needed to link the past with the future, you will need to balance this against keeping data that has lost its meaning (e.g. habitat codes with no known key).
 
-When you are done, all variables will be clearly defined in a **metadata file** and you will have checked extensively for errors using algorithms (the data is “clean”). Likely, the structure of the data will be long format (the data is “tidy”), meaning a data structure where the rows represent the measurements / examples and the columns refer to the measures/features/variables of the data (see Introduction to Data chapter). If you are not familiar with tidy data formats, you will find the online help pages by Hadley Wickham (creator of the tidyverse packages including dyplr, tidyr, plyr, etc.) to be useful (overview here: https://r4ds.had.co.nz/tidy-data.html). 
+When you are done, all variables will be clearly defined in a **metadata file** and you will have checked extensively for errors using algorithms (the data is “clean”). Likely, the structure of the data will be long format (the data is “tidy”), meaning a data structure where the rows represent the measurements / examples and the columns refer to the measures/features/variables of the data (see Introduction to Data chapter). If you are not familiar with tidy data formats, you will find the [online help pages by Hadley Wickham](https://r4ds.had.co.nz/tidy-data.html) (creator of the tidyverse packages including dplyr, tidyr, plyr, etc.) to be useful.
 
-Keep in mind that the final product must be understandable by anyone with a general biological background, meaning the database should become self-explanatory and be a stand-alone product. 
+Keep in mind that the final product must be understandable by anyone with a general biological background, meaning the full data package should be self-explanatory and be a stand-alone product. 
+
+
+## Data Rescue Teams: Roles & Responsibilities
+
+In order to conduct your data rescue project, you will work in close contact with a senior researcher and/or a partner organization (hereafter “data owner{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A data owner is an individual or a specific department entrusted with authoritative rights over particular datasets within an organization."}”), as well as two Living Data Project (LDP) mentors: a postdoctoral fellow in reproducible research and data management, and a faculty member. 
+
+The role of the **data owner** is to help you understand how the data were collected and how they might be used in the future, as well as to provide information that allows you to create the metadata. The role of the LDP postdoc is to help you with both the conceptual and technical aspects of data rescue, and you should expect to be in regular contact with them. The role of the LDP faculty member is to make sure that the project is going according to schedule, to facilitate the relationship with other team members, and to help you set priorities and goals. Finally, some but not all projects may have an undergraduate assistant associated with them, primarily to help enter large amounts of data into digital formats. 
+
+Depending on the nature of your project, you should aim to meet with the faculty mentor, postdoc, and data owner multiple times during the project (e.g., at the beginning, mid-point and end) to discuss overall goals and progress. You may want to meet with the data owner more often to understand how the data was collected, what certain codes mean, and limitations of the data. 
+
+If you have undergraduate assistants involved in your project, they will need a lot of check-ins early on in their activity to make sure that they understand the task and feel empowered to ask you questions about the data entry (even if they are small questions!). Make good use of the your LDP postdoc: they are there to guide you over all the bumps in the road!
 

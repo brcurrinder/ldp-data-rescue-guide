@@ -4,7 +4,7 @@ project:
 book:
   title: "The Living Data Project: Data Rescue Guidebook"
   subtitle: "A guide to data rescue for Living Data Project interns and data rescue teams"
-  author: "Living Data Project Members"
+  author: "Members of the Living Data Project and DataStream"
   page-navigation: true
   
   repo-url: https://github.com/brcurrinder/ldp-data-rescue-guide
@@ -17,20 +17,15 @@ book:
     - part: "Introduction to Data Rescue"
       chapters:
         - chapters/introduction.qmd
-        - chapters/data-rescue-goals.qmd
-        - chapters/data-rescue-teams-roles-responsibilities.qmd
-        
-    - part: "Data Stewardship and Preservation"
-      chapters:
-        - chapters/repositories-doi.qmd
+        - chapters/introduction-datastream.qmd
         - chapters/data.qmd
         - chapters/metadata.qmd
-        - chapters/digitization-validation.qmd
+        - chapters/digitization.qmd
+        - chapters/repositories-doi.qmd
 
-    - part: "Open Science and Reproducible Research"
+    - part: "Open Science and Best Practices"
       chapters:
         - chapters/open-science-reproducible-research.qmd
-        - chapters/collaboration-tools.qmd
         - chapters/coding-best-practices.qmd
         
     - part: "Artificial Intelligence in Data Rescue"
@@ -40,21 +35,14 @@ book:
     - part: "General Data Rescue Workflow"
       chapters:
         - chapters/getting-started.qmd
-        - chapters/working-with-data-owners.qmd
         - chapters/prepare-metadata.qmd
-        - chapters/merging-data.qmd
-        - chapters/column-cleanup.qmd
-        - chapters/outlier-detection.qmd
-        - chapters/data-standards.qmd
-        - chapters/raw-data-archiving.qmd
-        - chapters/output-data.qmd
-        - chapters/uploading.qmd
+        - chapters/prepare-data.qmd
+        - chapters/archiving-uploading.qmd
         
     - part: "DataStream Data Rescue Workflow"
       chapters:
         - chapters/prepare-metadata-datastream.qmd
         - chapters/prepare-data-datastream.qmd
-        - chapters/data-types-guidance-datastream.qmd
         - chapters/uploading-datastream.qmd
         
     - part: "Additional Tasks"
@@ -62,12 +50,14 @@ book:
         - chapters/internship_tasks.qmd
         - chapters/living_document.qmd
         
-    - part: "Resources"
+    - part: "Compiled Resources & References"
       chapters:
         - chapters/resources.qmd
+        - chapters/references.qmd
 
 format:
   html:
-    theme: default
+    theme: cosmo
     toc: true
     number-sections: false
+    include-after-body: includes/tooltips.html

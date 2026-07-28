@@ -2,18 +2,18 @@
 title: "Introduction to Data Rescue"
 ---
 
-# Introduction to Data Rescue and the Living Data Project
+## Data rescue and the Living Data Project
 
 The goal of **data rescue** is to retrieve data that has been collected in the past and has high scientific or societal importance for the future. Data rescue can take many forms. In some cases, you will be rescuing data collected by a (retiring) senior researcher who is interested in sharing their lifework with the scientific community but may not have the computational literacy or knowledge of archival standards to do so themselves. In other cases, the researchers who collected the data may not be available for consultation, either because the researcher has died or otherwise cannot be contacted, or the data were collected by a group of people or an organization that lack the time or resources to manage/archive the data. In both of these cases, the dataset has already been identified as being of high importance by a government agency, an NGO, or a group of university academics.
 
-The **Living Data Project** is an initiative of the Canadian Institute of Ecology and Evolution. The aims of the Living Data project are to:
+The [**Living Data Project**](https://www.ciee-icee.ca/ldp.html) is an initiative of the [**Canadian Institute of Ecology and Evolution**](https://www.ciee-icee.ca/index.html). The aims of the Living Data project are to:
 
--   Rescue legacy datasets in ecology, evolution, and environmental science pertinent to Canada.
--   Ensure that legacy datasets are publicly available on secure repositories.
--   Breathe new life into the datasets through working groups.
--   Train Canada's next generation of researchers in data and collaboration proficiencies.
+- Rescue legacy datasets in ecology, evolution, and environmental science pertinent to Canada.
+- Ensure that legacy datasets are publicly available on secure repositories.
+- Breathe new life into the datasets through working groups.
+- Train Canada's next generation of researchers in data and collaboration proficiencies.
 
-This guide to data rescue is a living document, intended to be continually improved by different cohorts of individuals who interact with it. Your role will generally be to collate, clean, and prepare the **data** and **metadata**, and to ensure these are uploaded to the appropriate **data repository**. If the data rescue project is too large for a single group or intern to carry out, you may be conducting your project as part of a relay between multiple groups or interns. For such large projects, the first step may be to decide on which data is the highest priority for rescue and implement a workflow for digitizing and processing the data, and it may require a second group to have the data fully uploaded to the data repository. The key point here is to understand what role you are playing in the overall project, through both discussion with project partners and also the "student deliverables" in your contract. **A data rescue project is not a success until the data are successfully uploaded to an online, secure repository where the data will become publicly accessible.**
+Your role will generally be to collate, clean, and prepare the **data** and **metadata**, and to ensure these are uploaded to the appropriate **data repository**. If the data rescue project is too large for a single group or intern to carry out, you may be conducting your project as part of a relay between multiple groups or interns. For such large projects, the first step may be to decide on which data is the highest priority for rescue and implement a workflow for digitizing and processing the data, and it may require a second group to have the data fully uploaded to the data repository. The key point here is to understand what role you are playing in the overall project through consistent discussion with your data rescue team. **A data rescue project is not a success until the data are successfully uploaded to an online, secure repository where the data will become publicly accessible.**
 
 The scope of a data rescue project can vary greatly depending on the amount, quality, and complexity of the data you will receive. In this guidebook, we provide you with:
 
@@ -23,7 +23,41 @@ The scope of a data rescue project can vary greatly depending on the amount, qua
 
 <br>
 
+## Data rescue as an exercise in time travel
+
+In ecology, evolution, and the environmental sciences, rescued datasets can be very valuable as historical baselines (i.e. surveys that can be repeated to establish rates of change), as part of a species range projection, as a part of a long term population or evolutionary time series, or as a classic dataset that can be combined with others or re-analysed in different ways to draw out generalities in process and pattern. There are a number of data repositories that provide the infrastructure needed for data to be permanently archived, readily discoverable, and freely accessible (see chapter on [Repositories & DOIs](repositories-doi.qmd) for more information).
+
+Data rescue may seem like a straightforward goal, but to do it well, you need to be a bit of a **time traveler**.
+
+First, you have to imagine a researcher in the future that you will never meet, and you need to convey to them all the complexities and subtleties in the data that will allow them to effectively use it. This is like being on a desert island and putting a message in a bottle about your location so that someone could rescue you... all of the information has to be on the message (**metadata** and **data**) in that bottle (the **repository**).  
+
+You also need to be able to travel backwards in time to when the data was collected. There may be a set of field notebooks where the data was recorded, full of all sorts of valuable bits of information that cannot be effectively captured in the digital version of the data, so you need to also think about how to make sure to maintain all those links so that other people (including the senior researcher) can cross-reference the original and digital datasets. The magic for maintaining these links is the **metadata**, where all of these connections can be explained (see Introduction to Metadata chapter). Finally, in ensuring that the metadata and data that you archive keep all the parts needed to link the past with the future, you will need to balance this against keeping data that has lost its meaning (e.g. habitat codes with no known key).
+
+When you are done, all variables will be clearly defined in a **metadata file** and you will have checked extensively for errors using algorithms (the data is “clean”). Likely, the structure of the data will be long format (the data is “tidy”), meaning a data structure where the rows represent the measurements / examples and the columns refer to the measures, features, and variables of the data (see the [Introduction to Data chapter](data.qmd) for more information). If you are not familiar with tidy data formats, you will find the [online help pages by Hadley Wickham](https://r4ds.had.co.nz/tidy-data.html) (creator of the tidyverse packages including `dplyr`, `tidyr`, `plyr`, etc.) to be useful.
+
+Keep in mind that the final product must be understandable by anyone with a general biological background, meaning the full data package should be self-explanatory and be a stand-alone product. 
+
+<br>
+
+## A workflow for data rescue
+
+In the [General Data Rescue Workflow](getting-started.qmd) and [DataStream Data Rescue Workflow](prepare-metadata-datastream.qmd) sections, we will detail the sequence of steps in the data rescue process through worked examples. The general sequence of each workflow is outlined in Figure 2 of Bledsoe et al. 2025 (below). At the start of your project, data has already been prioritized (Step 1) for rescue and a team has already been assembled (Step 2, but see more in the section below on [Data rescue teams: roles & responsibilities](#team-roles-responsibilities)). So most of the the effort in our workflow examples will be devoted to Steps 3-6. 
+
+<br>
+We will return to this broad workflow for data rescue throughout the guidebook.
+
 ![*Steps in the data rescue assembly line. First, data must be prioritized for rescue (Step 1). After team creation (Step 2) and metadata creation (Step 3), the data must be transferred and compiled into a logical format (Step 4). After data cleaning and validation (Step 5) is complete, the finalized data and metadata should be archived on a long-term data repository (Step 6). The ultimate goal is to have the rescued data openly available for re-use (Step 7). Image source: Bledsoe et al. 2022, Fig. 2.*](images/Conceptual_fig_Bledsoe_et_al_2022_.png){fig-alt="A cartoon illustration of a stereotypical assembly line, with a moving conveyor belt and many stations, and is intended to illustrate the various steps in the data rescue process. A new dataset or data rescue project enters the assembly line at the top left, before passing through the data prioritization station (1), where it is either prioritized for rescue or shunted out of the assembly line. Prioritized data move on to team creation (2), where the team that will undertake the data rescue is assembled. Here the team is illustrated as three people working collaboratively: data creator/collector/steward, data manager, and data entry technician (see main text). At step (3), the initial metadata are compiled and moved onto a “slide”, where they will rejoin the clean data at the end of the assembly line. Data transfer and compilation (4) is visualised as a robot (a person in real life!) removing floppy disks, data sheets, and other physical records from a box. At the data cleaning and validation step (5), the data pass through a “sanitising station” (imagine pasteurisation, radiation, or strong fan) that removes any debris from the box. Following step 5, the data are rejoined by the metadata sheet before being boxed for archiving (step 6). Finally, the box is labelled with a DOI, closed, and is ready for sharing (step 7)."}
+<br>
+
+## Data rescue teams: roles & responsibilities {#team-roles-responsibilities}
+
+In order to conduct your data rescue project, you will work in close contact with a senior researcher and/or a partner organization (hereafter [data owner]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A data owner is an individual or a specific department entrusted with authoritative rights over particular datasets within an organization."}), as well as at least two Living Data Project (LDP) mentors: a postdoctoral fellow in reproducible research and data management and a faculty member. **Make good use of the LDP postdoc: they are there to guide you over all the bumps in the road!**
+
+The role of the **data owner** is to help you understand how the data were collected and how they might be used in the future, as well as to provide information that allows you to create the metadata. The role of the LDP postdoc is to help you with both the conceptual and technical aspects of data rescue, and you should expect to be in regular contact with them. The role of the LDP faculty member is to make sure that the project is going according to schedule, to facilitate the relationship with other team members, and to help you set priorities and goals. 
+
+Depending on the nature of your project, you should aim to meet with the faculty mentor, postdoc, and data owner multiple times during the project (e.g., at the beginning, mid-point and end) to discuss overall goals and progress. You may want to meet with the data owner more often to understand how the data was collected, what certain codes mean, limitations of the data, etc.
+
+Finally, some but not all projects may have an undergraduate assistant associated with them, primarily to help enter large amounts of data into digital formats. If you have undergraduate assistants involved in your project, they will need a lot of check-ins early on in their activity to make sure that they understand the task and feel empowered to ask you questions about the data entry (even if they are small questions!). 
 
 <br>
 

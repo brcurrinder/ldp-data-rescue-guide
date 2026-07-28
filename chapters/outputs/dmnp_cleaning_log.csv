@@ -1,0 +1,7 @@
+log_id,processing_area,issue_or_decision,affected_records,action_taken,status
+1,Locations,Some observation records had missing or slightly different coordinates,DMNP-ST-01; DMNP-ST-03,Used DMNP_Site_List.xlsx as the reference source for site names and missing coordinates,Documented decision
+2,Dates and times,Source times were recorded as HH:MM and did not include seconds,All records with SampleTime,Formatted times as HH:MM:SS for DataStream by appending :00,Documented decision
+3,Dates and times,Source files did not include time zone values,All records with SampleTime,Assigned -04:00 after fictional data owner confirmation that source times represent Atlantic Daylight Time,Documented decision
+4,Characteristics,Source files used local abbreviations and names,DO; Temp; SpCond; Pb; Nitrate-N; Hardness,Mapped source terms to working DataStream-compatible characteristic names using a lookup table,Documented decision
+5,Censored values,Some results were reported as censored values rather than exact numeric values,<0.002; BDL,Moved censored results into ResultDetectionCondition and retained detection-limit information where available,Documented decision
+6,Heavy metals,Some heavy metal records were missing sample fraction,Lead; Copper,"Retained missing sample fraction as NA and documented limitation rather than guessing dissolved, total, or total recoverable",Unresolved limitation

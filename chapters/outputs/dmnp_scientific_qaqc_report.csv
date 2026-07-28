@@ -1,0 +1,25 @@
+check_type,record,value,issue
+Data bounds,"DMNP-ST-02 | Temperature, water",37.8,Value falls outside expected bounds: -2 to 35. Surface water temperature outside this range should be reviewed for this example park
+Z-score outlier screen,DMNP-ST-01 | pH,-0.5,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-01 | pH,15.2,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,"DMNP-ST-01 | Temperature, water",39.5,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-03 | Dissolved oxygen (DO),-1.2,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-02 | Dissolved oxygen (DO),26.5,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-02 | Specific conductance,950,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-LK-01 | Nitrate,6.8,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-03 | Total hardness,350,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-02 | Lead,0.08,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-LK-01 | Cadmium,3.5,Absolute z-score is greater than 3; review as possible outlier
+Z-score outlier screen,DMNP-ST-02 | Copper,0.09,Absolute z-score is greater than 3; review as possible outlier
+Graphical validation demo,DMNP-LK-01 | Cadmium,3.5 ug/L,Value falls outside example review bounds and should be checked Expected range: 0 to 2 ug/L
+Graphical validation demo,DMNP-ST-02 | Copper,0.09 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 0.05 mg/L
+Graphical validation demo,DMNP-ST-03 | Dissolved oxygen (DO),-1.2 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 25 mg/L
+Graphical validation demo,DMNP-ST-02 | Dissolved oxygen (DO),26.5 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 25 mg/L
+Graphical validation demo,DMNP-ST-02 | Lead,0.08 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 0.05 mg/L
+Graphical validation demo,DMNP-LK-01 | Nitrate,6.8 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 5 mg/L
+Graphical validation demo,DMNP-ST-02 | Specific conductance,950 uS/cm,Value falls outside example review bounds and should be checked Expected range: 0 to 500 uS/cm
+Graphical validation demo,"DMNP-ST-01 | Temperature, water",39.5 deg C,Value falls outside example review bounds and should be checked Expected range: -2 to 35 deg C
+Graphical validation demo,DMNP-ST-03 | Total hardness,-12 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 300 mg/L
+Graphical validation demo,DMNP-ST-03 | Total hardness,350 mg/L,Value falls outside example review bounds and should be checked Expected range: 0 to 300 mg/L
+Graphical validation demo,DMNP-ST-01 | pH,15.2 None,Value falls outside example review bounds and should be checked Expected range: 0 to 14 None
+Graphical validation demo,DMNP-ST-01 | pH,-0.5 None,Value falls outside example review bounds and should be checked Expected range: 0 to 14 None

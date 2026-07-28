@@ -1,347 +1,1458 @@
 ---
 title: "Preparing Data for DataStream"
+from: markdown+bracketed_spans
 editor: 
   markdown: 
     wrap: sentence
 ---
 
-After cleaning and reshaping a dataset, we need to verify that the data conforms to DataStream's data schema.
+After preparing metadata for a dataset, we also need to prepare the data itself for publication on DataStream.
 
+In our data rescue projects, the original files we receive will not already follow DataStream's data schema (see the [Data schemas section in the Introduction to Data Chapter](data.qmd#data-schemas) for more information on what a data schema is).
+Furthermore, a data owner may provide multiple spreadsheets or CSV files with different column names, inconsistent site names, mixed date formats, non-standard units, censored values, and/or values that require scientific review.
+
+In this chapter, we will continue working with the Decent Mountains National Park example from the previous chapter.
 By the end of this chapter, you should be able to:
 
--   Check that a water quality dataset follows the DataStream data schema.
--   Diagnose specific schema violations for a water quality dataset.
--   Perform final QA/QC checks on a dataset to check for common DataStream formatting issues.
--   Create a validation report and a QA/QC report to share with team members.
+- Clean the combined table of source data
+- Document data cleaning decisions in a change log
+- Perform basic scientific validation checks on water quality data
+- Format a cleaned water quality dataset into the DataStream data schema
+- Run a pre-upload validation check using the [JSON]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="JSON, or JavaScript Object Notation, is a simple way to write down and organize information using plain text, but that works with almost any computer language. Think of it like a digital label or a neat list that computers use to talk to each other."} version of DataStream's data schema
+- Export a CSV and validation report for your team to review
 
-This chapter is longer than most because it is designed as a reference workflow in R. You do not need to memorize every function or code chunk. Focus on understanding the overall sequence and return to it as needed throughout your project. The broad steps of the chapter are to:
+**This chapter is designed primarily as a reference workflow in R.**
+You do not need to memorize every function or code block, but can instead focus on understanding the overall sequence and return to the chapter as needed throughout your project.
 
-1. Download and import the DataStream schema into R
-2. Extract field rules and allowed values from the schema
-3. Create a water quality dataset
-4. Run schema validation checks on the water quality dataset
-5. Run final QA/QC checks for common issues
+::: callout-note
+### Metadata updates are continuous
+
+In this guide, the workflow is presented in the following sequence: first we prepare **metadata**, then we prepare **data** through cleaning, validation, and formatting.
+
+In a real data rescue project, these steps are iterative.
+Cleaning the data often reveals new metadata questions and updates.
+When those issues are discovered, they should be added back to the metadata documentation, change log, or list of questions for the data owner.
+
+Metadata should be updated throughout the project as new issues and decisions emerge.
+We perform our own update to the example metadata at the end of this chapter.
+:::
 
 <br>
 
 ## The DataStream Data Schema
 
-DataStream uses a standardized data format based on the WQX (Water Quality Exchange) standard for the Exchange of Water Quality Data, which was originally developed by the United States Environmental Protection Agency and the United States Geological Survey.
-This allows different groups to share results in a common format, and increases a dataset's **Interoperability** and **Reusability** (i.e., the I and R in FAIR principles).
+DataStream uses a standardized data format based on the WQX (Water Quality Exchange) standard for the exchange of water quality data.
+This allows different groups to share results in a common format and increases a dataset's **Interoperability** and **Reusability**, (i.e., the I and R in [FAIR principles](metadata.qmd#sec-FAIR-principles)).
 
-The original, raw data that we receive will almost certainly not already adhere to the DataStream data schema.
-A data owner may provide multiple CSV files or spreadsheets with different column names, inconsistent site names, wide-format measurements, non-standard units, or values that do not match DataStream's controlled vocabularies.
+The source data that we receive will almost certainly not already adhere to the DataStream data schema.
+In a reproducible data rescue workflow, we want to use R to transform the original files into a table that adheres to the DataStream data schema.
+We then export that table as a CSV, which the relevant data owner will upload to DataStream.
 
-In a reproducible data rescue workflow, we want to use R to transform the original files into a DataStream-formatted table.
-We then export that table as a CSV, which the relevant data owner will then upload to DataStream.
+### Upload templates and schema validation
 
-### Upload Templates
-
-DataStream provides Excel and Google Sheets upload templates to help users understand how their data should be structured for upload.
+DataStream provides spreadsheet upload templates to help users understand how their data should be structured for upload.
 These templates include field names, examples, allowed values, and lookup tables.
 They are especially helpful for visualizing the expected DataStream format and for understanding how different fields relate to one another.
 
-As you work through this chapter, you should open the current DataStream upload template and use it as a visual reference: DataStream Upload Template (link)
+As you work through this chapter, you can open the current [DataStream upload template](https://datastream.org/en-ca/documentation/data-upload-resources#datastream-upload-templates) (either Excel or Google Sheets) and use it as a visual reference.
 
-The template contains several important sheets:
+The template contains several important sheets to investigate:
 
-| Sheet                       | Purpose                                                                                                                          |
-|-------------------------|-----------------------------------------------|
-| `Allowed Values-Valeurs`    | Lists DataStream fields, whether they are required, optional, or conditional, their field types, examples, and allowed values.   |
-| `CharacteristicName LOOKUP` | Provides additional guidance for `CharacteristicName` values, including fields that may be required for certain characteristics. |
-| `ResultUnit LOOKUP`         | Provides information about valid `ResultUnit` values.                                                                            |
-| `Export-Exporter`           | Shows the final column structure expected for the CSV upload file.                                                               |
+| Sheet | Purpose |
+|------------------------------------|------------------------------------|
+| `Allowed Values-Valeurs` | Lists DataStream fields, whether they are required, optional, or conditional, their field types, examples, and allowed values |
+| `CharacteristicName LOOKUP` | Provides additional guidance for `CharacteristicName` values, including fields that may be required for certain characteristics |
+| `ResultUnit LOOKUP` | Provides information about valid `ResultUnit` values |
+| `Export-Exporter` | Shows the final column structure expected for the CSV upload file |
 
-Although the spreadsheet template is useful for learning the format and for data owners to enter their data, our goal in a reproducible data rescue workflow is to avoid manually copying cleaned data into Excel or Google Sheets (and to avoid proprietary software in general!).
-Manual copying is difficult to reproduce, time-intensive, and can introduce new errors at the final step.
+Although the spreadsheet template is useful for learning the format, our goal in a reproducible workflow is to avoid manually copying cleaned data into Excel or Google Sheets.
+Manual copying is difficult to reproduce, time-intensive, and can introduce new errors.
 
-Instead, in this chapter we will use R to prepare and check a near-final DataStream-formatted table.
-To do this, **we will use DataStream's machine-readable schema, which is provided in JSON format (JavaScript Object Notation).**
-JSON is a text-based format for storing and exchanging structured data.
-This JSON schema contains many of the same rules represented in the spreadsheet template, including field names, field types, allowed values, required fields, and conditional field rules.
-*You do not need to understand how to read or write JSON as part of this chapter, but should know that it is a common format for dictating the structure of a data schema* (YAML and XML are other common, human-readable alternatives that you may have encountered).
+Instead, this chapter will use R to prepare and check a near-final DataStream-formatted table.
+At the end of the chapter, we will use DataStream's machine-readable schema, which is provided in JSON format via the DataStream website.
+JSON is a text-based format for storing and exchanging structured data, and the JSON schema contains all of the rules represented in the spreadsheet template, including field names, field types, allowed values, required fields, and conditional field rules.
 
-We will use R to read the JSON schema, extract the parts that are useful for validation, and check whether our formatted dataset follows DataStream's rules before exporting a final CSV.
+**You do not need to understand how to read or write JSON as part of this chapter.** For this workflow, you only need to know that the JSON schema is a machine-readable reference that we can use in R to check whether a formatted dataset follows DataStream's rules.
 
 ::: callout-note
 ### Pre-upload checks are not the final DataStream validator
 
 The checks in this chapter are designed to catch common problems before upload.
-**They do not replace DataStream's own upload validation, which occurs on the backend of their platform when data owners upload files.**
+They do not replace DataStream's own upload validation, which occurs on the backend of the platform when data owners upload files.
 
-You can think of our validation checks in this chapter as a way to identify issues earlier in your reproducible R workflow, and so that data owners do not encounter upload issues related to schema violations.
+You can think of the validation checks in this chapter as a way to identify issues earlier in your reproducible workflow so that data owners do not encounter avoidable upload errors.
 :::
 
 <br>
 
-## R Workflow for Validating A Dataset Against the DataStream Data Schema
+## Data Compilation, Cleaning, and Validation in the Data Rescue Lifecycle
 
-The following R workflow serves as an interactive and reproducible way for you to check if a dataset adheres to the DataStream data schema.
-You can incorporate and adapt the code from this section to help validate a real dataset against the DataStream data schema.
-
-**The code in this chapter is meant to be run in your own RStudio session or project environment. The online guidebook shows the code and explains the workflow, but it does not provide a live R session. To follow along, you can copy the code chunks into RStudio or download the .qmd file for this chapter (linked here) and run the code chunks from there.**
-
-The workflow encompasses a portion of the steps in the diagram below.
-*Note that a full data rescue workflow would begin with preserving raw files and cleaning or reshaping the original data.* In this chapter, we begin later in the workflow and assume that the data have already been cleaned and reshaped into a table that is close to DataStream format.
-Our goal in this chapter is to check that near-final table against the DataStream schema, run final QA/QC (Quality Assurance and Quality Control) checks, and export a final CSV that can be shared with the data owner for upload to the DataStream platform.
+As in the previous chapter, the diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2025](https://doi.org/10.1098/rspb.2022.0938). This chapter focuses on Data Transfer & Compilation, Data Cleaning & Validation, and Updating metadata as issues emerge.
 
 ```{mermaid}
-%%| fig-cap: "Workflow for preparing a near-DataStream-formatted dataset for data owner review. This chapter "
+%%| fig-cap: "DataStream example workflow within the broader data rescue lifecycle. This chapter focuses on highlighted boxes: Data transfer & compilation, data cleaning & validation, metadata updates, and preparing outputs for data owner review."
 flowchart TD
-  A[(Receive raw data files)] --> B[Preserve raw files]
-  B --> C[Clean, organize,<br/>and perform initial QA/QC]
-  C --> D[Format into DataStream schema]
-  D --> E{Pass schema validation?}
-  E -- No --> F[Revisit cleaning workflow]
-  F --> C
-  E -- Yes --> G{Pass final QA/QC checks?}
-  G -- No --> F
-  G -- Yes --> H[Export final CSV]
-  H --> I[Share final CSV<br/>with data owner]
-  I --> J[(Data owner uploads<br/>to DataStream)]
+  S1["Data prioritization<br/><small>Identify high-value or at-risk datasets</small>"]
+
+  S2["Team creation<br/><small>Define roles and responsibilities</small>"]
+
+  S3["Metadata creation<br/><small>Review source files<br/>Create metadata issues table<br/>Create review tables and change log<br/>Draft metadata package</small>"]
+
+  S4["Data transfer & compilation<br/><small>Preserve raw files<br/>Combine source tables<br/>Create inspection table</small>"]
+
+  S5["Data cleaning & validation<br/><small>Clean data<br/>Run QA/QC<br/>Format for DataStream<br/>Run schema validation</small>"]
+
+  U["Update metadata<br/>as issues emerge"]
+
+  R["Prepare package<br/>for data owner review<br/><small>Export final CSV, reports,<br/>validation results, and metadata</small>"]
+
+  S6["Data archiving<br/><small>Data owner uploads finalized<br/>data and metadata to DataStream</small>"]
+
+  S7["Data sharing<br/><small>Archived data are publicly<br/>available for discovery, reuse, and<br/> analysis</small>"]
+
+  S1 --> S2 --> S3 --> S4 --> S5 --> R --> S6 --> S7
+
+  S3 -. "metadata package<br/>is maintained" .-> U
+  S4 -. "source-file and<br/>compilation issues" .-> U
+  S5 -. "cleaning and validation<br/>decisions" .-> U
+  U -. "updated metadata<br/>included in review package" .-> R
 
   classDef prior fill:#f2f2f2,stroke:#999,color:#666;
-  classDef current fill:#ffffff,stroke:#333,stroke-width:2px;
-  class A,B,C prior;
-  class D,E,F,G,H,I current;
+  classDef focusData fill:#fff4e6,stroke:#fd7e14,stroke-width:3px,color:#222;
+  classDef later fill:#f8f9fa,stroke:#bbb,color:#666;
+
+  class S1,S2,S3 prior;
+  class S4,S5,U,R focusData;
+  class S6,S7 later;
 ```
 
-### Importing the DataStream Data Schema into R
+<br>
 
-Because the data schema is in JSON format, we will use the `jsonlite` package to read the DataStream data schema into R, as well as other packages for manipulating data.
+## Step 1: Load Packages and Create Project Folders
 
-This project uses `renv` to manage R package versions. If you are running this code from the project repository for the first time, restore the project package environment before working through the chapter:
+The code in this chapter is meant to be run in your own RStudio session or project environment. You can quickly copy code and paste it into your R session by clicking on the small clipboard in the top right of each code chunk. 
+
+First load the packages that we will need for this chapter.
 
 ```{r}
-#| eval: false
+#| message: false
+#| echo: true
+#| output: false
+# Load packages used in this chapter
+# dplyr, stringr, tibble, readr, and purrr support data cleaning and validation
+# lubridate helps parse and check dates and times
+# sf and ggplot2 support simple spatial validation and mapping
+# jsonlite reads the DataStream JSON schema
 
-renv::restore()
+library(dplyr)
+library(stringr)
+library(tibble)
+library(readr)
+library(purrr)
+library(lubridate)
+library(sf)
+library(ggplot2)
+library(jsonlite)
 ```
 
-You only need to run `renv::restore()` once after cloning or downloading the project, or when the project package environment changes. The code chunks in this chapter assume that the required packages have already been installed through `renv`.
-
 ```{r}
-#| results: hide
-# Load packages used in this chapter.
-# Package installation is managed by renv for this project.
-library(jsonlite)  # Reads JSON files, including the DataStream schema
-library(dplyr)     # Provides data manipulation functions such as filter() and mutate()
-library(purrr)     # Provides mapping functions used to iterate over schema fields
-library(stringr)   # Provides string helpers for detecting blanks and checking patterns
-library(readr)     # Writes CSV files
-library(tibble)    # Creates tidy data frames called tibbles
-```
+#| message: false
+#| echo: true
+#| output: false
+# Create folders for reference files and outputs in your current working directory
+# showWarnings = FALSE prevents messages if the folders already exist
 
-Next, we can create folders for reference files and outputs.
-
-```{r}
-#| results: hide
-# Create a folder for reference files, such as the downloaded DataStream schema, and a folder for outputs
-# showWarnings = FALSE prevents R from warning us if the folder already exists
 dir.create("data_reference", showWarnings = FALSE)
 dir.create("outputs", showWarnings = FALSE)
 ```
 
-Now let's download the machine-readable JSON version of the current DataStream schema.
-The schema is accessed directly from the DataStream website, ensuring that we are accessing the most up-to-date version.
+<br>
+
+## Step 2: Load the Combined Inspection Table
+
+In the previous chapter, we combined field measurements, lab chemistry results, heavy metal results, and site information into a single table called `dmnp_combined`.
+
+In a real project, this table would usually be created by importing and combining several source files.
+To keep this chapter focused on data cleaning, validation, and DataStream formatting, we will begin with the already-combined table.
 
 ```{r}
-# Download the current DataStream schema from DataStream's public schema URL
-download.file(
-  url = "https://datastream.org/schema",
-  destfile = "data_reference/datastream_schema.json", # Save it to your new data_reference folder
-  mode = "wb"
+#| message: false
+#| echo: true
+#| output: true
+# Create the table combining source data from the previous chapter
+# This represents the output from the previous metadata-preparation chapter
+
+dmnp_combined <- tibble::tribble(
+  ~SourceFile, ~DataGroup, ~SiteID, ~SiteName, ~Latitude, ~Longitude,
+  ~SampleDate, ~SampleTime, ~SourceCharacteristic, ~ResultRaw, ~UnitRaw,
+  ~SampleFraction, ~MethodSpeciation,
+  ~DetectionLimitRaw, ~DetectionLimitUnitRaw, ~DetectionLimitTypeRaw,
+  ~LaboratoryName, ~AnalyticalMethod,
+
+  "DMNP_Field_2012_2024.xlsx", "Field", "DMNP-ST-01", "North Fork Big Stream",
+  46.7351, -60.6412, "2012-07-15", "10:30",
+  "DO", "8.4", "mg/L",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  NA_character_, "YSI Pro Plus",
+
+  "DMNP_Field_2012_2024.xlsx", "Field", "DMNP-ST-02", "South Meadow Creek",
+  46.8010, -60.5120, "2014-08-03", "09:15",
+  "Temp", "37.8", "deg C",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  NA_character_, "YSI Pro Plus",
+
+  "DMNP_Field_2012_2024.xlsx", "Field", "DMNP-LK-01", "Clearwater Lake",
+  46.9100, -60.4550, "2019-07-21", "13:00",
+  "pH", "7.4", "None",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  NA_character_, "YSI Pro Plus",
+
+  "DMNP_Field_2012_2024.xlsx", "Field", "DMNP-ST-03", "Upper Falls Outlet",
+  NA_real_, NA_real_, "2024-08-11", "08:55",
+  "SpCond", "125", "uS/cm",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  NA_character_, "YSI Pro Plus",
+
+  "DMNP_Lab_Chemistry_2012_2024.csv", "Lab chemistry", "DMNP-ST-02", "South meadow creek",
+  46.8010, -60.5120, "2018-07-22", "11:45",
+  "Nitrate-N", "0.31", "mg/L",
+  "Filtered", NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  "National Laboratory for Environmental Testing", "Colorimetry",
+
+  "DMNP_Lab_Chemistry_2012_2024.csv", "Lab chemistry", "DMNP-LK-01", "Clearwater Lake",
+  46.9100, -60.4550, "2019-07-21", "13:05",
+  "pH", "7.2", "None",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  "National Laboratory for Environmental Testing", "SM 4500-H+",
+
+  "DMNP_Lab_Chemistry_2012_2024.csv", "Lab chemistry", "DMNP-ST-03", "Upper Falls Outlet",
+  46.8750, -60.5200, "2024-08-11", "09:20",
+  "Hardness", "42", "mg/L",
+  NA_character_, "From CaCO3",
+  NA_character_, NA_character_, NA_character_,
+  "National Laboratory for Environmental Testing", "SM 2340B",
+
+  "DMNP_Metals_2016_2024.xlsx", "Heavy metals", "DMNP-LK-01", "Clearwater Lake",
+  46.9100, -60.4550, "2020-09-10", "14:20",
+  "Pb", "<0.002", "mg/L",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  "Water Chemistry Lab", NA_character_,
+
+  "DMNP_Metals_2016_2024.xlsx", "Heavy metals", "DMNP-LK-01", "Clearwater Lake",
+  46.9100, -60.4550, "2021-09-12", "13:10",
+  "Cadmium", "BDL", "ug/L",
+  "Dissolved", NA_character_,
+  "0.05", "ug/L", "Reporting Limit",
+  "Water Chemistry Lab", "EPA 200.8",
+
+  "DMNP_Metals_2016_2024.xlsx", "Heavy metals", "DMNP-ST-02", "South Meadow Creek",
+  46.8010, -60.5120, "2022-08-18", "10:05",
+  "Copper", "0.004", "mg/L",
+  NA_character_, NA_character_,
+  NA_character_, NA_character_, NA_character_,
+  "Water Chemistry Lab", "EPA 200.8"
 )
+
+# Inspect the structure of the combined data table
+glimpse(dmnp_combined)
 ```
 
-Read the schema into R with the `jsonlite` package.
-The schema is stored as a text-based JSON file, and `jsonlite::read_json()` converts it into a nested list that we can inspect and use for validation checks.
+This is a combined table from the source data that preserves enough [provenance]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Data provenance is the documented history of a data object, including its origin, changes or transformations, and who handled it."} to support cleaning and review.
+The next steps will clean selected fields, document decisions, validate scientific plausibility, and format the result for DataStream.
+
+<br>
+
+Let's also import our site reference list from the previous chapter:
 
 ```{r}
-# Read the downloaded JSON schema into R
-# simplifyVector = FALSE preserves the nested structure of the schema
-# This makes it easier to extract schema rules later
-datastream_schema <- jsonlite::read_json(
-  path = "data_reference/datastream_schema.json", 
-  simplifyVector = FALSE
+#| message: false
+#| echo: true
+#| output: true
+# This represents site-level metadata from DMNP_Site_List.xlsx
+# The site list acts as the current reference for site names, coordinates, coordinate system, and waterbody type
+# We will compare observation records against this reference list
+
+dmnp_site_list <- tibble::tribble(
+  ~SiteID, ~SiteName_reference, ~Latitude_reference, ~Longitude_reference,
+  ~CoordinateReferenceSystem, ~WaterbodyType,
+
+  "DMNP-ST-01", "North Fork Big Stream", 46.7350, -60.6410,
+  "WGS84", "Stream",
+
+  "DMNP-ST-02", "South Meadow Creek", 46.8010, -60.5120,
+  "WGS84", "Stream",
+
+  "DMNP-LK-01", "Clearwater Lake", 46.9100, -60.4550,
+  "WGS84", "Lake",
+
+  "DMNP-ST-03", "Upper Falls Outlet", 46.8750, -60.5200,
+  "WGS84", "Stream"
 )
-```
 
-You should now see the `datastream_schema` object stored in your R environment as a list.
-The schema also includes a version number, and it is a good idea to record this version in your project notes so that others know which version of the schema was used during validation.
-
-```{r}
-# Extract the schema version from the "$comment" field
-# This allows us to document which schema version was used
-schema_version <- datastream_schema[["$comment"]]
-
-# Print the schema version
-schema_version
+glimpse(dmnp_site_list)
 ```
 
 <br>
 
-### Extracting Schema Information
+## Step 3: Create a Cleaning Change Log
 
-The code below extracts the parts of the schema we need for pre-upload checks.
-You do not need to understand the full JSON structure of the schema, but should understand the validation logic being built from it.
-The goal is to pull out schema information that helps us determine whether our dataset follows DataStream's formatting rules.
+As introduced in the previous chapter, a **change log** records important changes, decisions, assumptions, and unresolved issues for a dataset.
+R is just one way to create and maintain a change log, and the most useful format is a decision that can be made by your team.
+The key is that change logs are meant to be read by *humans*, not necessarily machines.
+In our example, the change log can be saved as a CSV, spreadsheet, or project document that is updated throughout the workflow.
 
 ```{r}
-# Define a helper operator
-# If x is NULL, return y. Otherwise, return x
-# This helps us avoid errors when a schema element is missing
+#| message: false
+#| echo: true
+#| output: true
+# Create an empty change log (which we will fill as changes arise)
+# Each row will document a data cleaning decision, assumption, or unresolved issue
+
+cleaning_log <- tibble::tibble(
+  log_id = integer(),
+  processing_area = character(),
+  issue_or_decision = character(),
+  affected_records = character(),
+  action_taken = character(),
+  status = character()
+)
+
+# View the empty change log
+glimpse(cleaning_log)
+```
+
+<br>
+
+## Step 4: Clean and Document the Dataset
+
+In the next few code chunks, we will make several demonstrative cleaning decisions.
+
+These steps are not exhaustive, but they are meant to illustrate the types of actions that commonly occur during water quality data rescue, such as:
+
+- Filling in missing coordinates
+- Standardizing site names
+- Parsing dates and times
+- Interpreting source characteristic names
+- Parsing censored values (such as `<0.002` and `BDL`)
+- Preserving detection-limit information
+- Retaining [provenance]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Data provenance is the documented history of a data object, including its origin, changes or transformations, and who handled it."} and documenting decisions
+
+### Create a working characteristic lookup table
+
+In the previous chapter, we used working names to interpret source-file terms.
+Here, we carry those interpretations forward and begin mapping them to the characteristic names that DataStream uses in their schema.
+In the code chunk below, we create a table listing:
+
+1.  The characteristic name used in the source data
+2.  The characteristic name used by DataStream that we want to map the source name to
+3.  A note briefly justifying the decision
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Create a lookup table for source characteristic names
+# CharacteristicName uses DataStream-compatible names for this example
+# MethodSpeciation and ResultSampleFraction are retained where they matter for interpretation
+
+characteristic_lookup <- tibble::tribble(
+  ~SourceCharacteristic, ~CharacteristicName, ~characteristic_note,
+
+  "DO", "Dissolved oxygen (DO)",
+  "Mapped from field abbreviation",
+
+  "Temp", "Temperature, water",
+  "Mapped from field abbreviation",
+
+  "SpCond", "Specific conductance",
+  "Mapped from field abbreviation",
+
+  "Nitrate-N", "Nitrate",
+  "Mapped from lab abbreviation and reported as nitrogen",
+
+  "pH", "pH",
+  "Source name already matches a common characteristic name",
+
+  "Pb", "Lead",
+  "Mapped from chemical symbol",
+
+  "Cadmium", "Cadmium",
+  "Source name already clear",
+
+  "Copper", "Copper",
+  "Source name already clear",
+
+  "Hardness", "Total hardness",
+  "Mapped from local lab name and reported as CaCO3"
+)
+
+# View the structure of the characteristic lookup table
+glimpse(characteristic_lookup)
+```
+
+### Clean the combined table
+
+The pipe below takes the following steps to clean and update our working data table:
+
+- Create a new table called `dmnp_clean` by joining the combined data table with the site reference list (originally from `DMNP_Site_List.xlsx`) and our lookup table from above for characteristic names (`characteristic_lookup`)
+- Change site names and coordinates by mapping to the site reference list
+- Use the `lubridate` package to standardize date and time values
+- Update time zone values
+- Identify and assign censored values to a consistent detection condition
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Clean and enrich the combined table
+# This creates a working cleaned dataset before DataStream formatting
+# Site names and coordinates are taken from the site list when available
+# Dates are parsed with lubridate::ymd so invalid dates can be detected
+# Censored values are separated from ordinary numeric result values
+
+dmnp_clean <- dmnp_combined |>
+  left_join(dmnp_site_list, by = "SiteID") |>
+  left_join(characteristic_lookup, by = "SourceCharacteristic") |>
+  mutate(
+    # Use the reference site name when available
+    SiteNameClean = coalesce(SiteName_reference, SiteName), # dplyr::coalesce is very useful here!
+
+    # Use reference coordinates when source coordinates are missing
+    LatitudeClean = coalesce(Latitude, Latitude_reference),
+    LongitudeClean = coalesce(Longitude, Longitude_reference),
+
+    # Parse sample dates into Date objects
+    SampleDateParsed = lubridate::ymd(SampleDate),
+
+    # Check whether sample times can be parsed as hour-minute values
+    SampleTimeParsed = lubridate::hm(SampleTime),
+
+    # Standardize times to HH:MM:SS for later DataStream formatting
+    SampleTimeClean = if_else(
+      str_detect(SampleTime, "^\\d{2}:\\d{2}$"),
+      paste0(SampleTime, ":00"),
+      SampleTime
+    ),
+
+    # In this fictional example, the data owner confirmed that source times are Atlantic Daylight Time
+    # In a real project, do not infer time zones without evidence
+    SampleTimeZoneClean = "-04:00",
+
+    # Identify censored values in the source result column
+    IsCensored = str_detect(coalesce(ResultRaw, ""), "^<|BDL|Below|ND"),
+
+    # Extract numeric values for ordinary measured results
+    ResultValueClean = case_when(
+      str_detect(coalesce(ResultRaw, ""), "^<") ~ NA_real_,
+      str_detect(coalesce(ResultRaw, ""), "BDL|Below|ND") ~ NA_real_,
+      TRUE ~ suppressWarnings(as.numeric(ResultRaw))
+    ),
+
+    # Assign a detection condition for censored values
+    ResultDetectionConditionClean = if_else(
+      IsCensored,
+      "Below Detection/Quantification Limit",
+      NA_character_
+    ),
+
+    # Pull detection-limit values from values like <0.002 or from separate source columns
+    DetectionLimitClean = case_when(
+      str_detect(coalesce(ResultRaw, ""), "^<") ~
+        suppressWarnings(as.numeric(str_remove(ResultRaw, "^<"))),
+      !is.na(DetectionLimitRaw) ~
+        suppressWarnings(as.numeric(DetectionLimitRaw)),
+      TRUE ~ NA_real_
+    ),
+
+    # Carry forward detection-limit units and types where they are available
+    DetectionLimitUnitClean = case_when(
+      IsCensored & !is.na(DetectionLimitUnitRaw) ~ DetectionLimitUnitRaw,
+      IsCensored & str_detect(coalesce(ResultRaw, ""), "^<") ~ UnitRaw,
+      TRUE ~ NA_character_
+    ),
+
+    DetectionLimitTypeClean = case_when(
+      IsCensored & !is.na(DetectionLimitTypeRaw) ~ DetectionLimitTypeRaw,
+      IsCensored & str_detect(coalesce(ResultRaw, ""), "^<") ~ "Reporting Limit",
+      TRUE ~ NA_character_
+    )
+  )
+
+# View the cleaned data table
+glimpse(dmnp_clean)
+```
+
+Take a moment to inspect the `dmnp_clean` object.
+Notice that the original `Latitude` and `Longitude` columns still contain the values from the source file, including missing values.
+The cleaned coordinate fields, `LatitudeClean` and `LongitudeClean`, are the fields used later for DataStream formatting.
+
+Also notice that we did not overwrite the raw source values.
+Instead, we created cleaned fields alongside them.
+Site names have been standardized in `SiteNameClean`, dates have been parsed in `SampleDateParsed`, times have been reformatted in `SampleTimeClean`, and time zone information has been added in `SampleTimeZoneClean`.
+Censored values such as `<0.002` and `BDL` are no longer treated as ordinary numeric results; they are represented with `ResultDetectionConditionClean` and detection-limit fields.
+This preserves the original data while making the cleaned values available for validation and DataStream formatting.
+
+### Document cleaning decisions
+
+Now we can document the cleaning actions from above in our change log.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Document key cleaning decisions in the change log
+# This table does not need to capture every line of code
+# It should capture decisions that affect interpretation or reproducibility
+
+cleaning_log <- tibble::tribble(
+  ~processing_area, ~issue_or_decision, ~affected_records, ~action_taken, ~status,
+
+  "Locations",
+  "Some observation records had missing or slightly different coordinates",
+  "DMNP-ST-01; DMNP-ST-03",
+  "Used DMNP_Site_List.xlsx as the reference source for site names and missing coordinates",
+  "Documented decision",
+
+  "Dates and times",
+  "Source times were recorded as HH:MM and did not include seconds",
+  "All records with SampleTime",
+  "Formatted times as HH:MM:SS for DataStream by appending :00",
+  "Documented decision",
+
+  "Dates and times",
+  "Source files did not include time zone values",
+  "All records with SampleTime",
+  "Assigned -04:00 after fictional data owner confirmation that source times represent Atlantic Daylight Time",
+  "Documented decision",
+
+  "Characteristics",
+  "Source files used local abbreviations and names",
+  "DO; Temp; SpCond; Pb; Nitrate-N; Hardness",
+  "Mapped source terms to working DataStream-compatible characteristic names using a lookup table",
+  "Documented decision",
+
+  "Censored values",
+  "Some results were reported as censored values rather than exact numeric values",
+  "<0.002; BDL",
+  "Moved censored results into ResultDetectionCondition and retained detection-limit information where available",
+  "Documented decision",
+
+  "Heavy metals",
+  "Some heavy metal records were missing sample fraction",
+  "Lead; Copper",
+  "Retained missing sample fraction as NA and documented limitation rather than guessing dissolved, total, or total recoverable",
+  "Unresolved limitation"
+) |>
+  mutate(log_id = row_number()) |>
+  select(log_id, everything())
+
+# View the updated change log
+glimpse(cleaning_log)
+```
+
+<br>
+
+## Step 5: Scientific Validation and QA/QC
+
+Since most data has been entered by hand at some point, typos and outliers are to be expected!
+Outliers may also signal issues with equipment used in the field.
+There are several common ways to check the data for outliers and errors.
+The ones we will cover here are:
+
+1.  Data bounds
+2.  Graphical validation
+3.  Spatial validation
+4.  Model-based validation
+
+These checks are meant to flag values for review and they should not be used to automatically delete or manipulate raw source data.
+Outlier detection is inherently non-trivial with no clear rules, and decisions about removing or modifying values should always be discussed with the project team, a senior researcher, and/or the data owner.
+
+<br>
+
+### Data bounds
+
+Water quality data often has logical or expected limits.
+For example, pH values should fall between 0 and 14, and concentrations cannot be negative.
+
+The bounds below are simplified, but demonstrate how we might set up these kinds of checks for similar datasets.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: false
+# Create a simple table of logical or expected value bounds
+# These bounds are used to flag values for review, not to automatically remove them
+
+bounds_table <- tibble::tribble(
+  ~CharacteristicName, ~min_value, ~max_value, ~bounds_note,
+
+  "pH", 0, 14,
+  "pH should be between 0 and 14",
+
+  "Temperature, water", -2, 35,
+  "Surface water temperature outside this range should be reviewed for this example park",
+
+  "Dissolved oxygen (DO)", 0, 25,
+  "Dissolved oxygen should not be negative and very high values should be reviewed",
+
+  "Specific conductance", 0, 5000,
+  "Specific conductance should not be negative",
+
+  "Nitrate", 0, 100,
+  "Nitrate concentration should not be negative",
+
+  "Total hardness", 0, 1000,
+  "Hardness should not be negative",
+
+  "Lead", 0, 100,
+  "Lead concentration should not be negative",
+
+  "Cadmium", 0, 100,
+  "Cadmium concentration should not be negative",
+
+  "Copper", 0, 100,
+  "Copper concentration should not be negative"
+)
+```
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Check cleaned result values against the bounds table
+# Censored values have NA ResultValueClean and are not checked here as exact values
+
+bounds_report <- dmnp_clean |>
+  left_join(bounds_table, by = "CharacteristicName") |>
+  mutate(row = row_number()) |>
+  filter(
+    !is.na(ResultValueClean),
+    !is.na(min_value),
+    ResultValueClean < min_value | ResultValueClean > max_value
+  ) |>
+  transmute(
+    row,
+    SourceFile,
+    SiteID,
+    CharacteristicName,
+    ResultValue = ResultValueClean,
+    Unit = UnitRaw,
+    issue = paste0(
+      "Value falls outside expected bounds: ",
+      min_value,
+      " to ",
+      max_value,
+      ". ",
+      bounds_note
+    )
+  )
+
+# Inspect the bounds report table
+glimpse(bounds_report)
+```
+
+In this example, the water temperature value of `37.8 deg C` is flagged for review.
+The team should return to the source file, check for transcription or unit errors, and discuss whether the value is plausible for the site and date.
+
+<br>
+
+### Graphical validation
+
+The Decent Mountains National Park example dataset is intentionally small (10 rows of observations), so it is not large enough to demonstrate graphical outlier detection very well.
+A plot with only a few observations can help inspect individual records, but it does not show the kinds of patterns we usually look for in larger datasets.
+
+To better demonstrate graphical validation, we will create a larger simulated dataset that follows the same basic structure as the DMNP data.
+
+The goal here is to show how plots can help identify values that are obviously different from the rest of the data or outside expected review bounds.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: false
+
+# Set a seed so the simulated site/date assignments are reproducible
+
+set.seed(123)
+
+# Create a helper function for simulating values for one characteristic
+# The ordinary values are generated from normal quantiles so they are approximately normal
+# Outlier values are then appended for demonstration
+
+simulate_characteristic <- function(characteristic,
+                                    unit,
+                                    mean_value,
+                                    sd_value,
+                                    outlier_values = numeric(0),
+                                    n_typical = 40,
+                                    digits = 2) {
+  
+  typical_values <- qnorm(
+    ppoints(n_typical),
+    mean = mean_value,
+    sd = sd_value
+  )
+  
+  values <- round(
+    c(sample(typical_values), outlier_values),
+    digits = digits
+  )
+  
+  tibble::tibble(
+    SiteID = sample(
+      c("DMNP-ST-01", "DMNP-ST-02", "DMNP-ST-03", "DMNP-LK-01"),
+      size = length(values),
+      replace = TRUE
+    ),
+    SampleDateParsed = sample(
+      seq.Date(
+        from = as.Date("2012-06-01"),
+        to = as.Date("2024-09-30"),
+        by = "4 weeks"
+      ),
+      size = length(values),
+      replace = TRUE
+    ),
+    CharacteristicName = characteristic,
+    UnitRaw = unit,
+    ResultValueClean = values,
+    inserted_for_demo = c(
+      rep(FALSE, n_typical),
+      rep(TRUE, length(outlier_values))
+    )
+  )
+}
+```
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Create a larger fake dataset for graphical QA/QC
+# Ordinary values are approximately normally distributed
+# Some outliers are intentionally inserted for review
+
+dmnp_graphical_demo <- dplyr::bind_rows(
+  simulate_characteristic(
+    characteristic = "pH",
+    unit = "None",
+    mean_value = 7.2,
+    sd_value = 0.3,
+    outlier_values = c(-0.5, 15.2),
+    digits = 2
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Temperature, water",
+    unit = "deg C",
+    mean_value = 14,
+    sd_value = 4,
+    outlier_values = c(39.5),
+    digits = 1
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Dissolved oxygen (DO)",
+    unit = "mg/L",
+    mean_value = 9.5,
+    sd_value = 1.2,
+    outlier_values = c(-1.2, 26.5),
+    digits = 1
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Specific conductance",
+    unit = "uS/cm",
+    mean_value = 125,
+    sd_value = 20,
+    outlier_values = c(950),
+    digits = 0
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Nitrate",
+    unit = "mg/L",
+    mean_value = 0.40,
+    sd_value = 0.12,
+    outlier_values = c(6.8),
+    digits = 2
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Total hardness",
+    unit = "mg/L",
+    mean_value = 45,
+    sd_value = 10,
+    outlier_values = c(-12, 350),
+    digits = 1
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Lead",
+    unit = "mg/L",
+    mean_value = 0.006,
+    sd_value = 0.0015,
+    outlier_values = c(0.08),
+    digits = 4
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Cadmium",
+    unit = "ug/L",
+    mean_value = 0.20,
+    sd_value = 0.08,
+    outlier_values = c(3.5),
+    digits = 2
+  ),
+  
+  simulate_characteristic(
+    characteristic = "Copper",
+    unit = "mg/L",
+    mean_value = 0.006,
+    sd_value = 0.002,
+    outlier_values = c(0.09),
+    digits = 4
+  )
+)
+
+# Inspect the structure of the simulated dataset
+glimpse(dmnp_graphical_demo)
+```
+
+Next, we define simple review bounds for the simulated dataset.
+These are not universal rules or regulatory thresholds.
+They are example screening bounds used to teach graphical outlier detection.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Create example review bounds for the simulated graphical validation dataset
+# These bounds are used to flag values for review, not to automatically delete data
+
+graphical_bounds <- tibble::tribble(
+  ~CharacteristicName, ~UnitRaw, ~min_value, ~max_value,
+  
+  "pH", "None", 0, 14,
+  "Temperature, water", "deg C", -2, 35,
+  "Dissolved oxygen (DO)", "mg/L", 0, 25,
+  "Specific conductance", "uS/cm", 0, 500,
+  "Nitrate", "mg/L", 0, 5,
+  "Total hardness", "mg/L", 0, 300,
+  "Lead", "mg/L", 0, 0.05,
+  "Cadmium", "ug/L", 0, 2,
+  "Copper", "mg/L", 0, 0.05
+)
+
+# View table of graphical bounds
+glimpse(graphical_bounds)
+```
+
+Now we can compare each simulated result to its review bounds.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Join the simulated data to the review bounds
+# outside_review_bounds identifies values that fall outside the expected range
+
+dmnp_graphical_demo_checked <- dmnp_graphical_demo |>
+  left_join(
+    graphical_bounds,
+    by = c("CharacteristicName", "UnitRaw")
+  ) |>
+  mutate(
+    outside_review_bounds = ResultValueClean < min_value |
+      ResultValueClean > max_value,
+    plot_label = paste0(CharacteristicName, " (", UnitRaw, ")")
+  )
+
+# View the table with simulated data and with values identified outside of bounds
+glimpse(dmnp_graphical_demo_checked)
+```
+
+Now we can plot all values through time, faceted by characteristic.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Create a small bounds table for plotting
+# This gives ggplot one minimum and maximum line per facet
+
+bounds_for_plot <- dmnp_graphical_demo_checked |>
+  distinct(plot_label, min_value, max_value)
+
+# Plot values by date and characteristic
+# Facets allow each characteristic to be reviewed on its own scale
+# Dashed lines show the example review bounds
+
+dmnp_graphical_demo_checked |>
+  ggplot(aes(x = SampleDateParsed, y = ResultValueClean)) +
+  geom_hline(
+    data = bounds_for_plot,
+    aes(yintercept = min_value),
+    linetype = "dashed",
+    inherit.aes = FALSE
+  ) +
+  geom_hline(
+    data = bounds_for_plot,
+    aes(yintercept = max_value),
+    linetype = "dashed",
+    inherit.aes = FALSE
+  ) +
+  geom_point(
+    aes(shape = outside_review_bounds),
+    size = 2
+  ) +
+  facet_wrap(~ plot_label, scales = "free_y") +
+  labs(
+    x = "Sample date",
+    y = "Result value",
+    shape = "Outside review bounds?",
+    title = "Graphical outlier review for simulated DMNP water quality data",
+    subtitle = "Dashed lines show example review bounds for each characteristic"
+  )
+```
+
+This plot makes it easy to see which values are unusual relative to values of the same type.
+
+We can also create a table of the records flagged by the graphical review.
+
+```{r}
+# Create a report of records that fall outside the graphical review bounds
+
+graphical_outlier_report <- dmnp_graphical_demo_checked |>
+  filter(outside_review_bounds) |>
+  arrange(CharacteristicName, SampleDateParsed) |>
+  transmute(
+    SiteID,
+    SampleDate = SampleDateParsed,
+    CharacteristicName,
+    ResultValue = ResultValueClean,
+    Unit = UnitRaw,
+    expected_range = paste(min_value, "to", max_value, UnitRaw),
+    issue = "Value falls outside example review bounds and should be checked"
+  )
+
+# View the structure of the report
+glimpse(graphical_outlier_report)
+```
+
+::: callout-warning
+### Do not automatically remove outliers
+
+Graphical validation is a screening step.
+A value that looks unusual may be a real environmental observation, a transcription error, a unit error, a method issue, or a result from unusual field conditions.
+
+Before removing or changing values, return to the source files, check field or lab notes, and discuss the record with the project team and/or data owner.
+:::
+
+In a real project, you would run this same type of workflow on the actual cleaned dataset rather than on simulated data.
+You would also adjust the review bounds, grouping variables, and plots based on the dataset context.
+For example, you might review values separately by characteristic, unit, site, season, waterbody type, method, or lab.
+
+<br>
+
+### Validation of spatial data
+
+Coordinates and spatial data should also be checked as part of a cleaning workflow.
+In a real project, this might involve plotting points on a map and checking whether they fall inside the expected park boundary or near an expected waterbody.
+
+For this example, we will use the R package `sf` for working with spatial objects to create a simple bounding box around the fictional park and check whether site coordinates fall inside it.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: false
+# Create a simple set of unique site coordinates from the cleaned data
+# sf::st_as_sf converts the table into a spatial object using longitude and latitude
+
+dmnp_sites_sf <- dmnp_clean |>
+  distinct(SiteID, SiteNameClean, LongitudeClean, LatitudeClean) |>
+  filter(!is.na(LongitudeClean), !is.na(LatitudeClean)) |>
+  st_as_sf(
+    coords = c("LongitudeClean", "LatitudeClean"),
+    crs = 4326 # coordinate reference system with EPSG code 4326 (This CRS = WGS 84)
+  )
+```
+
+```{r}
+#| message: false
+#| echo: true
+#| output: false
+# Create a simple bounding box for the fictional park using lat/long coordinates
+# In a real project, you would use an actual park boundary or expected study area polygon
+
+dmnp_park_bbox <- st_as_sfc(
+  st_bbox(
+    c(
+      xmin = -60.70,
+      xmax = -60.40,
+      ymin = 46.70,
+      ymax = 46.95
+    ),
+    crs = 4326 # coordinate reference system with EPSG code 4326 (This CRS = WGS 84)
+  )
+)
+```
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Check whether each site falls inside the expected park boundary
+# Points outside the boundary would be flagged as FALSE
+
+dmnp_sites_checked <- dmnp_sites_sf |>
+  mutate(
+    inside_expected_area = lengths(sf::st_within(geometry, dmnp_park_bbox)) > 0
+  )
+
+# Plot the site coordinates against the expected study area
+# If a point fell outside the rectangle, it would appear outside the bounding box
+# and would be marked as FALSE in the legend
+
+ggplot() +
+  geom_sf(data = dmnp_park_bbox, fill = NA) +
+  geom_sf(
+    data = dmnp_sites_checked,
+    aes(shape = inside_expected_area),
+    size = 2.5
+  ) +
+  labs(
+    title = "DMNP site coordinates for spatial QA/QC",
+    subtitle = "Points outside the bounding box would be flagged for review",
+    shape = "Inside expected area?"
+  )
+```
+In this example, all site coordinates fall inside the expected study area.
+If a coordinate had been entered incorrectly, such as with the wrong sign, swapped latitude and longitude, or a transcription error, the point would appear outside the bounding box and would be marked as `FALSE` in the legend.
+
+The plot is a visual check, but the `inside_expected_area` column is the reproducible check.
+That column can be used to create a spatial QA/QC report.
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Check whether each site falls inside the expected park boundary
+# lengths(st_within(...)) == 0 identifies points outside the boundary
+
+spatial_report <- dmnp_sites_sf |>
+  mutate(
+    inside_expected_area = lengths(st_within(geometry, dmnp_park_bbox)) > 0
+  ) |>
+  filter(!inside_expected_area) |>
+  st_drop_geometry() |>
+  transmute(
+    SiteID,
+    SiteName = SiteNameClean,
+    issue = "Site coordinate falls outside the expected study area"
+  )
+
+spatial_report
+```
+
+<br>
+
+### Model-based outlier detection with z-scores
+
+For approximately normally distributed data, a simple model-based approach is to calculate [z-scores]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A z-score tells you how many standard deviations a data point is from the mean, helping you spot values that are typical or unusual."} within each characteristic.
+A common rule of thumb is to flag values with z-scores less than `-3` or greater than `3`, though the type of dataset and its ecological context is likely to influence this interpretation.
+
+Note that this is only a screening method, and tt should not be used blindly for small datasets, skewed data, censored data, or data with strong seasonal or site effects.
+
+We will use the simulated data from above to first check that our data follow (approximately) normal distributions.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Check whether values for each characteristic are approximately normally distributed
+# The Shapiro-Wilk test is used here as a simple screening check
+# Small p-values suggest that the values may not be normally distributed
+
+normality_review <- dmnp_graphical_demo |>
+  filter(
+    !is.na(ResultValueClean),
+    inserted_for_demo == FALSE
+  ) |>
+  group_by(CharacteristicName) |>
+  summarise(
+    n_values = n(),
+    mean_value = mean(ResultValueClean, na.rm = TRUE),
+    sd_value = sd(ResultValueClean, na.rm = TRUE),
+    shapiro_p_value = if (n_values >= 3) {
+      shapiro.test(ResultValueClean)$p.value
+    } else {
+      NA_real_
+    },
+    normality_note = case_when(
+      is.na(shapiro_p_value) ~ "Too few values to assess normality",
+      shapiro_p_value < 0.05 ~ "Values may not be normally distributed; use z-scores cautiously",
+      TRUE ~ "No strong evidence against normality from this screening check"
+    ),
+    .groups = "drop"
+  )
+
+normality_review
+```
+Our variables do not appear to violate normality, so we can proceed with using z-scores (but know that other options are available if data does not adhere to a normal distribution).
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Calculate simple z-scores within each characteristic on the simulated data
+# This is most useful when there are enough comparable records within a group
+# The small DMNP example may not have enough values for this to be very informative
+
+zscore_report <- dmnp_graphical_demo |>
+  filter(!is.na(ResultValueClean)) |>
+  group_by(CharacteristicName) |>
+  mutate(
+    n_values = n(),
+    mean_value = mean(ResultValueClean, na.rm = TRUE),
+    sd_value = sd(ResultValueClean, na.rm = TRUE),
+    z_score = if_else(
+      n_values >= 3 & !is.na(sd_value) & sd_value > 0,
+      (ResultValueClean - mean_value) / sd_value,
+      NA_real_
+    )
+  ) |>
+  ungroup() |>
+  filter(!is.na(z_score), abs(z_score) > 3) |>
+  transmute(
+    SiteID,
+    CharacteristicName,
+    ResultValue = ResultValueClean,
+    z_score,
+    issue = "Absolute z-score is greater than 3; review as possible outlier"
+  )
+
+# Check which values have absolute z-scores greater than 3
+glimpse(zscore_report)
+```
+
+It looks like we have a number of outliers from our simulated dataset that we will want to flag. In many real water quality datasets, you could refine this approach by grouping values by characteristic, unit, site type, season, or monitoring program.
+Always discuss suspected outliers before removing or changing data.
+
+<br>
+
+### Summarize scientific QA/QC
+
+We can now summarize our scientific validation efforts in a saved report.
+Because the graphical validation section uses simulated teaching data, those records are included in the report with the label `Graphical validation demo`.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Combine scientific validation reports into one QA/QC report
+# Each report is converted to a shared format before combining
+# The graphical validation report comes from simulated teaching data, so we label it clearly
+
+scientific_qaqc_report <- bind_rows(
+  bounds_report |>
+    transmute(
+      check_type = "Data bounds",
+      record = paste(SiteID, CharacteristicName, sep = " | "),
+      value = as.character(ResultValue),
+      issue
+    ),
+
+  zscore_report |>
+    transmute(
+      check_type = "Z-score outlier screen",
+      record = paste(SiteID, CharacteristicName, sep = " | "),
+      value = as.character(ResultValue),
+      issue
+    ),
+
+  graphical_outlier_report |>
+    transmute(
+      check_type = "Graphical validation demo",
+      record = paste(SiteID, CharacteristicName, sep = " | "),
+      value = paste(ResultValue, Unit),
+      issue = paste(issue, "Expected range:", expected_range)
+    ),
+
+  spatial_report |>
+    transmute(
+      check_type = "Spatial validation",
+      record = paste(SiteID, SiteName, sep = " | "),
+      value = NA_character_,
+      issue
+    )
+)
+
+# View the report
+glimpse(scientific_qaqc_report)
+```
+
+```{r}
+#| message: false
+#| echo: true
+#| output: false
+# Save the scientific QA/QC report
+# This report can be shared with team members for review
+
+if (nrow(scientific_qaqc_report) > 0) {
+  readr::write_csv(
+    scientific_qaqc_report,
+    "outputs/dmnp_scientific_qaqc_report.csv"
+  )
+}
+```
+
+<br>
+
+## Step 7: Format the Dataset for DataStream
+
+After cleaning and scientific validation, we can create a DataStream-formatted table.
+
+This step translates our cleaned working table, `dmnp_clean`, into DataStream's expected field names and controlled vocabulary values.
+This is one of the most important steps in the workflow because it is where project-specific column names, units, methods, and metadata are converted into a structure that can be uploaded to DataStream.
+
+In the code below, we are doing several things at once:
+
+- Selecting the columns that will be included in the DataStream export
+- Renaming cleaned project-specific columns to DataStream field names
+- Adding dataset-level information that applies to every row
+- Recoding source values to DataStream controlled vocabulary values
+- Carrying forward cleaned dates, times, locations, methods, units, and result values
+- Representing censored values using detection-condition and detection-limit fields
+- Preserving important unresolved issues in `ResultComment`
+
+The function `transmute()` is useful here because it creates a new table that contains only the columns listed inside the function.
+This helps ensure that extra working columns from the cleaning process are not accidentally included in the final export.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Create a DataStream-formatted export table
+# dmnp_clean is the cleaned working table
+# datastream_export is the table we are preparing for DataStream upload
+
+datastream_export <- dmnp_clean |>
+  transmute(
+    # Dataset-level information
+    # This value is repeated on every row of the upload file
+
+    DatasetName = "Decent Mountains National Park Freshwater Monitoring",
+
+    # Monitoring location information
+    # These columns use the cleaned site names and coordinates created earlier
+
+    MonitoringLocationID = SiteID,
+    MonitoringLocationName = SiteNameClean,
+    MonitoringLocationLatitude = LatitudeClean,
+    MonitoringLocationLongitude = LongitudeClean,
+    MonitoringLocationHorizontalCoordinateReferenceSystem =
+      CoordinateReferenceSystem,
+
+    # Recode source waterbody types to DataStream location types
+    # Unknown or unresolved values are left blank rather than guessed
+
+    MonitoringLocationType = case_when(
+      WaterbodyType == "Stream" ~ "River/Stream",
+      WaterbodyType == "Lake" ~ "Lake/Pond",
+      TRUE ~ NA_character_
+    ),
+
+    # Activity information
+    # Field measurements and lab-analyzed samples use different activity types
+
+    ActivityType = case_when(
+      DataGroup == "Field" ~ "Field Msr/Obs",
+      TRUE ~ "Sample-Routine"
+    ),
+
+    # All observations in this example are from surface water
+
+    ActivityMediaName = "Surface Water",
+
+    # Date and time information
+    # These fields use the cleaned date, time, and time zone values
+
+    ActivityStartDate = as.character(SampleDateParsed),
+    ActivityStartTime = SampleTimeClean,
+    ActivityStartTimeZone = SampleTimeZoneClean,
+
+    # Characteristic and result metadata
+    # These fields describe what was measured and how the result should be interpreted
+
+    CharacteristicName = CharacteristicName,
+    MethodSpeciation = MethodSpeciation,
+    ResultSampleFraction = SampleFraction,
+
+    # Result values
+    # Exact numeric results go in ResultValue
+    # Censored results have NA here and are described in detection-condition fields below
+
+    ResultValue = ResultValueClean,
+    ResultUnit = UnitRaw,
+    ResultValueType = "Actual",
+
+    # Detection-limit information
+    # These fields are used for censored values such as <0.002 or BDL
+
+    ResultDetectionCondition = ResultDetectionConditionClean,
+    ResultDetectionQuantitationLimitMeasure = DetectionLimitClean,
+    ResultDetectionQuantitationLimitUnit = DetectionLimitUnitClean,
+    ResultDetectionQuantitationLimitType = DetectionLimitTypeClean,
+
+    # Result status
+    # This example assumes final results, but real projects should confirm this
+
+    ResultStatusID = "Final",
+
+    # Method and laboratory information
+    # Field records use the field instrument name
+    # Lab records carry forward the analytical method and lab name from the source data
+
+    ResultAnalyticalMethodName = case_when(
+      DataGroup == "Field" ~ "YSI Pro Plus multiparameter meter",
+      TRUE ~ AnalyticalMethod
+    ),
+
+    LaboratoryName = if_else(
+      DataGroup == "Field",
+      NA_character_,
+      LaboratoryName
+    ),
+
+    # Record-level comments
+    # These comments preserve important unresolved issues without guessing
+
+    ResultComment = case_when(
+      SourceCharacteristic == "Pb" & is.na(SampleFraction) ~
+        "Sample fraction missing in source file; result should not be assumed dissolved, total, or total recoverable",
+
+      SourceCharacteristic == "Copper" & is.na(SampleFraction) ~
+        "Sample fraction missing in source file; result should not be assumed dissolved, total, or total recoverable",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+# View the formatted table
+# The table now uses DataStream field names, but still needs schema validation
+
+glimpse(datastream_export)
+```
+
+```{r}
+# Write the DataStream-formatted table to CSV
+# This is the file that would be shared with the data owner for review and upload
+
+readr::write_csv(
+  datastream_export,
+  "outputs/dmnp_datastream_export.csv"
+)
+```
+
+At this point, `datastream_export` has been reshaped into a DataStream-style table.
+However, formatting the table does not guarantee that every value is valid.
+The next step is to check the table against DataStream's JSON schema.
+
+
+
+<br>
+
+## Step 8: Check Adherence to the DataStream Schema
+
+The code block below downloads the current DataStream JSON schema, extracts key schema rules, and runs a set of pre-upload checks on `datastream_export`. It is primarily intended as a reference for checking if your dataset adheres to DataStream's expected formatting.
+
+You do not need to understand every line of this code chunk, and it is long!
+In your own project, you can treat this as a validation utility: run it, inspect the report, fix issues upstream in your cleaning workflow, and run it again.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+
+# Download, read, and use the DataStream JSON schema to validate a formatted dataset
+# This block creates one validation report and saves it to outputs/datastream_validation_report.csv
+
+# Download the current DataStream schema in JSON format
+download.file(
+  url = "https://datastream.org/schema",
+  destfile = "data_reference/datastream_schema.json",
+  mode = "wb"
+)
+
+# Read the schema into R
+datastream_schema <- jsonlite::read_json(
+  path = "data_reference/datastream_schema.json",
+  simplifyVector = FALSE
+)
+
+# Record the schema version
+schema_version <- datastream_schema[["$comment"]]
+
+# Helper operator for replacing NULL with a fallback value
 `%||%` <- function(x, y) {
   if (is.null(x)) y else x
 }
 
-# Extract the main part of the schema that contains field definitions
-# In this schema, the core object is stored inside allOf[[1]]
+# Extract the main schema object
 schema_core <- datastream_schema$allOf[[1]]
-
-# Extract the schema properties for each field
-# Each property corresponds to a DataStream field, such as DatasetName,
-# MonitoringLocationID, ActivityStartDate, or CharacteristicName
 schema_properties <- schema_core$properties
-
-# Extract the names of all fields defined in the DataStream schema
 schema_fields <- names(schema_properties)
-
-
-# Extract the fields that are required by the schema
-# If the schema does not include a required section, this returns an empty character vector
 required_fields <- schema_core$required %||% character(0)
-
-# Extract dependency rules for the schema
-# These are one type of conditional rule:
-# 'Dependencies' are cases where if one field is populated, then one
-# or more related fields must also be populated
 schema_dependencies <- schema_core$dependencies %||% list()
-```
 
-After running the above, you should see each of the new objects in your R environment as lists that have now been extracted from the downloaded schema.
-
-Inspect each of the new objects.
-For example, the object `schema_fields` contains the names of all fields defined by DataStream.
-
-```{r}
-schema_fields
-```
-
-The object `required_fields` contains fields that are required by the schema.
-
-```{r}
-required_fields
-```
-
-<br>
-
-### Create a Field Summary
-
-Now we will create a summary table that describes each DataStream field.
-If you are interested in fully understanding what this function is doing, in-line comments are included throughout.
-
-```{r}
-# Helper function for extracting text values from the schema
-# Some schema fields have a single text value, some have multiple values,
-# and some do not have the value at all
+# Helper functions for extracting schema details
 get_chr <- function(x) {
   if (is.null(x)) {
-    # If the schema field does not contain this information,
-    # return NA so the summary table still has a value
     NA_character_
   } else {
-    # If the schema field contains one or more values,
-    # collapse them into a single character string
     paste(unlist(x), collapse = ", ")
   }
 }
 
-# Helper function for extracting numeric values from the schema
-# This is used for fields such as minimum, maximum, minLength, and maxLength
 get_num <- function(x) {
   if (is.null(x)) {
-    # If the schema field does not include a numeric limit,
-    # return NA.
     NA_real_
   } else {
-    # Extract the first numeric value.
-    # For this schema, limits such as minimum and maximum
-    # are expected to contain a single value.
     as.numeric(x[[1]])
   }
 }
 
-# Create a summary table of the DataStream schema fields.
-# Each element of schema_properties corresponds to one DataStream field,
-# such as DatasetName, MonitoringLocationID, ActivityStartDate,
-# CharacteristicName, or ResultUnit.
+# Create a compact schema summary
 schema_field_summary <- purrr::imap_dfr(
   schema_properties,
   function(field_schema, field_name) {
-    
-    # For each DataStream field, extract the pieces of information
-    # that are useful for validation.
     tibble::tibble(
-      # Name of the DataStream field
       field = field_name,
-      
-      # Expected data type, such as string or number
       type = get_chr(field_schema$type),
-      
-      # Expected format, such as date
       format = get_chr(field_schema$format),
-      
-      # Minimum numeric value, if defined
       minimum = get_num(field_schema$minimum),
-      
-      # Maximum numeric value, if defined
       maximum = get_num(field_schema$maximum),
-      
-      # Minimum number of characters, if defined
       min_length = get_num(field_schema$minLength),
-      
-      # Maximum number of characters, if defined
       max_length = get_num(field_schema$maxLength),
-      
-      # TRUE if the field has a controlled vocabulary
-      # stored as "enum" value in the schema
       has_allowed_values = !is.null(field_schema$enum)
     )
   }
 )
 
-# View the resulting field summary table
-schema_field_summary
-```
-
-This summary table gives us a compact view of the schema fields, including field type, date format, numeric limits, and whether a field has a controlled vocabulary.
-
-<br>
-
-### Extract Allowed Values
-
-Many DataStream fields use controlled vocabularies.
-These are represented in the schema as allowed values.
-For example, `MonitoringLocationType`, `ActivityType`, `ActivityMediaName`, `CharacteristicName`, and `ResultUnit` all use controlled vocabularies.
-The code below will extract all controlled vocabulary values from the schema.
-
-```{r}
-# Extract all controlled vocabulary values from the schema
-# In JSON schema, controlled vocabularies are stored as "enum" values
+# Extract allowed values from enum fields
 allowed_values <- purrr::imap_dfr(
   schema_properties,
   function(field_schema, field_name) {
-    
-    # If a field does not have an enum, it does not have allowed values
-    # that we need to extract here
     if (is.null(field_schema$enum)) {
       return(tibble::tibble())
     }
-    
-    # If the field does have an enum, create a table with:
-    #   1. the field name; and
-    #   2. each allowed value for that field
+
     tibble::tibble(
       field = field_name,
       allowed_value = as.character(unlist(field_schema$enum))
@@ -349,162 +1460,44 @@ allowed_values <- purrr::imap_dfr(
   }
 )
 
-# View the table of allowed values.
-allowed_values
-```
-
-In the `allowed_values` table, notice that certain fields will only accept one or a few values (e.g., `MonitoringLocationHorizontalCoordinateReferenceSystem` only accepts `NAD27`,`NAD83`,`UNKWN`, `WGS72`, or `WGS84`), while other fields may accept many values (e.g., `CharacteristicName` has \>1500 allowed values).
-
-```{r}
-# Filter the allowed values table to count the number of allowed values for CharacteristicName
-allowed_values |>
-  dplyr::filter(field == "CharacteristicName") |>
-  nrow()
-```
-
-<br>
-
-### Example Dataset
-
-Suppose we have reshaped a small water quality dataset as we prepare it for DataStream.
-The table below is close to DataStream format, but intentionally includes errors.
-Let's use this example dataset to show how validation checks would work on an example dataset.
-
-```{r}
-# Create a small example dataset that resembles a DataStream-formatted export.
-# This dataset intentionally includes several common issues seen during
-# data standardization and upload preparation.
-
-datastream_export <- tibble::tribble(
-  ~DatasetName, ~MonitoringLocationID, ~MonitoringLocationName,
-  ~MonitoringLocationLatitude, ~MonitoringLocationLongitude,
-  ~MonitoringLocationHorizontalCoordinateReferenceSystem,
-  ~MonitoringLocationType, ~ActivityType, ~ActivityMediaName,
-  ~ActivityStartDate, ~ActivityStartTime, ~ActivityStartTimeZone,
-  ~CharacteristicName, ~ResultValue, ~ResultUnit, ~ResultValueType,
-  ~ResultDetectionCondition,
-  ~ResultDetectionQuantitationLimitMeasure,
-  ~ResultDetectionQuantitationLimitUnit,
-  ~ResultDetectionQuantitationLimitType,
-  ~SourceFile, ~SourceSheet,
-  
-  # Row 1: A valid-looking temperature observation.
-  # This row gives us one example that should mostly pass the basic checks.
-  "Example Mountain Lake Monitoring", "ML-01", "Clear Lake",
-  49.850, -123.100, "WGS84",
-  "Lake/Pond", "Field Msr/Obs", "Surface Water",
-  "2024-07-15", "10:30:00", "-07:00",
-  "Temperature, water", 14.2, "deg C", "Actual",
-  NA_character_,
-  NA_real_, NA_character_, NA_character_,
-  "lake_data_2024.xlsx", "July field data",
-  
-  # Row 2: Same apparent location, but with slightly different coordinates.
-  # This can happen when coordinates vary across files or years because of
-  # rounding, GPS precision, or inconsistent transcription.
-  # This row also includes an invalid date format, invalid time format,
-  # and a CharacteristicName that may not exactly match DataStream's vocabulary.
-  "Example Mountain Lake Monitoring", "ML-01", "Clear Lake",
-  49.85012, -123.10009, "WGS84",
-  "Lake/Pond", "Field Msr/Obs", "Surface Water",
-  "07/15/2024", "10:35 AM", "-07:00",
-  "Dissolved oxygen", 8.9, "mg/L", "Actual",
-  NA_character_,
-  NA_real_, NA_character_, NA_character_,
-  "lake_data_2024.xlsx", "July field data",
-  
-  # Row 3: Same apparent location again, but with different capitalization
-  # in both the location ID and name.
-  # Because location IDs and names are case sensitive, this could create
-  # duplicate locations during upload if not corrected.
-  # This row also includes a negative pH value, which is scientifically invalid
-  # even if it may not be caught by basic schema checks.
-  "Example Mountain Lake Monitoring", "ml-01", "Clear lake",
-  49.850, -123.100, "WGS84",
-  "Lake/Pond", "Field Msr/Obs", "Surface Water",
-  "2024-07-15", "10:40:00", "-07:00",
-  "pH", -1, "None", "Actual",
-  NA_character_,
-  NA_real_, NA_character_, NA_character_,
-  "lake_data_2024.xlsx", "July field data",
-  
-  # Row 4: Missing coordinates and missing time zone.
-  # Missing coordinates and time zones are common issues in raw data.
-  # This row also uses "Water" instead of the DataStream-controlled value
-  # "Surface Water".
-  "Example Mountain Lake Monitoring", "ML-02", "Mirror Lake",
-  NA_real_, NA_real_, "WGS84",
-  "Lake/Pond", "Sample-Routine", "Water",
-  "2024-07-16", "11:20:00", NA_character_,
-  "Specific conductance", 125, "uS/cm", "Actual",
-  NA_character_,
-  NA_real_, NA_character_, NA_character_,
-  "lake_data_2024.xlsx", "July chemistry",
-  
-  # Row 5: A censored result.
-  # The result is flagged as below a detection/quantification limit,
-  # but the limit value, limit unit, and limit type are missing.
-  # This is a common detection-limit problem in historical datasets.
-  "Example Mountain Lake Monitoring", "ML-02", "Mirror Lake",
-  49.910, -123.050, "WGS84",
-  "Lake/Pond", "Sample-Routine", "Surface Water",
-  "2024-07-16", "11:25:00", "-07:00",
-  "Ammonia and ammonium", NA_real_, NA_character_, "Actual",
-  "Below Detection/Quantification Limit",
-  NA_real_, NA_character_, NA_character_,
-  "lab_results_2024.xlsx", "Nutrients",
-  
-  # Row 6: A negative hardness value.
-  # This kind of issue is not just a formatting problem; it requires
-  # scientific QA/QC because hardness should not be less than or equal to zero.
-  "Example Mountain Lake Monitoring", "ML-03", "Long Lake",
-  49.960, -123.020, "WGS84",
-  "Lake/Pond", "Sample-Routine", "Surface Water",
-  "2024-07-17", "09:15:00", "-07:00",
-  "Hardness, Ca, Mg", -5, "mg/L", "Actual",
-  NA_character_,
-  NA_real_, NA_character_, NA_character_,
-  "lab_results_2024.xlsx", "General chemistry"
+# Convert schema dependencies to a table
+dependency_table <- purrr::imap_dfr(
+  schema_dependencies,
+  function(dependent_fields, trigger_field) {
+    tibble::tibble(
+      trigger_field = trigger_field,
+      dependent_field = as.character(unlist(dependent_fields))
+    )
+  }
 )
-```
 
-This example includes several possible issues: - Dissolved oxygen may not exactly match the allowed DataStream value.
-- One date uses MM/DD/YYYY instead of YYYY-MM-DD.
-- One row has a detection condition but no result value or detection limit information.
-- Some sample records may require additional analytical method information before upload.
-
-<br>
-
-### Validation Helper Functions
-
-Before checking how our example dataset adheres to the schema, we will create a few "helper functions." The purpose of these functions is to make validation easier to read and interpret.
-
-```{r}
-# Helper function for identifying blank values
-# This treats both NA values and empty strings as blank
+# Helper for blank values
 is_blank <- function(x) {
   is.na(x) | stringr::str_trim(as.character(x)) == ""
 }
 
-# Helper function for creating a validation issue table
-# Each validation check will use this function to return issues
-# in the same format
+# Create a consistent empty validation table
+empty_issue <- function() {
+  tibble::tibble(
+    row = integer(),
+    field = character(),
+    value = character(),
+    issue = character()
+  )
+}
+
+# Helper for making validation issue tables
 make_issue <- function(data, rows, field, issue) {
-  
-  # If there are no problem rows, return an empty tibble
   if (length(rows) == 0) {
-    return(tibble::tibble())
+    return(empty_issue())
   }
-  
-  # If the field exists in the dataset, extract the values from the problem rows
-  # If the field does not exist, return NA values instead
+
   values <- if (field %in% names(data)) {
     as.character(data[[field]][rows])
   } else {
     rep(NA_character_, length(rows))
   }
-  
-  # Return a standardized validation report table
+
   tibble::tibble(
     row = rows,
     field = field,
@@ -512,182 +1505,105 @@ make_issue <- function(data, rows, field, issue) {
     issue = issue
   )
 }
-```
 
-Now that we've defined these helper functions, each validation check will return a table with: - The row number - The field containing the issue - The value currently in that field - A short description of the issue
-
-<br>
-
-### Check 1: Unexpected Columns
-
-```{r}
-# Check whether the dataset contains columns that are not defined
-# in the DataStream schema
+# Check for columns not defined in the schema
 check_extra_columns <- function(data, schema_fields) {
-  
-  # Identify columns in the dataset that are not in the schema
   extra_cols <- setdiff(names(data), schema_fields)
-  
-  # If there are no extra columns, return an empty tibble
+
   if (length(extra_cols) == 0) {
-    return(tibble::tibble())
+    return(empty_issue())
   }
-  
-  # If extra columns exist, report them as validation issues
+
   tibble::tibble(
     row = NA_integer_,
     field = extra_cols,
     value = NA_character_,
-    issue = "Column is not defined in the DataStream schema."
+    issue = "Column is not defined in the DataStream schema"
   )
 }
 
-# Run the extra-column check on the example dataset
-check_extra_columns(datastream_export, schema_fields)
-```
-
-No extra columns exist in this example dataset.
-
-### Check 2: Required Fields
-
-Now let's check that all required fields are populated.
-
-```{r}
-# Check whether required DataStream fields are present and populated.
+# Check required fields
 check_required_fields <- function(data, required_fields) {
-  
-  # Identify required fields that are missing entirely from the dataset.
   missing_required <- setdiff(required_fields, names(data))
-  
-  # Only create missing-column issues if there are actually missing columns.
+
   missing_issues <- if (length(missing_required) > 0) {
-    
     tibble::tibble(
       row = NA_integer_,
       field = missing_required,
       value = NA_character_,
-      issue = "Required field is missing from the dataset."
+      issue = "Required field is missing from the dataset"
     )
-    
   } else {
-    
-    # If no required columns are missing, return an empty tibble.
-    tibble::tibble()
+    empty_issue()
   }
-  
-  # Identify required fields that are present in the dataset.
+
   present_required <- intersect(required_fields, names(data))
-  
-  # For each required field that is present, check whether any rows are blank.
-  blank_issues <- purrr::map_dfr(present_required, function(field) {
-    
-    # Find rows where this required field is blank.
-    bad_rows <- which(is_blank(data[[field]]))
-    
-    # Create a validation issue for each blank required value.
-    make_issue(
-      data = data,
-      rows = bad_rows,
-      field = field,
-      issue = "Required field is blank."
-    )
-  })
-  
-  # Combine missing-column issues and blank-value issues.
+
+  blank_issues <- if (length(present_required) > 0) {
+    purrr::map_dfr(present_required, function(field) {
+      bad_rows <- which(is_blank(data[[field]]))
+
+      make_issue(
+        data = data,
+        rows = bad_rows,
+        field = field,
+        issue = "Required field is blank"
+      )
+    })
+  } else {
+    empty_issue()
+  }
+
   dplyr::bind_rows(missing_issues, blank_issues)
 }
 
-# Run the required-field check on the example dataset.
-check_required_fields(datastream_export, required_fields)
-```
-
-All required fields are populated.
-
-<br>
-
-### Check 3: Allowed Values
-
-Many DataStream fields use controlled vocabularies.
-For these fields, any non-blank value should match one of the allowed values in the schema.
-This check is especially useful for fields like: - MonitoringLocationType - ActivityType - ActivityMediaName - CharacteristicName - ResultUnit - ResultValueType - ResultDetectionCondition
-
-```{r}
-# Check whether controlled vocabulary fields use allowed DataStream values.
+# Check controlled vocabulary fields
 check_allowed_values <- function(data, allowed_values) {
-  
-  # Identify fields that both:
-  #   1. have allowed values in the schema; and
-  #   2. are present in the dataset.
   fields_to_check <- intersect(
     unique(allowed_values$field),
     names(data)
   )
-  
-  # Check each controlled vocabulary field one at a time.
+
+  if (length(fields_to_check) == 0) {
+    return(empty_issue())
+  }
+
   purrr::map_dfr(fields_to_check, function(field) {
-    
-    # Pull the allowed values for the current field.
     allowed <- allowed_values |>
       dplyr::filter(.data$field == .env$field) |>
       dplyr::pull(allowed_value)
-    
-    # Find rows where the value is not blank
-    # but also not included in the allowed values.
+
     bad_rows <- which(
       !is_blank(data[[field]]) &
         !(as.character(data[[field]]) %in% allowed)
     )
-    
-    # Create validation issues for invalid values.
+
     make_issue(
       data = data,
       rows = bad_rows,
       field = field,
-      issue = "Value is not listed as an allowed value in the DataStream schema."
+      issue = "Value is not listed as an allowed value in the DataStream schema"
     )
   })
 }
 
-# Run the allowed-value check on the example dataset.
-check_allowed_values(datastream_export, allowed_values)
-```
-
-It appears that we have a CharacteristicName that does not match any of the allowed values in the schema.
-
-### Check 4: Numeric Fields and Numeric Ranges
-
-Some fields must be numeric.
-The schema also defines minimum and maximum values for some numeric fields.
-
-For example, latitude must be between 0 and 90, and longitude must be between -180 and 180.
-
-```{r}
-# Check whether numeric fields contain numeric values
-# and whether those values fall within schema-defined ranges
+# Check numeric fields and schema-defined ranges
 check_numeric_ranges <- function(data, schema_field_summary) {
-  
-  # Identify numeric fields that are present in the dataset
   numeric_fields <- schema_field_summary |>
     dplyr::filter(type %in% c("number", "integer")) |>
     dplyr::filter(field %in% names(data))
-  
-  # Check each numeric field one at a time
+
+  if (nrow(numeric_fields) == 0) {
+    return(empty_issue())
+  }
+
   purrr::map_dfr(seq_len(nrow(numeric_fields)), function(i) {
-    
-    # Extract the field name and its allowed numeric range
     field <- numeric_fields$field[i]
     min_value <- numeric_fields$minimum[i]
     max_value <- numeric_fields$maximum[i]
-    
-    # Try to convert the field values to numeric
-    # suppressWarnings() avoids printing warnings for non-numeric values
+
     x <- suppressWarnings(as.numeric(data[[field]]))
-    
-    # Find rows where:
-    #   1. the value is not blank; and
-    #   2. the value cannot be converted to numeric, or
-    #   3. the value falls below the minimum, or
-    #   4. the value exceeds the maximum
+
     bad_rows <- which(
       !is_blank(data[[field]]) &
         (
@@ -696,187 +1612,114 @@ check_numeric_ranges <- function(data, schema_field_summary) {
             (!is.na(max_value) & x > max_value)
         )
     )
-    
-    # Create validation issues for invalid numeric values
+
     make_issue(
       data = data,
       rows = bad_rows,
       field = field,
-      issue = "Value is not numeric or falls outside the range defined in the DataStream schema."
+      issue = "Value is not numeric or falls outside the range defined in the DataStream schema"
     )
   })
 }
 
-# Run the numeric range check on the example dataset
-check_numeric_ranges(datastream_export, schema_field_summary)
-```
-
-### Check 5: Date, Time, and Time Zone Formats
-
-DataStream expects dates, times, and time zones to use specific formats.
-A common data rescue problem is that dates may be stored inconsistently across source files.
-
-```{r}
-# Check whether date, time, and time zone fields use expected formats
+# Check dates, times, and time zones
 check_date_time_formats <- function(data, schema_field_summary) {
-  
-  # Create a list to store validation issues from date, time, and time zone checks
-  issues <- list()
-  
-  # Identify fields that the schema marks as date fields
   date_fields <- schema_field_summary |>
     dplyr::filter(format == "date") |>
-    dplyr::pull(field)
-  
-  # Keep only date fields that are present in the dataset
-  date_fields <- intersect(date_fields, names(data))
-  
-  # Check whether date fields use YYYY-MM-DD format.
-  issues[["dates"]] <- purrr::map_dfr(date_fields, function(field) {
-    
-    # Find rows where the date is not blank and does not match YYYY-MM-DD
-    bad_rows <- which(
-      !is_blank(data[[field]]) &
-        !stringr::str_detect(as.character(data[[field]]), "^\\d{4}-\\d{2}-\\d{2}$")
-    )
-    
-    # Create validation issues for invalid dates
-    make_issue(
-      data = data,
-      rows = bad_rows,
-      field = field,
-      issue = "Date should use YYYY-MM-DD format."
-    )
-  })
-  
-  # Define the time fields we want to check, if they are present
+    dplyr::pull(field) |>
+    intersect(names(data))
+
+  date_issues <- if (length(date_fields) > 0) {
+    purrr::map_dfr(date_fields, function(field) {
+      bad_rows <- which(
+        !is_blank(data[[field]]) &
+          is.na(lubridate::ymd(data[[field]]))
+      )
+
+      make_issue(
+        data = data,
+        rows = bad_rows,
+        field = field,
+        issue = "Date should be parseable as YYYY-MM-DD"
+      )
+    })
+  } else {
+    empty_issue()
+  }
+
   time_fields <- intersect(
     c("ActivityStartTime", "ActivityEndTime", "AnalysisStartTime"),
     names(data)
   )
-  
-  # Regular expression for valid time values.
-  # This accepts HH:MM, HH:MM:SS, or HH:MM:SS.sss.
+
   time_pattern <- "^(2[0-3]|[01][0-9]):[0-5][0-9](:[0-5][0-9](\\.[0-9]{1,3})?)?$"
-  
-  # Check whether time fields match the expected time pattern
-  issues[["times"]] <- purrr::map_dfr(time_fields, function(field) {
-    
-    # Find rows where the time is not blank and does not match the pattern
-    bad_rows <- which(
-      !is_blank(data[[field]]) &
-        !stringr::str_detect(as.character(data[[field]]), time_pattern)
-    )
-    
-    # Create validation issues for invalid times
-    make_issue(
-      data = data,
-      rows = bad_rows,
-      field = field,
-      issue = "Time should use HH:MM, HH:MM:SS, or HH:MM:SS.sss format."
-    )
-  })
-  
-  # Define the time zone fields we want to check, if they are present
+
+  time_issues <- if (length(time_fields) > 0) {
+    purrr::map_dfr(time_fields, function(field) {
+      bad_rows <- which(
+        !is_blank(data[[field]]) &
+          !stringr::str_detect(as.character(data[[field]]), time_pattern)
+      )
+
+      make_issue(
+        data = data,
+        rows = bad_rows,
+        field = field,
+        issue = "Time should use HH:MM, HH:MM:SS, or HH:MM:SS.sss format"
+      )
+    })
+  } else {
+    empty_issue()
+  }
+
   timezone_fields <- intersect(
     c("ActivityStartTimeZone", "ActivityEndTimeZone", "AnalysisStartTimeZone"),
     names(data)
   )
-  
-  # Regular expression for valid time zone values
-  # This accepts Z or offsets such as -07:00 or +05:30
+
   timezone_pattern <- "^(Z|[+-](0[0-9]|1[0-9]|2[0-4]):[0-5][0-9])$"
-  
-  # Check whether time zone fields match the expected pattern.
-  issues[["timezones"]] <- purrr::map_dfr(timezone_fields, function(field) {
-    
-    # Find rows where the time zone is not blank and does not match the pattern
-    bad_rows <- which(
-      !is_blank(data[[field]]) &
-        !stringr::str_detect(as.character(data[[field]]), timezone_pattern)
-    )
-    
-    # Create validation issues for invalid time zones
-    make_issue(
-      data = data,
-      rows = bad_rows,
-      field = field,
-      issue = "Time zone should use Z or +/-HH:MM format."
-    )
-  })
-  
-  # Combine all date, time, and time zone issues into one table
-  dplyr::bind_rows(issues)
+
+  timezone_issues <- if (length(timezone_fields) > 0) {
+    purrr::map_dfr(timezone_fields, function(field) {
+      bad_rows <- which(
+        !is_blank(data[[field]]) &
+          !stringr::str_detect(as.character(data[[field]]), timezone_pattern)
+      )
+
+      make_issue(
+        data = data,
+        rows = bad_rows,
+        field = field,
+        issue = "Time zone should use Z or +/-HH:MM format"
+      )
+    })
+  } else {
+    empty_issue()
+  }
+
+  dplyr::bind_rows(date_issues, time_issues, timezone_issues)
 }
 
-# Run the date, time, and time zone checks on the example dataset
-check_date_time_formats(datastream_export, schema_field_summary)
-```
-
-<br>
-
-### Check 6: Field Dependencies
-
-Some fields become required when another field is populated.
-These are called dependencies.
-
-For example, if `ResultValue` is populated, then `ResultUnit` is also required.
-If `ActivityDepthHeightMeasure` is populated, then `ActivityDepthHeightUnit` is also required.
-
-We can extract these dependencies from the schema.
-
-```{r}
-# Convert schema dependencies into a table that is easier to inspect
-# Each row says: when trigger_field is populated,
-# dependent_field should also be populated
-dependency_table <- purrr::imap_dfr(
-  schema_dependencies,
-  function(dependent_fields, trigger_field) {
-    
-    tibble::tibble(
-      trigger_field = trigger_field,
-      dependent_field = as.character(unlist(dependent_fields))
-    )
-  }
-)
-
-# View the dependency table
-dependency_table
-```
-
-Now we can check whether dependent fields are populated when their trigger fields are populated.
-
-```{r}
-# Check whether dependent fields are populated when their trigger fields are populated
+# Check simple dependency rules
 check_dependencies <- function(data, dependency_table) {
-  
-  # If there are no dependencies, return an empty tibble
   if (nrow(dependency_table) == 0) {
-    return(tibble::tibble())
+    return(empty_issue())
   }
-  
-  # Check each dependency rule one at a time
+
   purrr::map_dfr(seq_len(nrow(dependency_table)), function(i) {
-    
-    # Extract the trigger field and dependent field for this rule
     trigger_field <- dependency_table$trigger_field[i]
     dependent_field <- dependency_table$dependent_field[i]
-    
-    # If the trigger field is not in the dataset, skip this rule
+
     if (!trigger_field %in% names(data)) {
-      return(tibble::tibble())
+      return(empty_issue())
     }
-    
-    # Identify rows where the trigger field is populated
+
     trigger_rows <- which(!is_blank(data[[trigger_field]]))
-    
-    # If the trigger field is never populated, there is nothing to check
+
     if (length(trigger_rows) == 0) {
-      return(tibble::tibble())
+      return(empty_issue())
     }
-    
-    # If the dependent field is missing entirely, report it as an issue
-    # for each row where the trigger field is populated
+
     if (!dependent_field %in% names(data)) {
       return(
         tibble::tibble(
@@ -886,19 +1729,16 @@ check_dependencies <- function(data, dependency_table) {
           issue = paste0(
             "Field is required when ",
             trigger_field,
-            " is populated, but this column is missing."
+            " is populated, but this column is missing"
           )
         )
       )
     }
-    
-    # Among rows where the trigger field is populated,
-    # identify rows where the dependent field is blank
+
     bad_rows <- trigger_rows[
       is_blank(data[[dependent_field]][trigger_rows])
     ]
-    
-    # Create validation issues for missing dependent values
+
     make_issue(
       data = data,
       rows = bad_rows,
@@ -906,559 +1746,350 @@ check_dependencies <- function(data, dependency_table) {
       issue = paste0(
         "Required when ",
         trigger_field,
-        " is populated."
+        " is populated"
       )
     )
   })
 }
 
-# Run the dependency check on the example dataset
-check_dependencies(datastream_export, dependency_table)
-```
-
-<br>
-
-### Check 7: Result Values and Detection Conditions
-
-A common DataStream issue involves the relationship between `ResultValue` and `ResultDetectionCondition`.
-For a single observation, you should generally provide either:
-
--   A measured value in `ResultValue`, or
--   A detection condition in `ResultDetectionCondition`.
-
-You should not populate both for the same observation, and you should not leave both blank.
-`ResultDetectionCondition` is a required field when `ResultValue` is blank.
-
-```{r}
-# Check the relationship between ResultValue and ResultDetectionCondition
+# Check ResultValue and ResultDetectionCondition relationship
 check_result_value_detection_condition <- function(data) {
-  
-  # These are the two fields needed for this check
   required_fields <- c("ResultValue", "ResultDetectionCondition")
-  
-  # If either field is missing, skip this check
+
   if (!all(required_fields %in% names(data))) {
-    return(tibble::tibble())
+    return(empty_issue())
   }
-  
-  # Identify rows where both ResultValue and ResultDetectionCondition are blank
+
   both_blank <- which(
     is_blank(data$ResultValue) &
       is_blank(data$ResultDetectionCondition)
   )
-  
-  # Identify rows where both ResultValue and ResultDetectionCondition are populated
+
   both_populated <- which(
     !is_blank(data$ResultValue) &
       !is_blank(data$ResultDetectionCondition)
   )
-  
-  # Combine both types of issues into one table
+
   dplyr::bind_rows(
     make_issue(
       data = data,
       rows = both_blank,
       field = "ResultValue",
-      issue = "Either ResultValue or ResultDetectionCondition should be populated."
+      issue = "Either ResultValue or ResultDetectionCondition should be populated"
     ),
     make_issue(
       data = data,
       rows = both_populated,
       field = "ResultDetectionCondition",
-      issue = "Do not populate ResultDetectionCondition when ResultValue is also populated."
+      issue = "Do not populate ResultDetectionCondition when ResultValue is also populated"
     )
   )
 }
 
-# Run the ResultValue / ResultDetectionCondition check
-check_result_value_detection_condition(datastream_export)
-```
+# Check lab method requirements for routine samples
+check_lab_method_fields <- function(data) {
+  if (!"ActivityType" %in% names(data)) {
+    return(empty_issue())
+  }
 
-<br>
+  sample_rows <- which(
+    stringr::str_detect(
+      dplyr::coalesce(data$ActivityType, ""),
+      "^Sample-"
+    )
+  )
 
-### Create a Validation Report
+  if (length(sample_rows) == 0) {
+    return(empty_issue())
+  }
 
-Now combine the checks into a single validation function.
+  get_field <- function(field) {
+    if (field %in% names(data)) {
+      as.character(data[[field]])
+    } else {
+      rep(NA_character_, nrow(data))
+    }
+  }
 
-```{r}
-# Run all pre-upload validation checks and combine the results
-validate_datastream_preupload <- function(data,
-                                          schema_fields,
-                                          required_fields,
-                                          allowed_values,
-                                          schema_field_summary,
-                                          dependency_table) {
-  
+  laboratory_name <- get_field("LaboratoryName")
+  method_name <- get_field("ResultAnalyticalMethodName")
+  method_id <- get_field("ResultAnalyticalMethodID")
+  method_context <- get_field("ResultAnalyticalMethodContext")
+
+  lab_missing <- sample_rows[
+    is_blank(laboratory_name[sample_rows])
+  ]
+
+  method_missing <- sample_rows[
+    is_blank(method_name[sample_rows]) &
+      (
+        is_blank(method_id[sample_rows]) |
+          is_blank(method_context[sample_rows])
+      )
+  ]
+
   dplyr::bind_rows(
-    # Check whether all columns are recognized by the DataStream schema
-    check_extra_columns(data, schema_fields),
-    
-    # Check whether required fields are present and populated
-    check_required_fields(data, required_fields),
-    
-    # Check whether controlled vocabulary fields use allowed values
-    check_allowed_values(data, allowed_values),
-    
-    # Check numeric fields and schema-defined numeric ranges
-    check_numeric_ranges(data, schema_field_summary),
-    
-    # Check date, time, and time zone formatting
-    check_date_time_formats(data, schema_field_summary),
-    
-    # Check schema-defined field dependencies
-    check_dependencies(data, dependency_table),
-    
-    # Check the relationship between result values and detection conditions
-    check_result_value_detection_condition(data)
-  ) |>
-    # Sort the validation report by row and field
-    dplyr::arrange(row, field)
+    make_issue(
+      data = data,
+      rows = lab_missing,
+      field = "LaboratoryName",
+      issue = "LaboratoryName should be populated for lab-analyzed samples"
+    ),
+    make_issue(
+      data = data,
+      rows = method_missing,
+      field = "ResultAnalyticalMethodName",
+      issue = "Analytical method information should be populated for lab-analyzed samples"
+    )
+  )
 }
-```
 
-And run the validation checks.
-
-```{r}
-# Run the combined validation function on the example dataset
-validation_report <- validate_datastream_preupload(
-  data = datastream_export,
-  schema_fields = schema_fields,
-  required_fields = required_fields,
-  allowed_values = allowed_values,
-  schema_field_summary = schema_field_summary,
-  dependency_table = dependency_table
+# Run all checks and combine them into one report
+validation_report <- dplyr::bind_rows(
+  check_extra_columns(datastream_export, schema_fields),
+  check_required_fields(datastream_export, required_fields),
+  check_allowed_values(datastream_export, allowed_values),
+  check_numeric_ranges(datastream_export, schema_field_summary),
+  check_date_time_formats(datastream_export, schema_field_summary),
+  check_dependencies(datastream_export, dependency_table),
+  check_result_value_detection_condition(datastream_export),
+  check_lab_method_fields(datastream_export)
 )
 
-# View the validation report
-validation_report
-```
-
-```{r}
-# If the validation report contains one or more rows,
-# write the report to a CSV file
+# Arrange validation issues when any are found
 if (nrow(validation_report) > 0) {
-  
-  # Save the validation report to the outputs folder so it can be reviewed
-  readr::write_csv(
-    validation_report,
-    "outputs/datastream_validation_report.csv"
-  )
-  
-  # In a real data processing script, you may want to stop the pipeline here
-  message(
-    "DataStream pre-upload checks found issues. ",
-    "Review outputs/datastream_validation_report.csv before exporting the final CSV."
-  )
-  
-  # In a real pipeline, you could use stop() instead of message():
-  # stop("DataStream pre-upload checks failed. Review outputs/datastream_validation_report.csv.")
-}
-```
-
-If the validation report is populated with issues, you will receive an error here that points to the saved validation report in the outputs folder.
-
-<br>
-
-### Review: What These Checks Do and Do Not Do
-
-These checks help determine whether the dataset is likely to conform to the DataStream schema.
-They are useful for catching common issues before upload.
-
-| Question                                                    | Addressed by these checks? |
-|-----------------------------------------------|-------------------------|
-| Are unexpected columns present?                             | Yes                        |
-| Are required fields populated?                              | Yes                        |
-| Are controlled vocabulary values valid?                     | Yes                        |
-| Are numeric values within schema-defined ranges?            | Yes                        |
-| Are dates, times, and time zones formatted consistently?    | Yes                        |
-| Are common dependent fields populated when needed?          | Yes                        |
-| Does this fully reproduce DataStream's upload validator?    | No                         |
-| Did the cleaning script preserve all original observations? | No                         |
-| Were duplicate observations introduced during joins?        | No                         |
-| Are values scientifically reasonable?                       | Only partly                |
-
-Final validation happens during the DataStream upload process.
-In addition, schema checks should be paired with project-specific QA/QC checks that confirm the cleaned data are scientifically reasonable and correctly derived from the raw files (see linked chapter).
-
-## Final QA/QC Checks After Schema Validation
-
-Before exporting the final CSV, we should run a final set of QA/QC checks.
-**Importantly, these checks are not meant to replace the data cleaning and QA/QC work that should already have occurred earlier in the data rescue workflow.** Instead, they provide a final review of common issues that may remain after the dataset has been cleaned, reshaped, and mapped to DataStream fields.
-
-At this stage, we assume that the dataset has already been substantially cleaned and organized.
-The goal is to check the formatted table for issues that may not be caught by schema validation alone, such as near-duplicate locations, inconsistent coordinates, missing time zones, incomplete detection-limit information, or scientifically implausible values.
-
-If these checks identify problems, the preferred approach is to fix them upstream in the R cleaning script, then rerun the schema validation and final QA/QC checks.
-
-As covered in the data cleaning chapter, DataStream often see issues like:
-
--   Duplicate or near-duplicate monitoring locations
--   Different coordinates associated with the same location
--   Missing coordinates or time zones
--   Implausible or impossible values
--   Incomplete detection-limit information
--   Inconsistent naming conventions across files or sheets
-
-These issues are not always schema validation errors.
-Instead, they are **QA/QC issues** that should be reviewed before the final CSV is shared with the data owner.
-
-<br>
-
-### Check for Location Issues
-
-Duplicate locations can be created when the same site is represented with different spelling, capitalization, or coordinates.
-Because DataStream treats location IDs and names as case sensitive, small differences can matter.
-
-```{r}
-# Check for common monitoring location issues
-check_location_qaqc <- function(data) {
-  
-  # If the required location fields are not present, skip this check
-  location_fields <- c(
-    "MonitoringLocationID",
-    "MonitoringLocationName",
-    "MonitoringLocationLatitude",
-    "MonitoringLocationLongitude"
-  )
-  
-  if (!all(location_fields %in% names(data))) {
-    return(tibble::tibble())
-  }
-  
-  # Check for location IDs that differ only by capitalization
-  # For example, "ML-01" and "ml-01" may refer to the same location
-  # but would be treated as different values
-  id_case_issues <- data |>
-    dplyr::mutate(
-      row = dplyr::row_number(),
-      id_lower = stringr::str_to_lower(MonitoringLocationID)
-    ) |>
-    dplyr::group_by(id_lower) |>
-    dplyr::filter(dplyr::n_distinct(MonitoringLocationID) > 1) |>
-    dplyr::ungroup() |>
-    dplyr::transmute(
-      row = row,
-      field = "MonitoringLocationID",
-      value = as.character(MonitoringLocationID),
-      issue = "Location IDs differ only by capitalization. Review for possible duplicate locations."
-    )
-  
-  # Check for location names that differ only by capitalization
-  # For example, "Clear Lake" and "Clear lake" may refer to the same location
-  name_case_issues <- data |>
-    dplyr::mutate(
-      row = dplyr::row_number(),
-      name_lower = stringr::str_to_lower(MonitoringLocationName)
-    ) |>
-    dplyr::group_by(name_lower) |>
-    dplyr::filter(dplyr::n_distinct(MonitoringLocationName) > 1) |>
-    dplyr::ungroup() |>
-    dplyr::transmute(
-      row = row,
-      field = "MonitoringLocationName",
-      value = as.character(MonitoringLocationName),
-      issue = "Location names differ only by capitalization. Review for possible duplicate locations."
-    )
-  
-  # Check for cases where the same location ID has more than one
-  # latitude or longitude value
-  # This can happen because of rounding, changing GPS precision,
-  # or inconsistent coordinates across years or files
-  coordinate_issues <- data |>
-    dplyr::mutate(row = dplyr::row_number()) |>
-    dplyr::group_by(MonitoringLocationID) |>
-    dplyr::filter(
-      dplyr::n_distinct(MonitoringLocationLatitude, na.rm = TRUE) > 1 |
-        dplyr::n_distinct(MonitoringLocationLongitude, na.rm = TRUE) > 1
-    ) |>
-    dplyr::ungroup() |>
-    dplyr::transmute(
-      row = row,
-      field = "MonitoringLocationLatitude/Longitude",
-      value = paste(
-        MonitoringLocationLatitude,
-        MonitoringLocationLongitude,
-        sep = ", "
-      ),
-      issue = "The same MonitoringLocationID has more than one coordinate pair. Review for rounding, precision, or transcription issues."
-    )
-  
-  # Check for missing coordinates
-  missing_coordinate_issues <- data |>
-    dplyr::mutate(row = dplyr::row_number()) |>
-    dplyr::filter(
-      is_blank(MonitoringLocationLatitude) |
-        is_blank(MonitoringLocationLongitude)
-    ) |>
-    dplyr::transmute(
-      row = row,
-      field = "MonitoringLocationLatitude/Longitude",
-      value = paste(
-        MonitoringLocationLatitude,
-        MonitoringLocationLongitude,
-        sep = ", "
-      ),
-      issue = "Latitude or longitude is missing. Coordinates should be reviewed before upload."
-    )
-  
-  # Combine all location QA/QC issues into one table
-  dplyr::bind_rows(
-    id_case_issues,
-    name_case_issues,
-    coordinate_issues,
-    missing_coordinate_issues
-  )
-}
-
-# Run the location QA/QC check
-check_location_qaqc(datastream_export)
-```
-
-<br>
-
-### Check for Missing Time Zones
-
-Missing time zones are common in raw data.
-They are especially important when time values are included.
-
-```{r}
-# Check for missing time zones when an activity start time is provided
-check_timezone_qaqc <- function(data) {
-  
-  # Skip this check if the relevant fields are not present
-  timezone_fields <- c("ActivityStartTime", "ActivityStartTimeZone")
-  
-  if (!all(timezone_fields %in% names(data))) {
-    return(tibble::tibble())
-  }
-  
-  # Find rows where a start time is provided but the time zone is blank
-  bad_rows <- which(
-    !is_blank(data$ActivityStartTime) &
-      is_blank(data$ActivityStartTimeZone)
-  )
-  
-  # Return a standardized issue table
-  make_issue(
-    data = data,
-    rows = bad_rows,
-    field = "ActivityStartTimeZone",
-    issue = "ActivityStartTime is populated, but ActivityStartTimeZone is missing."
-  )
-}
-
-# Run the time zone QA/QC check
-check_timezone_qaqc(datastream_export)
-```
-
-<br>
-
-### Check for Impossible or Suspicious Values
-
-Some values may be valid numbers but still scientifically unreasonable.
-For example, pH should not be negative, and hardness should not be less than zero.
-
-```{r}
-# Check for simple impossible or suspicious values
-check_value_qaqc <- function(data) {
-  
-  # Skip this check if the fields needed for value checks are missing
-  value_fields <- c("CharacteristicName", "ResultValue")
-  
-  if (!all(value_fields %in% names(data))) {
-    return(tibble::tibble())
-  }
-  
-  # Convert ResultValue to numeric for checking
-  # suppressWarnings() avoids warnings if some values are text
-  data_checked <- data |>
-    dplyr::mutate(
-      row = dplyr::row_number(),
-      result_value_num = suppressWarnings(as.numeric(ResultValue))
-    )
-  
-  # Check for pH values outside the usual possible range of 0 to 14
-  ph_issues <- data_checked |>
-    dplyr::filter(
-      CharacteristicName == "pH",
-      !is.na(result_value_num),
-      result_value_num < 0 | result_value_num > 14
-    ) |>
-    dplyr::transmute(
-      row = row,
-      field = "ResultValue",
-      value = as.character(ResultValue),
-      issue = "pH value is outside the expected range of 0 to 14."
-    )
-  
-  # Check for negative hardness values
-  hardness_issues <- data_checked |>
-    dplyr::filter(
-      stringr::str_detect(CharacteristicName, "Hardness"),
-      !is.na(result_value_num),
-      result_value_num < 0
-    ) |>
-    dplyr::transmute(
-      row = row,
-      field = "ResultValue",
-      value = as.character(ResultValue),
-      issue = "Hardness value is negative. Review as a likely data quality issue."
-    )
-  
-  # Check for negative values for variables that generally should not be negative
-  nonnegative_issues <- data_checked |>
-    dplyr::filter(
-      CharacteristicName %in% c(
-        "Specific conductance",
-        "Ammonia and ammonium",
-        "Dissolved oxygen",
-        "Temperature, water"
-      ),
-      !is.na(result_value_num),
-      result_value_num < 0
-    ) |>
-    dplyr::transmute(
-      row = row,
-      field = "ResultValue",
-      value = as.character(ResultValue),
-      issue = "ResultValue is negative for a characteristic that generally should not be negative. Review before upload."
-    )
-  
-  # Combine all value QA/QC issues into one table
-  dplyr::bind_rows(
-    ph_issues,
-    hardness_issues,
-    nonnegative_issues
-  )
-}
-
-# Run the value QA/QC check
-check_value_qaqc(datastream_export)
-```
-
-<br>
-
-### Check Detection-Limit Information
-
-Detection-limit issues are common in historical water quality datasets.
-If a result is reported as above or below a detection or quantification limit, then the limit value, unit, and type should be reviewed carefully.
-
-```{r}
-# Check for incomplete detection-limit information
-check_detection_limit_qaqc <- function(data) {
-  
-  # These fields are needed for this check
-  detection_fields <- c(
-    "ResultDetectionCondition",
-    "ResultDetectionQuantitationLimitMeasure",
-    "ResultDetectionQuantitationLimitUnit",
-    "ResultDetectionQuantitationLimitType"
-  )
-  
-  # Skip this check if the relevant fields are not present
-  if (!all(detection_fields %in% names(data))) {
-    return(tibble::tibble())
-  }
-  
-  # Find rows where a detection condition is provided,
-  # but one or more detection-limit fields are missing
-  incomplete_limit_rows <- which(
-    !is_blank(data$ResultDetectionCondition) &
-      (
-        is_blank(data$ResultDetectionQuantitationLimitMeasure) |
-          is_blank(data$ResultDetectionQuantitationLimitUnit) |
-          is_blank(data$ResultDetectionQuantitationLimitType)
-      )
-  )
-  
-  # Create issues for incomplete detection-limit information
-  incomplete_limit_issues <- make_issue(
-    data = data,
-    rows = incomplete_limit_rows,
-    field = "ResultDetectionQuantitationLimitMeasure",
-    issue = "ResultDetectionCondition is populated, but detection-limit value, unit, or type is missing."
-  )
-  
-  # Convert the detection-limit measure to numeric
-  limit_value <- suppressWarnings(
-    as.numeric(data$ResultDetectionQuantitationLimitMeasure)
-  )
-  
-  # Find rows where the detection-limit value is negative
-  negative_limit_rows <- which(
-    !is_blank(data$ResultDetectionQuantitationLimitMeasure) &
-      !is.na(limit_value) &
-      limit_value < 0
-  )
-  
-  # Create issues for negative detection-limit values
-  negative_limit_issues <- make_issue(
-    data = data,
-    rows = negative_limit_rows,
-    field = "ResultDetectionQuantitationLimitMeasure",
-    issue = "Detection-limit value is negative. Review before upload."
-  )
-  
-  # Combine detection-limit QA/QC issues into one table
-  dplyr::bind_rows(
-    incomplete_limit_issues,
-    negative_limit_issues
-  )
-}
-
-# Run the detection-limit QA/QC check
-check_detection_limit_qaqc(datastream_export)
-```
-
-<br>
-
-### Create a QA/QC Report
-
-Now, using all of the functions we defined above, combine all of the QA/QC checks into one report that you can save and share with team members.
-
-```{r}
-# Run all project-specific QA/QC checks and combine the results
-run_project_qaqc <- function(data) {
-  
-  dplyr::bind_rows(
-    # Check for duplicate or inconsistent monitoring locations.
-    check_location_qaqc(data),
-    
-    # Check whether time zones are missing when times are provided
-    check_timezone_qaqc(data),
-    
-    # Check for impossible or suspicious values
-    check_value_qaqc(data),
-    
-    # Check whether detection-limit information is complete
-    check_detection_limit_qaqc(data)
-  ) |>
-    # Sort the QA/QC report by row and field.
+  validation_report <- validation_report |>
     dplyr::arrange(row, field)
+} else {
+  validation_report <- empty_issue()
 }
 
-# Run the QA/QC checks on the example dataset
-qaqc_report <- run_project_qaqc(datastream_export)
+# Save the validation report
+readr::write_csv(
+  validation_report,
+  "outputs/datastream_validation_report.csv"
+)
 
-# View the QA/QC report
-qaqc_report
-```
+# Print the schema version and validation report
+schema_version
+validation_report
 
-If the QA/QC report contains rows, review the issues and return to the original data cleaning workflow.
-
-```{r}
-# If the QA/QC report contains one or more rows,
-# write the report to a CSV file
-if (nrow(qaqc_report) > 0) {
-  
-  # Save the QA/QC report to the outputs folder so it can be reviewed
-  readr::write_csv(
-    qaqc_report,
-    "outputs/datastream_qaqc_report.csv"
+# Message for the user
+if (nrow(validation_report) == 0) {
+  message("No issues found by the pre-upload schema checks")
+} else {
+  message(
+    "Pre-upload schema checks found issues. ",
+    "Review outputs/datastream_validation_report.csv, fix issues upstream, and rerun validation."
   )
 }
 ```
 
-These QA/QC checks are intentionally simple and assume that the dataset is already nearly formatted to the DataStream schema.
-They are meant to flag records that require review, not automatically determine whether a value is correct or incorrect.
-In a real data rescue project, the team should discuss the resulting issues with team members, the data owner, and document any assumptions, corrections, or unresolved questions.
+The validation report found one issue: `ResultAnalyticalMethodName` is missing for one lab-analyzed sample.
+
+In this case, the issue is not with the result value itself.
+The issue is that the data record does not include enough analytical method information for a lab-analyzed result.
+Because analytical methods affect how a result should be interpreted, we should not fill this field by guessing.
+
+Instead, we should flag the record for review, return to the source files, and ask the data owner to confirm the appropriate analytical method if it cannot be found in the available documentation.
+
+```{r}
+#| message: false
+#| echo: true
+#| output: true
+# Identify records flagged for missing analytical method information
+# These records should be reviewed against source files or confirmed with the data owner
+
+method_issue_rows <- validation_report |>
+  filter(field == "ResultAnalyticalMethodName") |>
+  pull(row) |>
+  unique()
+
+method_review <- datastream_export |>
+  mutate(row = row_number()) |>
+  filter(row %in% method_issue_rows) |>
+  select(
+    any_of(c(
+      "row",
+      "MonitoringLocationID",
+      "MonitoringLocationName",
+      "ActivityStartDate",
+      "CharacteristicName",
+      "ResultValue",
+      "ResultUnit",
+      "LaboratoryName",
+      "ResultAnalyticalMethodName",
+      "ResultComment"
+    ))
+  )
+
+method_review
+```
+
+This issue should be added to the metadata change log or unresolved issues list.
+If the analytical method is later confirmed, the correction should be made upstream in the cleaning or formatting workflow and the validation checks can be run again.
+
+<br>
+
+## Step 9: Review and Export Final Outputs
+
+The final outputs from this workflow are:
+
+- A cleaned working table
+- A cleaning change log
+- A scientific QA/QC report
+- A DataStream-formatted export table
+- A DataStream schema validation report
+
+```{r}
+#| message: false
+#| echo: true
+#| output: false
+# Save the cleaned working table
+# This preserves the cleaned version of the project-specific dataset before final DataStream formatting
+
+readr::write_csv(
+  dmnp_clean,
+  "outputs/dmnp_clean_working_table.csv"
+)
+
+# Save the cleaning change log
+# This documents key processing decisions, assumptions, and unresolved issues
+
+readr::write_csv(
+  cleaning_log,
+  "outputs/dmnp_cleaning_log.csv"
+)
+
+# Save the scientific QA/QC report
+# This includes records flagged during data bounds, outlier, graphical, or spatial checks
+
+readr::write_csv(
+  scientific_qaqc_report,
+  "outputs/dmnp_scientific_qaqc_report.csv"
+)
+
+# Save the final DataStream-formatted export
+# This is the main CSV that would be shared with the data owner for review and upload
+
+readr::write_csv(
+  datastream_export,
+  "outputs/dmnp_datastream_export.csv"
+)
+
+# Save the DataStream schema validation report
+# This records any remaining issues found by the pre-upload schema checks
+
+readr::write_csv(
+  validation_report,
+  "outputs/datastream_validation_report.csv"
+)
+```
+
+<br>
+
+## Step 10: Update Metadata Documentation
+
+At the beginning of this chapter, we noted that updates to metadata are often continuous throughout a project.
+Now that we have performed cleaning, validation, and formatting of the dataset, we should update the metadata documentation from the previous chapter.
+
+For the Decent Mountains National Park example, the metadata should now document that:
+
+- The site list was used as the reference source for site names and missing coordinates
+- Sample times were reformatted from `HH:MM` to `HH:MM:SS`
+- The time zone was assigned as `-04:00` after data owner confirmation
+- Censored values such as `<0.002` and `BDL` were represented using detection-condition and detection-limit fields
+- Missing sample fraction remains unresolved for some heavy metal records
+- A high water temperature value was flagged for review during scientific QA/QC
+- The hardness result was reformatted after schema validation because `From CaCO3` was not an allowed `MethodSpeciation` value
+
+```{r}
+# Add metadata updates that emerged during data cleaning and validation
+# This table follows the same structure as the metadata change log from the previous chapter
+
+# Identify any rows flagged for missing analytical method information
+method_issue_rows <- validation_report |>
+  filter(field == "ResultAnalyticalMethodName") |>
+  pull(row) |>
+  unique()
+
+method_issue_records <- if (length(method_issue_rows) > 0) {
+  paste(method_issue_rows, collapse = "; ")
+} else {
+  "No records flagged"
+}
+
+metadata_change_log_updates <- tibble::tribble(
+  ~metadata_area, ~issue_or_decision, ~affected_records, ~evidence, ~action_taken, ~status,
+
+  "Locations",
+  "Used the site list as the reference source for site names and missing coordinates",
+  "DMNP-ST-01; DMNP-ST-03",
+  "Cleaning workflow used SiteName_reference, Latitude_reference, and Longitude_reference from DMNP_Site_List.xlsx",
+  "Update Data Processing metadata to state that site metadata were standardized using the site list",
+  "Documented decision",
+
+  "Dates and times",
+  "Sample times were reformatted from HH:MM to HH:MM:SS and assigned time zone -04:00 after data owner confirmation",
+  "All records with SampleTime",
+  "Cleaning workflow created SampleTimeClean and SampleTimeZoneClean",
+  "Update Data Processing metadata and note that seconds were added for formatting rather than measured in the source data",
+  "Documented decision",
+
+  "Censored values",
+  "Censored values were represented using ResultDetectionCondition and detection-limit fields where possible",
+  "<0.002; BDL",
+  "Cleaning workflow created ResultDetectionConditionClean, DetectionLimitClean, DetectionLimitUnitClean, and DetectionLimitTypeClean",
+  "Update Data Processing metadata to describe how censored values were handled",
+  "Documented decision",
+
+  "Heavy metals",
+  "Sample fraction remains missing for selected lead and copper records",
+  "Lead; Copper",
+  "ResultComment was used to document that these results should not be assumed dissolved, total, or total recoverable",
+  "Keep this as an unresolved limitation in the metadata package and data owner questions",
+  "Unresolved limitation",
+
+  "Scientific QA/QC",
+  "A high water temperature value was flagged for review",
+  "Temperature, water",
+  "Data bounds check flagged 37.8 deg C as outside the example review bounds",
+  "Add to the QA/QC summary and review the source file before changing or excluding the value",
+  "Needs review",
+
+  "Lab methods",
+  "One lab-analyzed result is missing analytical method information",
+  method_issue_records,
+  "Pre-upload validation flagged missing ResultAnalyticalMethodName for a lab-analyzed sample",
+  "Review source method files or confirm the analytical method with the data owner before updating the DataStream export",
+  "Needs review"
+) |>
+  mutate(log_id = row_number())
+
+glimpse(metadata_change_log_updates)
+```
+
+These entries should be incorporated into the metadata package from the previous chapter, particularly the change log, unresolved issues list, and draft **Data Processing** field.
+The goal is for the metadata to continually reflect what happened during data cleaning, scientific QA/QC, and schema validation.
+
+## Review: What These Checks Do and Do Not Do
+
+| Question | Addressed in this chapter? |
+|----|----|
+| Were source files combined in a reproducible way? | Yes |
+| Were cleaning decisions documented? | Yes |
+| Were censored values parsed and documented? | Yes |
+| Were missing coordinates reviewed against a site list? | Yes |
+| Were scientifically suspicious values flagged? | Yes |
+| Were coordinates checked spatially? | Yes |
+| Were columns and values checked against the DataStream schema? | Yes |
+| Does this replace DataStream's upload validator? | No |
+| Does this prove every value is valid? | No |
+| Should flagged outliers be automatically removed? | No |
+
+Scientific validation and schema validation are complementary.
+A value can pass the DataStream schema and still be scientifically suspicious.
+Likewise, a scientifically plausible value may still fail schema validation if it uses an invalid unit, missing required field, or non-standard controlled vocabulary value.
+
+When validation reports identify issues, return to the cleaning workflow, update the code, document the decision in the change log, and rerun the checks.
+The goal is to create a dataset that is reproducible, well-documented, scientifically defensible, and ready for data owner review.

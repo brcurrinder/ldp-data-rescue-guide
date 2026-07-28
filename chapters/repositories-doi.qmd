@@ -2,11 +2,4 @@
 title: "Repositories & DOIs"
 ---
 
-# Repositories
-
 Coming soon.
-
-
-# DOIs
-
-Coming soon

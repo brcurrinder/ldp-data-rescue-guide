@@ -1,0 +1,13 @@
+---
+title: "Digitizing Data"
+---
+
+## Digitization
+
+In some projects, the data you receive will not be digitized, but will instead be in paper or printed format. Thus, the first part of your project may consist of overseeing the data entry (manual typing) or data digitization (scanning of printed material, with manual correction of errors). The intention of your data rescue project is NOT for you to be spending a large fraction of your time manually entering data, so we will often recruit undergraduates or technicians to help with this. In some cases, we will have specifically hired an undergraduate to help you, in other cases you may be expected to lead a weekend hackathon-style event where undergraduates help enter or digitize data. Both of these options will give you an opportunity to develop your supervisory and organizational skills.
+
+If you or an assistant are entering data manually from a printed or written table, we recommend that you set up your spreadsheet to replicate exactly the format of the paper version of the data. If you read right one column on the paper table, but need to enter that datum one row down, you are likely to make an error – *this is analogous to that kids’ game of trying to pat your head and rub your stomach at the same time.*
+
+## Validating digitized data
+
+A critical part of data entry or digitization is to verify the accuracy of the digital data. In the old days, two people would type in the data independently, and these would be compared. There are more efficient ways to do this today. One trick is to calculate row totals, column totals and the grand total on the original paper version of the data (e.g. with a calculator) and compare this to the entered data. In the example workflows for already digitized data ([General Data Rescue Workflow](getting-started.qmd) and [DataStream Data Rescue Workflow](prepare-metadata-datastream.qmd)), we describe methods for checking whether values fall within expected ranges and for flagging possible outliers. These checks are especially important because source files often contain data that were entered, transcribed, or reformatted by hand at some point. In that sense, validation is also checking for possible errors introduced during earlier manual data entry.

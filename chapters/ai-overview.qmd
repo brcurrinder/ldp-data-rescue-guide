@@ -1,13 +1,13 @@
 ---
-title: "AI Intro"
+title: "An Guide to Using Artificial Intelligence Tools in Data Rescue"
 ---
 
 By the end of this chapter, you should be able to:
--   Recognize appropriate and inappropriate uses of Artificial Intelligence (AI) in data rescue
+-   Recognize appropriate and inappropriate uses of Artificial Intelligence (AI) tools in data rescue
 -   Explain the major risks of AI-assisted coding
 -   Apply a general workflow for validating AI-generated code
--   Document and defend AI-assisted code in a reproducible pipeline
--   Use AI as a programming assistant rather than as an autonomous agent
+-   Document AI-assisted code in a reproducible pipeline
+-   Using AI as a programming assistant rather than as an autonomous agent
 
 ## Introduction: AI as a tool, not an authority
 

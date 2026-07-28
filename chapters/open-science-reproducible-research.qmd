@@ -1,12 +1,6 @@
 ---
-title: "Open Science & Reproducible Research"
+title: "Open Science and Reproducible Research"
 ---
 
-# What is open science? 
-
 Coming soon.
 
-
-# What is a reproducible workflow?
-
-Coming soon.
