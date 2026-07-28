@@ -1,5 +1,5 @@
 ---
-title: "An Guide to Using Artificial Intelligence Tools in Data Rescue"
+title: "Using Artificial Intelligence Tools in Data Rescue"
 ---
 
 By the end of this chapter, you should be able to:
