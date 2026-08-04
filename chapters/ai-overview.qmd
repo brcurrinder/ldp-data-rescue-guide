@@ -71,7 +71,7 @@ Computational thinking includes:
 - Distinguishing the intended result from an accidental output
 
 AI may assist with parts of these processes, but it should not perform the reasoning on your behalf.
-Additionally, a number of studies have shown that over-reliance on AI tools erodes these types of skills ().
+Additionally, there is growing evidence that over-reliance on AI tools may erode these types of skills and reasoning (Macnamara et al. 2024; Kosmyna et al. 2025; Baldeo et al. 2026).
 
 **Key takeaway: Incorporate AI tools when it improves the quality of your work, not simply the speed of producing content.**
 
@@ -339,9 +339,15 @@ Much like the rest of this guidebook, this chapter should be treated as a living
 
 Data rescue teams should discuss their experiences openly and update their practices as technology, institutional requirements, and understanding continue to evolve.
 
-## References
+## References 
 
-NIST AI Risk Management Framework (AI RMF) https://www.nist.gov/itl/ai-risk-management-framework
+Baldeo, S. (2026). Generative artificial intelligence reliance and executive function attenuation: Behavioral evidence of cognitive offload in high-use adults. Technology, Mind, and Behavior. Advance online publication. https://doi.org/10.1037/tmb0000191
 
-Parent-Doliner, G. Water Rangers Internal Guidance: use of artificial intelligence (AI) tools. Version 1. March 2026.
+Kosmyna, N., Hauptmann, E., Yuan, Y.T., Situ, J., Liao, X.H., Beresnitzky, A.V., Braunstein, I. and Maes, P. (2025). Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task. arXiv preprint arXiv:2506.08872, 4, 206. https://doi.org/10.48550/arXiv.2506.08872
+
+Macnamara, B.N., Berber, I., Çavuşoğlu, M.C., Krupinski, E.A., Nallapareddy, N., Nelson, N.E., Smith, P.J., Wilson-Delfosse, A.L. and Ray, S. (2024). Does using artificial intelligence assistance accelerate skill decay and hinder skill development without performers’ awareness?. Cognitive Research: Principles and Implications, 9(1), 46. https://doi.org/10.1186/s41235-024-00572-8
+
+National Institute of Standards and Technology, United States Department of Commerce. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0). https://doi.org/10.6028/NIST.AI.100-1
+
+Parent-Doliner, G. (2026). Water Rangers Internal Guidance: use of artificial intelligence (AI) tools: Version 1.
 
