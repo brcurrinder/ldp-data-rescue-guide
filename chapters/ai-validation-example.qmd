@@ -1,0 +1,516 @@
+---
+title: "Worked Example: Validating AI-generated Code"
+format: html
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+The worked example in this chapter is intended to demonstrate an appropriate workflow for prompting and validating AI-generated code as part of a data rescue project. 
+
+## Using AI-generated Code to Reconcile Site Names
+
+```{r, eval=FALSE}
+# Packages required as part of this example
+library(tidyverse)
+library(stringdist)
+library(assertr)
+```
+
+Suppose **Anita Query** is cleaning a historical dataset as part of a data rescue project.
+Anita has noticed that location names are not always recorded consistently and multiple entries seem to contain errors or typos.
+
+The project's source data files include a site reference table containing the official site names and identifiers.
+Anita wants to compare the site names in the main data table with this reference table to find potential matches, but they have not previously used [**regular expressions (regex)**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Regular expressions are text patterns used to identify, extract, or replace strings (i.e., text data). For example, finding values that begin with a symbol, contain certain characters, or follow a specific format."} notation (you can read more about [regex here](https://r4ds.hadley.nz/regexps.html)) or any type of matching for string data in R.
+
+Anita understands the intended data-cleaning workflow but is unsure how to implement it in R. Because they can clearly describe the desired output and will evaluate whether the results follow those rules, they decide that an AI tool could be appropriate for helping develop and understand a code snippet.
+
+Before prompting the AI tool, Anita considers the following:
+
+- Anita has not previously implemented approximate string matching and will need the generated code and its settings explained before they can validate them
+- Previous data rescue projects have used the `stringdist` package for approximate, or “fuzzy,” matching of string data
+- The project dataset is not yet public, so Anita will use only synthetic data when interacting with the AI tool
+
+Rather than asking an AI tool to decide which sites are equivalent, Anita asks it to help draft a short snippet of reproducible R code that:
+
+- Preserves the original site name
+- Identifies approximate / "fuzzy" matches using `stringdist`
+- Suggests possible matches for small spelling differences
+- Leaves names without a close match unresolved
+- Clearly separates suggested matches from accepted corrections
+
+Because the project data are not yet public, Anita creates a small synthetic example dataset below to share with the AI tool as part of an initial prompt:
+
+```{r site-example, eval=TRUE}
+site_records <- tibble::tribble(
+  ~RecordID, ~SiteNameRaw,
+  1, "North Fork Big Stream",
+  2, "Big Stream",
+  3, "South Meadow Creek",
+  4, "Clearwater Lke",
+  5, "Upper Falls Outlet",
+  6, "Unknown Tributary"
+)
+
+site_reference <- tibble::tribble(
+  ~SiteID, ~SiteNameReference,
+  "ST-01", "North Fork Big Stream",
+  "ST-02", "South Meadow Creek",
+  "LK-01", "Clearwater Lake",
+  "ST-03", "Upper Falls Outlet"
+)
+
+site_records
+
+site_reference
+```
+
+<br>
+
+### Review and Understand the AI-Generated Code
+
+The AI tool suggests the following code, specifically using `stringdist::amatch()` to find the closest reference name for each site:
+
+```{r initial-ai-code}
+match_index <- stringdist::amatch(
+  site_records$SiteNameRaw,
+  site_reference$SiteNameReference,
+  method = "lv",
+  maxDist = 3
+)
+
+site_matches_ai <- site_records |>
+  dplyr::mutate(
+    SiteID = site_reference$SiteID[match_index]
+  )
+
+match_index
+
+site_matches_ai
+```
+
+<br>
+
+Anita does not immediately apply this code to the full project dataset.
+They first run it on the synthetic example dataset and inspect the output.
+
+The code runs without errors, but Anita does not fully understand what the values in `match_index` represent or why some records receive `NA`.
+Rather than asking the AI tool to rewrite the workflow, they asks a narrower follow-up question:
+
+> Explain this code line by line without changing it.
+> In particular, explain what the first two arguments to `amatch()` represent, what `method = "lv"` and `maxDist = 3` control, what the function returns, and what happens when no suitable match is found.
+
+Anita compares the explanation with the `stringdist` documentation (e.g., by running `?stringdist::amatch()` in the R console) and summarizes what each part of the code does.
+
+| Code element | What it does | What Anita needs to consider |
+|------------------------|------------------------|------------------------|
+| `site_records$SiteNameRaw` | Supplies the names that need to be matched | These are source values and should be preserved |
+| `site_reference$SiteNameReference` | Supplies the approved names against which each source name is compared | Results depend on the quality and completeness of the reference table |
+| `method = "lv"` | Uses Levenshtein distance for matching, which counts the character insertions, deletions, and substitutions needed to change one string into another | Character similarity does not establish that two records represent the same monitoring location |
+| `maxDist = 3` | Returns a candidate only when the closest reference name has a distance of three or less | Three is a selected threshold, not a confidence score or proof of identity |
+| `match_index` | Returns the position of the closest qualifying name in the reference table, or `NA` when none is within the threshold | The result is an index, not a confirmed site identifier |
+| `site_reference$SiteID[match_index]` | Uses the returned positions to retrieve site identifiers | This step treats approximate suggestions as though they were confirmed matches |
+
+To make the returned indexes easier to interpret, Anita creates a temporary review table:
+
+```{r review-initial-matches}
+initial_match_review <- site_records |>
+  dplyr::mutate(
+    MatchIndex = match_index,
+    CandidateSiteID = site_reference$SiteID[match_index],
+    CandidateSiteName =
+      site_reference$SiteNameReference[match_index]
+  )
+
+initial_match_review
+```
+
+<br>
+
+The review table helps Anita see that:
+
+- Exact names are linked to their corresponding reference-table entries
+- `Clearwater Lke` is linked to `Clearwater Lake`
+- `Big Stream` does not receive a match, despite its potential match to `North Fork Big Stream`
+- `Unknown Tributary` also remains unmatched
+
+Anita wants to understand why the two imperfect names were treated differently, so they calculate the distances from the most plausible reference names (using the Levenshtein distance metric originally chosen by the AI tool via the `method = "lv"` argument in `stringdist::amatch()`:
+
+```{r inspect-example-distances}
+distance_examples <- tibble::tribble(
+  ~SiteNameRaw, ~SiteNameReference,
+  "Clearwater Lke", "Clearwater Lake",
+  "Big Stream", "North Fork Big Stream"
+) |>
+  dplyr::mutate(
+    LevenshteinDistance = stringdist::stringdist(
+      SiteNameRaw,
+      SiteNameReference,
+      method = "lv"
+    )
+  )
+
+distance_examples
+```
+
+<br>
+
+`Clearwater Lke` has a distance of one from `Clearwater Lake`, so it falls within the selected threshold.
+`Big Stream` has a distance greater than three from `North Fork Big Stream`, so `amatch()` returns `NA`.
+
+This investigation helps Anita understand what `maxDist = 3` controls.
+It limits which candidate names the code returns, but it does not determine whether a match is correct.
+
+The approach can also miss a real match when two names differ by more than the threshold.
+For example, the name `Big Stream` might refer to `North Fork Big Stream`, but text similarity alone cannot establish that relationship.
+
+Anita identifies two problems with the initial workflow:
+
+1.  It does not distinguish exact matches from approximate suggestions.
+2.  It writes approximate suggestions directly into a column called `SiteID`, making them appear confirmed.
+
+### Revise the Workflow Incrementally
+
+Anita knows how the output should look, but is still unfamiliar with some of the R functions needed to implement it.
+
+Rather than asking the AI tool to rewrite the entire workflow, Anita divides the revision into smaller tasks and reviews the output after each task before proceeding.
+
+#### Step 1: Identify exact matches
+
+Anita first asks:
+
+> Show me how to identify exact matches using base R's `match()` function.
+> Preserve the original location name and place exact-match identifiers in a separate column.
+> Explain what the returned index represents.
+
+The AI tool suggests:
+
+```{r identify-exact-matches}
+site_matches <- site_records |>
+  dplyr::mutate(
+    SiteNameClean = stringr::str_squish(SiteNameRaw),
+
+    ExactMatchIndex = match(
+      SiteNameClean,
+      site_reference$SiteNameReference
+    ),
+
+    ExactSiteID =
+      site_reference$SiteID[ExactMatchIndex]
+  )
+
+site_matches
+```
+
+<br>
+
+Anita reads the code line by line to understand what each function and argument is doing:
+
+- `str_squish()` removes leading or trailing spaces and reduces repeated internal spaces while preserving `SiteNameRaw`
+- `match()` compares each cleaned source name with the reference names
+- `ExactMatchIndex` stores the position of an exact match in the reference table
+- `ExactSiteID` retrieves the identifier from that position
+- Records without an exact match receive `NA`
+
+Anita inspects the table and confirms that `ExactSiteID` is populated only when the source name exactly matches a reference name.
+
+<br>
+
+#### Step 2: Generate suggestions only for unmatched records
+
+Anita next asks:
+
+> For records without an exact match, use `amatch()` to create a suggested site identifier and site name.
+> Use Levenshtein distance with a maximum distance of three.
+> Do not overwrite the original name or place suggested values in `ExactSiteID`.
+
+The AI tool suggests calculating the approximate-match indexes separately:
+
+```{r calculate-suggested-matches}
+approximate_match_index <- stringdist::amatch(
+  site_matches$SiteNameClean,
+  site_reference$SiteNameReference,
+  method = "lv",
+  maxDist = 3
+)
+
+approximate_match_index
+```
+
+<br>
+
+Anita confirms that this object has one value for each source record.
+Each value is either:
+
+- The position of a candidate in `site_reference`, or
+- `NA` when no reference name is within the selected distance.
+
+Anita then uses those indexes only for records without an exact match:
+
+```{r add-suggested-matches}
+site_matches <- site_matches |>
+  dplyr::mutate(
+    SuggestedMatchIndex = dplyr::if_else(
+      is.na(ExactMatchIndex),
+      approximate_match_index,
+      NA_integer_
+    ),
+
+    SuggestedSiteID =
+      site_reference$SiteID[SuggestedMatchIndex],
+
+    SuggestedSiteName =
+      site_reference$SiteNameReference[SuggestedMatchIndex]
+  )
+
+site_matches
+```
+
+<br>
+
+Before continuing, Anita inspects the intermediate table and confirms that:
+
+- Exact matches remain in `ExactSiteID`
+- `Clearwater Lke` receives a suggested match
+- Exact matches do not also receive suggestions
+- `Big Stream` and `Unknown Tributary` remain unresolved
+- The original `SiteNameRaw` values have not changed.
+
+<br>
+
+#### Step 3: Add distances and review categories
+
+Anita asks for help with one final implementation step:
+
+> Calculate the Levenshtein distance for each suggested match.
+> Then label each record as an exact match, a suggested match requiring review, or no close match.
+> Do not make any additional matching decisions.
+
+The AI tool suggests the following code:
+
+```{r classify-site-matches}
+site_matches <- site_matches |>
+  dplyr::mutate(
+    SuggestedMatchDistance = stringdist::stringdist(
+      SiteNameClean,
+      SuggestedSiteName,
+      method = "lv"
+    ),
+
+    MatchStatus = dplyr::case_when(
+      !is.na(ExactSiteID) ~ "Exact match",
+      !is.na(SuggestedSiteID) ~ "Review suggested match",
+      TRUE ~ "No close match"
+    )
+  ) |>
+  dplyr::select(
+    -ExactMatchIndex,
+    -SuggestedMatchIndex
+  )
+
+site_matches
+```
+
+<br>
+
+Anita walks through the new code line by line to understand it fully:
+
+- `stringdist()` calculates the distance between each source name and its suggested reference name
+- Records without a suggestion receive `NA` for `SuggestedMatchDistance`
+- `case_when()` checks for an exact match first
+- Only records without an exact match can be labelled as suggested matches
+- Records without either type of match remain unresolved
+
+The revised output preserves the original source values and distinguishes among:
+
+- Exact text matches
+- Approximate matches requiring review
+- Records without a sufficiently close match
+
+<br>
+
+### Validate the Output
+
+Anita now needs to check whether the revised code behaves according to the rules originally defined.
+They already know that functions in the `assertr` package can be very useful for validation checks like these.
+
+Anita begins with dataset-level expectations using `assertr::verify()` and column-level expectations using `assertr::assert()`.
+
+```{r validate-site-output}
+site_matches |>
+  assertr::verify(
+    nrow(site_matches) == nrow(site_records)
+  ) |>
+  assertr::verify(
+    identical(
+      SiteNameRaw,
+      site_records$SiteNameRaw
+    )
+  ) |>
+  assertr::assert(
+    assertr::not_na,
+    RecordID,
+    SiteNameRaw,
+    MatchStatus
+  ) |>
+  assertr::assert(
+    assertr::is_uniq,
+    RecordID
+  ) |>
+  assertr::assert(
+    assertr::in_set(
+      "Exact match",
+      "Review suggested match",
+      "No close match"
+    ),
+    MatchStatus
+  )
+```
+
+<br>
+
+These checks help confirm that:
+
+- No records were lost
+- The original site-name column was preserved
+- Required fields are present
+- Record identifiers remain unique
+- Match statuses contain only expected values
+
+Anita then checks the approximate suggestions, again with `assertr`:
+
+```{r validate-site-suggestions}
+site_matches |>
+  dplyr::filter(
+    MatchStatus == "Review suggested match"
+  ) |>
+  assertr::assert(
+    assertr::in_set(site_reference$SiteID),
+    SuggestedSiteID
+  ) |>
+  assertr::assert(
+    assertr::in_set(site_reference$SiteNameReference),
+    SuggestedSiteName
+  ) |>
+  assertr::assert(
+    assertr::within_bounds(1, 3),
+    SuggestedMatchDistance
+  )
+```
+
+<br>
+
+The suggested identifiers and names come from the approved reference table and their distances fall within the selected range.
+
+Anita also verifies the expected behavior of the synthetic examples:
+
+```{r validate-known-examples}
+site_matches |>
+  assertr::verify(
+    SuggestedSiteName[
+      SiteNameRaw == "Clearwater Lke"
+    ] == "Clearwater Lake"
+  ) |>
+  assertr::verify(
+    is.na(
+      SuggestedSiteName[
+        SiteNameRaw == "Big Stream"
+      ]
+    )
+  ) |>
+  assertr::verify(
+    is.na(
+      SuggestedSiteName[
+        SiteNameRaw == "Unknown Tributary"
+      ]
+    )
+  )
+```
+
+<br>
+
+Finally, Anita inspects every unresolved or suggested match directly:
+
+```{r review-site-suggestions}
+site_matches |>
+  dplyr::filter(
+    MatchStatus != "Exact match"
+  )
+```
+
+<br>
+
+The checks above with `assertr` help show that the code followed the rules Anita defined, but they do not establish that the suggested matches are correct.
+
+Before accepting a suggested site match, Anita and the team should compare it with other evidence, such as:
+
+- Station identifiers
+- Coordinates
+- Sampling dates
+- Field sheets
+- Site descriptions
+- Confirmation from the data owner
+
+The absence of an approximate match also does not prove that two names represent different locations.
+It only shows that the selected text-matching method and threshold were not sufficient to link them.
+
+Only after understanding and validating the workflow on synthetic data does Anita apply the code locally to the full project dataset.
+
+::: callout-important
+### Avoid outsourcing your thinking to an AI tool
+
+AI helped Anita implement and understand an unfamiliar coding approach, but it did not determine which dataset locations were equivalent.
+In this small example, Anita implemented a potentially appropriate use of AI-generated code because they:
+
+1.  Defined the intended behavior before requesting code
+2.  Used a small synthetic dataset rather than the not-yet-public project data
+3.  Requested a small initial code snippet
+4.  Asked the AI tool to explain unfamiliar functions and settings
+5.  Compared the explanation with package documentation
+6.  Inspected intermediate values rather than only the final output
+7.  Identified assumptions and unsafe behavior
+8.  Decomposed the revision into smaller coding tasks
+9.  Validated the results with assertions and known examples
+10. Retained human review as the final decision point
+
+Remember that code that runs successfully is not necessarily code that represents the data correctly.
+:::
+
+### Document the AI Assistance
+
+Because AI assistance contributed meaningfully to the coding workflow, Anita records its use in the project documentation.
+
+This type of documentation can include:
+
+- What the AI tool contributed
+- How the generated code was reviewed
+- How the output was validated
+- Which decisions remained under human control
+
+The below entry could be included in the project README or change log.
+
+```{r document-ai-use, eval=TRUE}
+ai_use_log <- tibble::tribble(
+  ~ProjectStep,
+  ~AIContribution,
+  ~HumanReviewAndValidation,
+  "Monitoring-location name reconciliation",
+  paste(
+    "An AI tool was used to explain stringdist functions",
+    "and draft incremental R code for exact and approximate",
+    "matching of monitoring-location names."
+  ),
+  paste(
+    "The project team checked the package documentation,",
+    "inspected intermediate indexes and distances, revised",
+    "the code to separate suggestions from exact matches,",
+    "validated expected behavior with assertr, and required",
+    "manual confirmation before accepting suggested matches.",
+    "A small, representative synthetic dataset was used when",
+    "interacting with the AI tool; no non-public project data",
+    "were shared."
+  )
+)
+
+dplyr::glimpse(ai_use_log)
+```

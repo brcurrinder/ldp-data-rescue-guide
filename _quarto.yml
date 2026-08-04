@@ -31,6 +31,7 @@ book:
     - part: "Artificial Intelligence in Data Rescue"
       chapters:
         - chapters/ai-overview.qmd
+        - chapters/ai-validation-example.qmd
 
     - part: "General Data Rescue Workflow"
       chapters:

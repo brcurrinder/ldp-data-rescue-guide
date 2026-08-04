@@ -1,101 +1,347 @@
 ---
-title: "Using Artificial Intelligence Tools in Data Rescue"
+title: "Artificial Intelligence in Data Rescue"
+editor:
+  markdown:
+    wrap: sentence
 ---
 
+Artificial intelligence (AI) tools, particularly those built on top of Large Language Models (LLMs), have surged in both capabilities and usage.
+These tools may be appropriate for assistance with writing, coding, troubleshooting, summarization, and other parts of a data rescue project.
+They may help teams work more efficiently, especially when used for clearly defined structural or language-focused tasks.
+
+However, the use of AI tools comes with risk.
+These tools can produce convincing but incorrect information, code, citations, and interpretations.
+Outputs may also obscure assumptions and make it difficult to understand how a result was produced.
+As such, AI tools should support human thinking and expertise rather than replace them.
+
+This chapter serves as a guide for how to approach the use of AI tools in your data rescue project, as well as the inherent risks of using these tools.
 By the end of this chapter, you should be able to:
--   Recognize appropriate and inappropriate uses of Artificial Intelligence (AI) tools in data rescue
--   Explain the major risks of AI-assisted coding
--   Apply a general workflow for validating AI-generated code
--   Document AI-assisted code in a reproducible pipeline
--   Using AI as a programming assistant rather than as an autonomous agent
 
-## Introduction: AI as a tool, not an authority
+- Recognize appropriate and inappropriate uses of AI tools in data rescue
+- Explain the risks and potential strategies for incorporating AI-generated code into your workflow
+- Use AI tools as an assistant rather than as an autonomous agent
+- Appropriately document meaningful assistance from AI tools
 
-### Opportunities and limitations
+[In the following chapter](ai-validation-example.qmd), we present a worked example for how to appropriately use an AI tool to generate and validate code in a data rescue project.
 
-### Scientific responsibility remains with the researcher / data steward
+<br>
 
-## Where AI fits into data rescue
+## Core Principles
 
-### Code explanation
+Consider the following principles as a guide for how to think about use of AI tools during your data rescue project.
 
-### Boilerplate code and refactoring
+### Principle 1: You are responsible for your project outputs
 
-### Documentation
+AI tools may assist with drafting or implementation of your data rescue project, but responsibility remains with the person or team using the outputs.
+You must be willing to stand behind any work produced in partnership with an AI tool, and you must document that you have done so.
+You should not incorporate AI-generated outputs unless you fully understand and can verify them.
 
-### Brainstorming and exploration
+All AI-assisted work should be reviewed for:
 
-## Ethical, legal, and privacy considerations
+- Accuracy
+- Consistency with the source materials
+- Alignment with project methods and standards
+- Unsupported assumptions
+- Appropriate tone and framing that aligns with your team's work
+- Reproducibility
 
-### Confidential or sensitive data
+AI tools cannot be treated as authors, data stewards, analysts, or scientific authorities.
 
-### Copyright and licensing of datasets and code
+**Key takeaway: Human reviewers always remain responsible for the integrity and accuracy of any AI-generated outputs.**
 
-### Institutional policies on AI use
+### Principle 2: Use AI to support your thinking, not replace it
 
-### Transparency and disclosure when appropriate
+Like any scientific project, data rescue requires both [**critical thinking**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="The process of evaluating evidence, assumptions, uncertainty, and competing explanations before reaching a conclusion."} and [**computational thinking**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A problem-solving approach that involves breaking a problem into smaller tasks, describing logical steps, anticipating edge cases, and testing whether a computational solution behaves as intended."}.
+
+In this context, critical thinking includes:
+
+- Defining a problem clearly
+- Evaluating evidence and uncertainty
+- Identifying assumptions
+- Comparing conflicting sources of information
+- Deciding what can and cannot be inferred
+- Explaining why a decision is defensible
+
+Computational thinking includes:
+
+- Breaking a problem into smaller tasks
+- Tracing how data change through a workflow
+- Anticipating unusual or invalid inputs
+- Designing checks and tests to validate outputs
+- Distinguishing the intended result from an accidental output
+
+AI may assist with parts of these processes, but it should not perform the reasoning on your behalf.
+Additionally, a number of studies have shown that over-reliance on AI tools erodes these types of skills ().
+
+**Key takeaway: Incorporate AI tools when it improves the quality of your work, not simply the speed of producing content.**
+
+### Principle 3: Reproducible science requires transparency
+
+AI systems often do not provide a transparent or reproducible account of how they produced an answer.
+A prompt may also return different results when repeated or when used with a different model.
+
+This does not necessarily prevent responsible use, but it means that an AI output should not be treated as a reproducible record of work.
+
+Meaningful AI assistance should be disclosed when appropriate, especially when it substantially shaped code, documentation, or other project outputs.
+
+**Key takeaway: Transparency about meaningful AI assistance supports the reproducibility, accountability, and integrity of the research process.**
+
+### Principle 4: Protect non-public information
+
+Do not share confidential, personal, sensitive, or unpublished information unless the tool has been explicitly approved for that use.
+This includes unpublished datasets, private communications, partner information, personal information, access credentials, draft results, internal reports, and confidential community or Indigenous knowledge.
+
+Sharing this information with AI tools may violate privacy laws and erodes trust with our partners and data owners.
+
+In a prompt for an AI tool, consider describing the problem you are hoping to solve in general terms or create a small synthetic example instead of sharing any non-public information.
+For example, instead of uploading an unpublished dataset CSV file to an AI tool, you could create a small fictional table that reproduces the relevant column types and table structure.
+
+**Key takeaway: If the information is not already public, do not share it with an AI system.**
+
+<br>
+
+## Where AI Can Fit Into Data Rescue
+
+AI tools are generally more helpful for tasks that are **structural, explanatory, or language-focused**, rather than tasks requiring independent scientific judgment and domain expertise.
+While considering our core principles above, the following cases may be appropriate uses of AI during data rescue projects:
+
+### Appropriate supporting uses
+
+| Structural tasks | Explanatory tasks | Language-focused tasks |
+|------------------------|------------------------|------------------------|
+| Reorganizing notes into an outline | Explaining an unfamiliar R function | Editing text for clarity and readability |
+| Drafting a small code snippet | Suggesting possible debugging steps for code | Summarizing a publicly available report |
+| Proposing test or edge cases for testing code | Identifying questions to discuss with the project team | Improving a first draft of wording in metadata |
+
+### Uses requiring substantial caution
+
+AI may assist with, but should not independently perform, tasks such as:
+
+- Mapping source fields to a repository schema
+- Interpreting unusual units or qualifiers
+- Proposing corrections to values
+- Selecting statistical methods
+- Determining whether records should be altered or removed
+- Interpreting ecological patterns
+- Drawing conclusions from scientific data
+
+### Uses to avoid
+
+Do not rely on AI to independently:
+
+- Validate its own outputs
+- Interpret scientific results
+- Produce scientific conclusions
+- Decide what data are valid
+- Invent missing metadata
+- Infer a method, unit, sample fraction, or detection limit without evidence
+- Generate citations that have not been verified
+- Alter data without a documented decision
+- Approve work for publication
+
+AI tools can produce polished technical content while still being wrong.
+Scientific interpretation and environmental claims must remain with qualified people.
+
+<br>
+
+## AI-Assisted Coding in Data Rescue
+
+Data rescue workflows are typically built on reproducible code.
+As such, AI tools may be helpful coding assistants in a data rescue project (see the [next chapter](ai-validation-example.qmd) for a worked example).
+However, AI-generated code carries particular risks when incorporated into our data rescue workflows.
+
+For example, AI-generated code may:
+
+- Misunderstand the structure or meaning of a dataset
+- Use the wrong field or unit
+- Perform an incorrect calculation
+- Silently drop records
+- Overwrite source values
+- Treat censored values as measured results
+- Invent package functions or arguments
+- Use outdated syntax
+- Work only for the example provided
+- Fail on missing values or unexpected inputs
+- Implement faulty logic
+
+All AI-generated code must be reviewed, tested, and validated **by a human reviewer** against known results before it can be used in a project workflow.
+In our projects, an AI tool should not be the final authority on validating any code outputs (or any other outputs).
+
+::: callout-important
+### Never commit code you cannot explain
+
+Before adding AI-assisted code to a shared project, you should be able to explain:
+
+- What each major step does
+- Why the step is needed
+- What assumptions it makes
+- Which records it affects
+- How missing or unusual values are handled
+- How you checked that it works correctly
+:::
+
+### Break large tasks into smaller steps
+
+Avoid asking an AI tool to generate an entire data rescue workflow at once.
+
+Instead, separate the work into smaller code snippets that you can independently test and validate.
+
+Working incrementally will make it easier to identify where errors are introduced and reduces the likelihood that incorrect assumptions will be hidden inside a long script.
+
+### Use synthetic or public examples
+
+When asking for coding help, provide:
+
+- Invented column names and values
+- A small reproducible example
+- Publicly released data
+- A simplified description of the problem
+
+Do not paste the full project dataset into an external AI system simply because the code depends on its structure.
+
+A small synthetic example should contain enough variation to demonstrate the problem, including relevant missing values and unusual cases.
+
+### Ask for explanations and tests
+
+Useful requests include:
+
+- "Explain each transformation."
+- "List the assumptions made by this code."
+- "Identify cases where this code could fail."
+- "Write tests for missing, censored, duplicated, and malformed values."
+- "Do not remove or impute records."
+- "Show the intermediate table after each major step."
+- "Use functions and packages already used in this project."
+
+A strong explanation does not prove that the code is correct, but it makes the logic easier to inspect.
+
+<br>
+
+## Validating AI-Generated Code
+
+Use any AI-generated code as a **draft**, not as a finished solution.
+
+### 1. Read the code line by line
+
+Check:
+
+- Which input columns are used
+- Which output columns are created
+- Whether any columns are overwritten
+- How missing values are handled
+- Whether records are filtered or dropped
+- Whether joins could duplicate rows
+- Whether units or data types are changed
+- Whether assumptions are hidden in default values
+
+You should understand the purpose and expected effect of every major operation.
+
+### 2. Test a small representative example
+
+Create a synthetic example that includes both ordinary and difficult cases:
+
+- Valid values
+- Missing values
+- Censored values
+- Unexpected text
+- Duplicated identifiers
+- Differences in capitalization
+- Values at expected boundaries
+
+### 3. Compare against known results
+
+For at least a few records, determine the expected output yourself.
+
+The code should reproduce those known results exactly.
+
+For example, if a transformation is intended to standardize ten site names, manually confirm several of the resulting names against the site reference list.
+
+### 5. Check unusual and invalid cases
+
+A workflow that succeeds on ordinary values may fail on more unusual data records.
+Testing these cases is often more informative than testing only the expected input.
+
+### 6. Inspect summaries and visualizations
+
+After a transformation, compare the inputs and outputs using:
+
+- Row counts
+- Missing-value counts
+- Unique values
+- Value ranges
+- Grouped summaries
+- Joins and anti-joins
+- Plots
+- Selected record-level comparisons
+
+Code may run successfully while still changing the data in an unintended way.
+Inspecting and fully understanding the output is therefore an essential part of code validation.
+
+<br>
+
+::: callout-note
+### Code that runs is not necessarily correct
+
+Even if code runs without producing an error, it may not process an object correctly.
+A successful command only shows that the code could be executed.
+It does not demonstrate that the code correctly represents the source data or the scientific meaning of the values.
+:::
 
 
-## Where AI commonly fails
 
-### Hallucinations
+## Documenting AI Assistance
 
-### Lack of domain expertise
+Not every minor use of AI requires an extensive disclosure.
+However, meaningful use should be documented when it affects project code, methods, metadata, or published outputs.
 
-### Context limitations 
+Possible locations include:
 
-### Over-reliance and "vibe-coding"
+- The project README
+- The change log
+- Code comments
+- A methods or data-processing statement
+- A contribution statement
+- An internal project record
 
-### Productivity versus learning
+A short code-related entry might say:
 
+> An AI assistant was used to suggest and explain an initial approach for parsing censored values.
+> Project members reviewed and modified the code, tested it against synthetic and known cases, and documented the final treatment of censored results in the change log.
 
-## Problem framing versus code generation
+## A Practical Workflow
 
-### Scientific reasoning versus implementation
+A general workflow to follow when incorporating AI tools can be:
 
-### Task decomposition
+1.  Start with your own interpretation, plan, or outline
+2.  Decide whether the information is appropriate to share
+3.  Use AI for a narrow and clearly defined supporting task
+4.  Review and understand the output
+5.  Test it against known results and unusual cases
+6.  Revise it to match project standards
+7.  Document important assumptions, decisions, and AI assistance
 
-### Strategic prompting
+::: callout-tip
+### Before using an AI tool, ask yourself
 
+1.  Does this task require scientific or domain expertise?
+2.  Is the information appropriate to share with the tool?
+3.  Can I independently verify the output?
+4.  Will I understand and be able to explain the result?
+5.  Would using the tool support my learning, or bypass it?
+:::
 
-## Validating AI-generated code
+<br>
 
-### Validation depends on the task
+## This Guidance Will Change
 
-### Reading and understanding code
+AI tools, institutional policies, and accepted practices are evolving rapidly, and this guidance will be updated and revised as tools change.
+Much like the rest of this guidebook, this chapter should be treated as a living document rather than a permanent set of rules.
 
-### Happy path versus edge cases
+Data rescue teams should discuss their experiences openly and update their practices as technology, institutional requirements, and understanding continue to evolve.
 
-### Spot checks
+## References
 
-### Independent validation
+NIST AI Risk Management Framework (AI RMF) https://www.nist.gov/itl/ai-risk-management-framework
 
-### Summary statistics and visualization
-
-### Regression testing
-
-
-## Example: Validating an AI-assisted data transformation
-
-
-
-## Best practices
-
-### Work incrementally
-
-### Generate tests
-
-### Refactor only after code works
-
-### Never commit code you can't explain
-
-### Document assumptions and decisions
-
-
-## Key takeaways
-
-AI can accelerate implementation, but cannot replace scientific reasoning. It can also decelerate implementation if not adopted critically.
-Every transformation should be transparent, reproducible, and independently validated.
-Responsibility for the code and resulting dataset lies with the researcher.
-
+Parent-Doliner, G. Water Rangers Internal Guidance: use of artificial intelligence (AI) tools. Version 1. March 2026.
 
