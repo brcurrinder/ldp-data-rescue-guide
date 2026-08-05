@@ -15,7 +15,7 @@ By the end of this chapter (and after reading the Introduction to Data Chapter),
 
 ## What is metadata? {#sec-what-is-metadata}
 
-![*We don't have to include a cartoon here if we don't want to...*](images/data_metadata.png){fig-alt="Cartoon about data versus metadata with an unlocked box of gold representing data and a map with an X representing metadata." fig-align="left" width="526"}
+![Data versus metadata.](images/data_metadata.png){fig-alt="Cartoon about data versus metadata with an unlocked box of gold representing data and a map with an X representing metadata." fig-align="left" width="526"}
 
 **Metadata** is a collection of supportive data that provides additional information about a dataset, analogous to a help or README file that accompanies software. As such, the simplest definition of metadata is that it is **"data about data"**, because it provides contextual information about the data that cannot be included or inferred from the data itself. Therefore, metadata often includes information about the **who, what, when, where, why, and how** of a dataset, including:
 
@@ -300,3 +300,7 @@ Contributors to DataStream enter their metadata in a standardized format prior t
 | Vertical Extent | Auto-generated | Height/depth range represented in the dataset. |
 | Temporal Extent | Auto-generated | Time span covered by the dataset. |
 :::
+
+## References in this chapter
+
+DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.

@@ -166,3 +166,11 @@ The **WQX schema** was developed by the US Environmental Protection Agency (EPA)
 **Proprietary software** is software owned by a company and typically requires a specific application or license to open and edit its native file formats. Common proprietary software you have likely encountered includes the Microsoft Office Suite (Excel, Word, Powerpoint, Access, etc.) or ArcGIS Pro / ArcMap. As a general principle, **we try to avoid using proprietary software** because access to the software cannot be guaranteed in the future. As a primary goal of data rescue is to make data available in perpetuity, data stored in proprietary software is usually not accepted by repositories. Additionally, software like Microsoft Excel can be highly problematic for data management. For example, Excel automatically reformats cell values (e.g., dates), and as a point-and-click application (i.e., a low-code or no-code application), it makes data processing and quality-control steps difficult to reproduce. So while we may use Excel to enter data into digital format (like in a pre-formatted template), once entered the data should be exported as a .csv file for further work.
 
 <br>
+
+## References in this chapter
+
+DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.
+
+Koch, C., Heidenblad, D., Felkner, K., Rampin, R., & Poisot, T. *Data management with SQL for ecologists*. Data Carpentry. Retrieved from <https://datacarpentry.github.io/sql-ecology-lesson/>.
+
+Lovelace, R., Nowosad, J., & Muenchow, J. (2019). *Geocomputation with R* (web version). Geocompx. Retrieved from <https://r.geocompx.org/>.

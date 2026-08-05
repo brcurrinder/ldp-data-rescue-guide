@@ -1,13 +1,569 @@
 ---
-title: "Writing Reproducible Code"
+title: "Some Tools and Best Practices for Reproducible Coding in R"
+editor:
+  markdown:
+    wrap: sentence
 ---
 
-# Best practices & R packages
+Reproducible coding means that another person (your future self included) can understand how a dataset was processed and reproduce the same outputs from the same source materials.
 
-## Raw data vs Processed data
-## Data schemas
-## Commenting
-## Script organization
-## Relative paths - R package 'here'
-## Archiving R package versions - R package 'packrat'
-## Research workflow - R package 'rosf' (for integrating with OSF)
+In a data rescue project, reproducible code should clearly distinguish source data from derived outputs, document important decisions, validate assumptions about the data, and avoid relying on file paths or package environments that exist only on one person's computer.
+
+This chapter introduces several tools and practices that can help make an R workflow more transparent, portable, and reproducible.
+
+By the end of this chapter, you should be able to:
+
+- Organize project files according to their roles
+- Distinguish raw data from processed data
+- Translate important data expectations into validation checks
+- Organize and comment an R script clearly
+- Use functions to apply repeated transformations consistently
+- Construct portable file paths with the `here` package
+- Record project package dependencies with `renv`
+
+<br>
+
+## Organize the Project
+
+A reproducible workflow begins with a clear project structure.
+
+One possible structure for a data rescue project in R could be:
+
+``` text
+project/
+├── data/
+│   ├── raw/
+│   └── processed/
+├── scripts/
+├── outputs/
+├── README.md
+└── project.Rproj
+```
+
+The exact folder names may vary among projects, but each location should have a clear purpose.
+
+For example:
+
+- `data/raw/` contains the original source data
+- `data/processed/` contains data created through the cleaning workflow
+- `scripts/` contains the code used to process and validate the data
+- `outputs/` contains figures, reports, and other derived products
+- `README.md` explains the project structure and workflow
+
+::: callout-tip
+### Use an RStudio Project
+
+An RStudio Project provides a consistent project root and helps keep files, paths, package environments, and version control associated with the same project.
+
+Open the project through its `.Rproj` file rather than navigating to individual scripts and changing the working directory manually.
+:::
+
+<br>
+
+## Source Data and Processed Data
+
+Source data are the original files received or recovered during the data rescue project.
+These files provide the source record for the project and should remain unchanged.
+
+Processed data are created through documented cleaning, standardization, validation, or formatting steps.
+
+A reproducible workflow should:
+
+- Preserve the original source files
+- Perform transformations through code
+- Save processed files separately
+- Make it possible to recreate the processed data from the raw, source files
+
+::: callout-important
+### Treat raw data as read-only
+
+Do not manually edit, rename, reorder, or overwrite values within the original data files.
+
+When a correction is required, preserve the original value and create the corrected or standardized value through code.
+Document the reason for the change in the project change log.
+:::
+
+For example, suppose a raw data file contains dates stored as character values.
+
+```{r import-and-process, eval=FALSE}
+water_quality_raw <- readr::read_csv(
+  here::here(
+    "data",
+    "raw",
+    "water_quality.csv"
+  )
+)
+
+water_quality_processed <- water_quality_raw |>
+  dplyr::mutate(
+    SampleDateParsed = as.Date(
+      SampleDate,
+      format = "%Y-%m-%d"
+    )
+  )
+
+readr::write_csv(
+  water_quality_processed,
+  here::here(
+    "data",
+    "processed",
+    "water_quality_clean.csv"
+  )
+)
+```
+
+The original `SampleDate` column remains available, while the parsed value is stored in a new field called `SampleDateParsed`.
+
+This approach preserves the source value and makes the transformation explicit.
+
+**Key takeaway: A processed dataset should be reproducible from the raw data and the project code.**
+
+<br>
+
+## Data Schemas and Validation
+
+A [**data schema**](data.qmd#data-schemas) describes how a dataset is expected to be structured.
+
+A schema may define:
+
+- Required columns
+- Expected data types
+- Required values
+- Allowable categories
+- Valid units
+- Date or time formats
+- Relationships among fields
+- Acceptable numeric ranges
+
+For example, a simple schema for a water-quality results table might specify that:
+
+- `RecordID` must be present and unique
+- `SiteID` cannot be missing
+- `SampleDate` must contain valid dates
+- `CharacteristicName` must use an approved vocabulary
+- `ResultValue` must be numeric when a measured result is reported
+- `ResultUnit` must be appropriate for the characteristic
+
+We can use validation checks in our code to test whether the data meet the expectations of a schema.
+
+### Translate expectations into checks
+
+The `assertr` package provides functions for expressing assumptions about a dataset directly in an R workflow.
+
+Suppose the processed data are expected to contain several required columns.
+
+```{r validate-required-columns, eval=FALSE}
+water_quality_processed |>
+  assertr::verify(
+    assertr::has_all_names(
+      "RecordID",
+      "SiteID",
+      "SampleDateParsed",
+      "CharacteristicName",
+      "ResultValue"
+    )
+  )
+```
+
+`assertr::verify()` evaluates a condition about the dataset as a whole.
+
+We can also check individual columns with `assertr::assert()`:
+
+```{r validate-column-values, eval=FALSE}
+water_quality_processed |>
+  assertr::assert(
+    assertr::not_na,
+    RecordID,
+    SiteID,
+    SampleDateParsed,
+    CharacteristicName
+  ) |>
+  assertr::assert(
+    assertr::is_uniq,
+    RecordID
+  )
+```
+
+If a required value is missing or an identifier is duplicated, the validation will fail and report the records that violated the expectation.
+
+Controlled vocabularies can be checked with `assertr::in_set()`:
+
+```{r validate-characteristics, eval=FALSE}
+approved_characteristics <- c(
+  "Dissolved oxygen",
+  "pH",
+  "Temperature, water"
+)
+
+water_quality_processed |>
+  assertr::assert(
+    assertr::in_set(
+      approved_characteristics
+    ),
+    CharacteristicName
+  )
+```
+
+**Key takeaway: Validation code makes important assumptions about the data visible and testable.**
+
+<br>
+
+## Write Readable and Maintainable Code
+
+A reproducible script should communicate both what was done and how the workflow is organized.
+
+Someone unfamiliar with the project should be able to follow the major steps from the beginning of the script to the end.
+
+### Script organization
+
+A useful script structure might look like this:
+
+```{r script-organization, eval=FALSE}
+# 01-clean-water-quality-data.R
+
+# Load packages ----------------------------------------------------------
+
+library(tidyverse)
+library(here)
+library(assertr)
+
+# Import data ------------------------------------------------------------
+
+water_quality_raw <- readr::read_csv(
+  here::here(
+    "data",
+    "raw",
+    "water_quality.csv"
+  )
+)
+
+# Inspect and validate source data ---------------------------------------
+
+# Clean and standardize --------------------------------------------------
+
+# Validate processed data ------------------------------------------------
+
+# Save outputs -----------------------------------------------------------
+```
+
+Section headings make it easier to navigate a long script and understand its overall sequence.
+
+Other useful practices include:
+
+- Give each script a clear purpose
+- Number scripts when they need to run in a particular order
+- Use descriptive object and column names
+- Load required packages near the beginning
+- Organize code so it can run from top to bottom
+- Avoid leaving important processing steps only in the R Console
+- Remove unused or experimental code before finalizing the workflow
+
+For example, numbered scripts might include:
+
+``` text
+scripts/
+├── 01-import-data.R
+├── 02-clean-data.R
+├── 03-validate-data.R
+└── 04-create-datastream-export.R
+```
+
+The sequence should also be described briefly in the project README.
+
+### Commenting code
+
+Comments are most useful when they explain **why** a decision was made, what assumption is being applied, or how an unusual case is being handled.
+
+A less useful comment simply repeats **what* is being done by the code:
+
+```{r less-useful-comment, eval=FALSE}
+# Filter missing values
+results_for_checks <- water_quality_processed |>
+  dplyr::filter(
+    !is.na(ResultValue)
+  )
+```
+
+A more useful comment explains the purpose of the operation:
+
+```{r useful-comment, eval=FALSE}
+# Range checks require a numeric result
+# Records without one remain preserved in the full processed table
+results_for_checks <- water_quality_processed |>
+  dplyr::filter(
+    !is.na(ResultValue)
+  )
+```
+
+Useful comments can explain:
+
+- Why an original value is being preserved
+- Why a record is being flagged rather than corrected
+- Why a particular threshold was selected
+- How missing or censored values are being represented
+- Why a transformation differs from an apparently simpler alternative
+
+### Use functions for repeated operations
+
+Repeated code can create inconsistencies and make a workflow harder to maintain.
+
+Suppose site names need to be standardized in several datasets.
+Rather than rewriting the same transformation each time, we can define a function:
+
+```{r standardize-site-function}
+standardize_site_name <- function(x) {
+  x |>
+    stringr::str_squish() |>
+    stringr::str_to_title()
+}
+```
+
+The function can then be applied consistently:
+
+```{r apply-site-function, eval=FALSE}
+site_data <- site_data |>
+  dplyr::mutate(
+    SiteNameClean = standardize_site_name(
+      SiteNameRaw
+    )
+  )
+```
+
+If the standardization rule later changes, it can be updated in one location.
+
+A function should have:
+
+- A clear name
+- A clearly defined input
+- A predictable output
+- A limited and understandable purpose
+- Tests using ordinary and unusual values
+
+For example:
+
+```{r test-site-function}
+standardize_site_name(
+  c(
+    " north fork stream ",
+    "SOUTH   MEADOW CREEK",
+    NA_character_
+  )
+)
+```
+
+::: callout-tip
+### When should you write a function?
+
+When the same transformation is copied more than once, consider placing it in a function.
+
+A function is also useful when an important processing rule should be defined, tested, and documented in one place.
+:::
+
+Functions can have a steep learning curve, but investing the time and effor is worth it. See more on how to construct functions in [R for Data Science (2e), Chapter 25](https://r4ds.hadley.nz/functions.html)
+
+<br>
+
+## Use Portable File Paths with `here`
+
+An absolute file path describes the full location of a file on one computer.
+
+For example:
+
+```{r absolute-path, eval=FALSE}
+"/Users/student/Desktop/project/data/raw/water_quality.csv"
+```
+
+This path is unlikely to work on another person's computer.
+It may also stop working if the project folder is moved.
+
+The `here` package constructs paths relative to the project root:
+
+```{r relative-path}
+here::here(
+  "data",
+  "raw",
+  "water_quality.csv"
+)
+```
+
+As long as the project folders retain the same internal structure, this path can work regardless of where the project is stored.
+
+Use `here::here()` when reading and writing project files:
+
+```{r use-here, eval=FALSE}
+water_quality_raw <- readr::read_csv(
+  here::here(
+    "data",
+    "raw",
+    "water_quality.csv"
+  )
+)
+
+readr::write_csv(
+  water_quality_processed,
+  here::here(
+    "data",
+    "processed",
+    "water_quality_clean.csv"
+  )
+)
+```
+
+For an important script or report, `here::i_am()` can declare where the file is expected to be located:
+
+```{r here-i-am, eval=FALSE}
+here::i_am(
+  "scripts/02-clean-data.R"
+)
+```
+
+This provides an additional check that the project root has been identified correctly.
+
+::: callout-warning
+### Avoid `setwd()` in project scripts
+
+`setwd()` changes the working directory for the current R session and often depends on a computer-specific path.
+
+Using an RStudio Project and relative paths makes the workflow more portable and avoids requiring each person to manually set the working directory.
+:::
+
+**Key takeaway: Relative paths allow the same project code to work in different locations and on different computers.**
+
+<br>
+
+## Record Package Environments with `renv`
+
+R packages change over time.
+A script that works with one version of a package may behave differently (or fail entirely!) with another version. If you have ever returned to an old R script to re-run an analysis, or tried to run a script shared by a collaborator, you may know how much effort it can take to recreate the original package environment and get the code working as intended.
+
+The `renv` package solves this issue. `renv` helps create a project-specific package environment and records the package versions used by the project. It is relatively simple to implement and has just a few functions, but you should understand what is happening "under the hood" for these functions in order to use it effectively.
+
+Note: `renv` is the successor to the R package `packrat`, which you may or may not be familiar with.
+
+### Initialize a project environment
+
+For a new project, `renv` can be initialized with:
+
+```{r renv-init, eval=FALSE}
+renv::init()
+```
+
+This creates an `renv` project library and a file called `renv.lock` (which is in [JSON]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="JSON, or JavaScript Object Notation, is a simple way to write down and organize information using plain text, but that works with almost any computer language. Think of it like a digital label or a neat list that computers use to talk to each other."} format). You generally run `renv::init()` only once when setting up the project (note that it will likely restart your R session when run).
+
+### Record the current environment
+
+After installing or updating packages used by the project, record them with:
+
+```{r renv-snapshot, eval=FALSE}
+renv::snapshot()
+```
+
+The `renv.lock` file records the packages and versions required by the project.
+
+Commit this file to the project's version-control repository.
+
+### Check the project environment
+
+To check the status of the project environment, use:
+
+```{r renv-status, eval=FALSE}
+renv::status()
+```
+
+This compares the current project library with the packages recorded in `renv.lock`.
+
+For example, it may report that:
+
+- A package is installed but not recorded
+- A recorded package is not installed
+- An installed package version differs from the lockfile
+- The project environment is already synchronized
+
+### Restore an environment
+
+Usefully, if you have incorporated `renv` into your workflow, a collaborator can then recreate your recorded environment with:
+
+```{r renv-restore, eval=FALSE}
+renv::restore()
+```
+
+This installs all of the package versions and dependencies recorded in `renv.lock`.
+
+So a typical `renv' `workflow would be:
+
+```{r renv-workflow, eval=FALSE}
+# After adding or updating project packages
+renv::status()
+renv::snapshot()
+
+# When recreating the project environment
+renv::restore()
+```
+
+**Key takeaway: `renv` helps record and recreate the package environment in which the project code was developed.**
+
+<br>
+
+## Reproducibility and Random Processes
+
+Most data-cleaning operations should produce the same output each time they are run.
+
+Some workflows, however, may include random sampling, simulation, imputation, or another process that uses random numbers.
+
+Use `set.seed()` before a random operation when the exact result needs to be reproducible:
+
+```{r set-seed}
+set.seed(2026)
+
+sample(
+  1:100,
+  size = 5
+)
+```
+
+Using the same seed and code should reproduce the same sample.
+
+The seed should be set close to the operation it controls and documented when the random result affects a project output.
+
+<br>
+
+## Reproducible Coding Checklist
+
+Use the following checklist as a rough guide as you develop code for your project:
+
+- [ ] Raw source files remain unchanged
+- [ ] Processed files are created through code
+- [ ] Raw data and processed outputs are stored separately
+- [ ] Project folders have clearly defined purposes
+- [ ] Scripts can run from beginning to end in a clean R session
+- [ ] Scripts have clear names, sections, and execution order
+- [ ] Important assumptions are documented
+- [ ] Comments explain decisions rather than restating code
+- [ ] Required fields and values are checked through validation code (e.g., with R package `assertr`)
+- [ ] Repeated transformations are applied consistently
+- [ ] File paths are relative to the project root (e.g., with R package `here`)
+- [ ] Outputs are written to clearly identified locations
+- [ ] Required package versions are recorded with R package `renv`
+- [ ] The README or other documentation explains how to reproduce the workflow
+
+::: callout-important
+### Reproducibility is a project-level practice
+
+Note that no single package or coding convention makes a project reproducible.
+
+Reproducibility emerges from the combination of preserved source data, transparent code, documented decisions, validation checks, portable paths, organized project files, and a recorded software environment. It is a mindset that has to be continually reinforced for open science!
+:::
+
+## R packages used in this chapter
+
+Fischetti, T. (2024). *assertr: Assertive Programming for R Analysis Pipelines*. R package version 3.0.1. <https://github.com/ropensci/assertr>.
+
+Müller, K. (2025). *here: A Simpler Way to Find Your Files*. R package version 1.0.2, <https://cran.r-project.org/package=here>.
+
+Ushey, K., Wickham, H. (2026). *renv: Project Environments*. R package version 1.2.4, <https://rstudio.github.io/renv/>.
+
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, Max, Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., Takahashi, K., Vaughan, D., Wilke, C., Woo, K., & Yutani, H. (2019). Welcome to the tidyverse. *Journal of Open Source Software*, *4*(43), 1686. <https://doi.org/10.21105/joss.01686>.
+
+## References in this chapter
+
+Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). *R for data science* (2nd ed.). O'Reilly Media. <https://r4ds.hadley.nz/>.

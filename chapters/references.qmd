@@ -1,5 +1,72 @@
 ---
-title: "References"
+title: "References & R Packages"
 format: html
 ---
 
+## Compiled References
+
+Baldeo, S.
+(2026).
+Generative artificial intelligence reliance and executive function attenuation: Behavioral evidence of cognitive offload in high-use adults.
+*Technology, Mind, and Behavior.* Advance online publication.
+<https://doi.org/10.1037/tmb0000191>.
+
+Bledsoe, E. K., Burant, J. B., Higino, G. T., Roche, D. G., Binning, S. A., Finlay, K., Pither, J., Pollock, L. S., Sunday, J. M., & Srivastava, D. S. (2022). Data rescue: Saving environmental data from extinction. Proceedings of the Royal Society B: Biological Sciences, 289(1979), Article 20220938. <https://doi.org/10.1098/rspb.2022.0938>.
+
+DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.
+
+Haber, J. (2020). Critical thinking. MIT Press. <https://doi.org/10.7551/mitpress/12081.001.0001>.
+
+Koch, C., Heidenblad, D., Felkner, K., Rampin, R., & Poisot, T. *Data management with SQL for ecologists*. Data Carpentry. Retrieved from https://datacarpentry.github.io/sql-ecology-lesson/
+
+Kosmyna, N., Hauptmann, E., Yuan, Y.T., Situ, J., Liao, X.H., Beresnitzky, A.V., Braunstein, I.
+and Maes, P. (2025).
+Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task.
+*arXiv preprint* arXiv:2506.08872, 4, 206.
+<https://doi.org/10.48550/arXiv.2506.08872>.
+
+Kules, B. (2016). Computational thinking is critical thinking: Connecting to university discourse, goals, and learning outcomes. *Proceedings of the association for information science and technology*, *53*(1), 1-6. <https://doi.org/10.1002/pra2.2016.14505301092>.
+
+Lovelace, R., Nowosad, J., & Muenchow, J. (2019). *Geocomputation with R* (web version). Geocompx. Retrieved from <https://r.geocompx.org/>.
+
+Macnamara, B.N., Berber, I., Çavuşoğlu, M.C., Krupinski, E.A., Nallapareddy, N., Nelson, N.E., Smith, P.J., Wilson-Delfosse, A.L.
+and Ray, S.
+(2024).
+Does using artificial intelligence assistance accelerate skill decay and hinder skill development without performers’ awareness?.
+*Cognitive Research: Principles and Implications*, *9*(1), 46.
+<https://doi.org/10.1186/s41235-024-00572-8>.
+
+National Institute of Standards and Technology, United States Department of Commerce.
+(2023).
+Artificial Intelligence Risk Management Framework (AI RMF 1.0).
+<https://doi.org/10.6028/NIST.AI.100-1>.
+
+Parent-Doliner, G.
+(2026).
+Water Rangers internal guidance: Use of artificial intelligence (AI) tools (Version 1) \[Internal guidance document\].
+
+Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). *R for data science* (2nd ed.). O'Reilly Media. <https://r4ds.hadley.nz/>.
+
+Wing, J. M.
+(2006).
+Computational thinking.
+*Communications of the ACM*, *49*(3), 33-35.
+<https://doi.org/10.1145/1118178.1118215>.
+
+<br> 
+
+## Compiled R packages
+
+Fischetti, T. (2024). *assertr: Assertive Programming for R Analysis Pipelines*. R package version 3.0.1. <https://github.com/ropensci/assertr>.
+
+Müller, K. (2025). *here: A Simpler Way to Find Your Files*. R package version 1.0.2, <https://cran.r-project.org/package=here>.
+
+Ooms, J. (2014). The jsonlite Package: A Practical and Consistent Mapping Between JSON Data and R Objects. _arXiv:1403.2805 [stat.CO]_.
+<https://arxiv.org/abs/1403.2805>.
+
+Ushey, K., Wickham, H. (2026). *renv: Project Environments*. R package version 1.2.4, <https://rstudio.github.io/renv/>.
+
+van der Loo, M. (2014). The stringdist package for approximate string matching. _The R Journal_, *6*, 111-122.
+<https://journal.r-project.org/articles/RJ-2014-011/>.
+
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, Max, Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., Takahashi, K., Vaughan, D., Wilke, C., Woo, K., & Yutani, H. (2019). Welcome to the tidyverse. *Journal of Open Source Software*, *4*(43), 1686. <https://doi.org/10.21105/joss.01686>.

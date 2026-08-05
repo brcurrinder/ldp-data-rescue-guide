@@ -40,7 +40,7 @@ In short, DataStream provides:
 - An online [Learning Centre](https://datastream.org/en-ca/documentation) with resources on water quality data, how to access data, and how to contribute data, including upload templates and documentation for preparing datasets
 - [Dataset-level metadata](metadata.qmd#sec-what-is-metadata) fields that describe the dataset, collection organization, methods, licensing, and processing
 - Dataset [DOI (Digital Object Identifier)]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A Digital Object Identifier is a permanent, unique code used to identify digital documents like datasets, research papers, and journal articles. Unlike standard website addresses (URLs), a DOI never changes, even if the web page moves."} pages that provide persistent landing pages for datasets and their metadata
-- Tools for searching, visualizing, downloading, and accessing data through an [API (Application Programming Interface)](.tooltip-term%20tabindex=%220%22%20data-bs-toggle=%22tooltip%22%20data-bs-title=%22An%20API%20is%20a%20software%20messenger%20that%20lets%20two%20different%20computer%20systems%20talk%20to%20each%20other%20by%20requesting%20and%20sharing%20data.%22)
+- Tools for searching, visualizing, downloading, and accessing data through an [API (Application Programming Interface)]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="An API is a software messenger that lets two different computer systems communicate by requesting and sharing data."}
 
 [DataStream has also achieved CoreTrustSeal certification](https://datastream.org/en-ca/article/datastream-achieves-coretrustseal-certification) as a trustworthy digital repository, and received the 2024 award for [Open Data Excellence from the Canadian Open Data Society](https://www.opendatasociety.ca/copy-of-2023-winners).
 
@@ -159,3 +159,8 @@ In these chapters, you will:
 
 The workflow presented in this guidebook is not meant to imply that every DataStream project will follow exactly the same steps.
 Instead, it is one example of the kinds of decisions, documentation, and checks that commonly arise when preparing water quality data for publication.
+
+
+## References in this chapter
+
+DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.

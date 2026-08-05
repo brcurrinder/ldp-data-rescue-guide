@@ -139,19 +139,13 @@ First load the packages that we will need for this chapter.
 #| echo: true
 #| output: false
 # Load packages used in this chapter
-# dplyr, stringr, tibble, readr, and purrr support data cleaning and validation
-# lubridate helps parse and check dates and times
-# sf and ggplot2 support simple spatial validation and mapping
+# The tidyverse packages dplyr, stringr, tibble, readr, and purrr support data cleaning and validation
+# while lubridate helps parse and check dates and times
+# sf supports spatial validation and mapping
 # jsonlite reads the DataStream JSON schema
 
-library(dplyr)
-library(stringr)
-library(tibble)
-library(readr)
-library(purrr)
-library(lubridate)
+library(tidyverse)
 library(sf)
-library(ggplot2)
 library(jsonlite)
 ```
 
@@ -2093,3 +2087,18 @@ Likewise, a scientifically plausible value may still fail schema validation if i
 
 When validation reports identify issues, return to the cleaning workflow, update the code, document the decision in the change log, and rerun the checks.
 The goal is to create a dataset that is reproducible, well-documented, scientifically defensible, and ready for data owner review.
+
+<br>
+
+## R packages used in this chapter
+
+Pebesma, E. (2018). Simple Features for R: Standardized Support for Spatial Vector Data. *The R Journal* 10 (1), 439-446,
+<https://doi.org/10.32614/RJ-2018-009>.
+
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, Max, Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., Takahashi, K., Vaughan, D., Wilke, C., Woo, K., & Yutani, H. (2019). Welcome to the tidyverse. *Journal of Open Source Software*, *4*(43), 1686. <https://doi.org/10.21105/joss.01686>.
+
+## References in this chapter
+
+Bledsoe, E. K., Burant, J. B., Higino, G. T., Roche, D. G., Binning, S. A., Finlay, K., Pither, J., Pollock, L. S., Sunday, J. M., & Srivastava, D. S. (2022). Data rescue: Saving environmental data from extinction. Proceedings of the Royal Society B: Biological Sciences, 289(1979), Article 20220938. <https://doi.org/10.1098/rspb.2022.0938>.
+
+DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.

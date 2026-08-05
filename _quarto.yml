@@ -28,7 +28,7 @@ book:
         - chapters/open-science-reproducible-research.qmd
         - chapters/coding-best-practices.qmd
         
-    - part: "Artificial Intelligence in Data Rescue"
+    - part: "Artificial Intelligence"
       chapters:
         - chapters/ai-overview.qmd
         - chapters/ai-validation-example.qmd
@@ -51,10 +51,11 @@ book:
         - chapters/internship_tasks.qmd
         - chapters/living_document.qmd
         
-    - part: "Compiled Resources & References"
+    - part: "Compiled References & Resources"
       chapters:
-        - chapters/resources.qmd
         - chapters/references.qmd
+        - chapters/resources.qmd
+
 
 format:
   html:

@@ -63,4 +63,7 @@ Finally, some but not all projects may have an undergraduate assistant associate
 
 ## References
 
-Ellen K. Bledsoe, Joseph B. Burant, Gracielle T. Higino, Dominique G. Roche, Sandra A. Binning, Kerri Finlay, Jason Pither, Laura S. Pollock, Jennifer M. Sunday, Diane S. Srivastava; Data rescue: saving environmental data from extinction. Proc Biol Sci 1 July 2022; 289 (1979): 20220938. https://doi.org/10.1098/rspb.2022.0938
+Bledsoe, E. K., Burant, J. B., Higino, G. T., Roche, D. G., Binning, S. A., Finlay, K., Pither, J., Pollock, L. S., Sunday, J. M., & Srivastava, D. S. (2022). Data rescue: Saving environmental data from extinction. Proceedings of the Royal Society B: Biological Sciences, 289(1979), Article 20220938. <https://doi.org/10.1098/rspb.2022.0938>.
+
+Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). *R for data science* (2nd ed.). O'Reilly Media. <https://r4ds.hadley.nz/>.
+

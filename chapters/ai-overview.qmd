@@ -5,24 +5,24 @@ editor:
     wrap: sentence
 ---
 
-Artificial intelligence (AI) tools, particularly those built on top of Large Language Models (LLMs), have surged in both capabilities and usage.
-These tools may be appropriate for assistance with writing, coding, troubleshooting, summarization, and other parts of a data rescue project.
+Artificial intelligence (AI) tools, particularly those powered by Large Language Models (LLMs), have rapidly expanded in both capability and use.
+In a data rescue context, these tools may be appropriate for assistance with writing, coding, troubleshooting, summarization, and other tasks of a project.
 They may help teams work more efficiently, especially when used for clearly defined structural or language-focused tasks.
 
 However, the use of AI tools comes with risk.
 These tools can produce convincing but incorrect information, code, citations, and interpretations.
 Outputs may also obscure assumptions and make it difficult to understand how a result was produced.
-As such, AI tools should support human thinking and expertise rather than replace them.
+As such, caution must be exercised when incorporating AI tools into our projects. Furthermore, AI tools should support human thinking and expertise rather than replace them.
 
-This chapter serves as a guide for how to approach the use of AI tools in your data rescue project, as well as the inherent risks of using these tools.
-By the end of this chapter, you should be able to:
+This chapter serves as a guide for how to approach the use of AI tools in your data rescue project, including the inherent risks that come with using these tools.
+By the end of this chapter and the [following worked example chapter](ai-validation-example.qmd), you should be able to:
 
 - Recognize appropriate and inappropriate uses of AI tools in data rescue
-- Explain the risks and potential strategies for incorporating AI-generated code into your workflow
+- Explain the risks and potential strategies for incorporating AI-generated outputs into your workflow
 - Use AI tools as an assistant rather than as an autonomous agent
 - Appropriately document meaningful assistance from AI tools
 
-[In the following chapter](ai-validation-example.qmd), we present a worked example for how to appropriately use an AI tool to generate and validate code in a data rescue project.
+*Source note: This chapter draws on and adapts principles and other elements from Water Rangers’* Internal Guidance: Use of Artificial Intelligence (AI) Tools *(Parent-Doliner, 2026) and was also informed by the National Institute of Standards and Technology’s* Artificial Intelligence Risk Management Framework *(2023).*
 
 <br>
 
@@ -45,39 +45,40 @@ All AI-assisted work should be reviewed for:
 - Appropriate tone and framing that aligns with your team's work
 - Reproducibility
 
-AI tools cannot be treated as authors, data stewards, analysts, or scientific authorities.
+AI tools cannot be treated as authors, analysts, or scientific authorities.
 
 **Key takeaway: Human reviewers always remain responsible for the integrity and accuracy of any AI-generated outputs.**
 
 ### Principle 2: Use AI to support your thinking, not replace it
 
-Like any scientific project, data rescue requires both [**critical thinking**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="The process of evaluating evidence, assumptions, uncertainty, and competing explanations before reaching a conclusion."} and [**computational thinking**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A problem-solving approach that involves breaking a problem into smaller tasks, describing logical steps, anticipating edge cases, and testing whether a computational solution behaves as intended."}.
+Like any scientific project, data rescue requires both [**critical thinking**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Critical thinking is generally defined as the process of evaluating evidence, assumptions, uncertainty, and competing explanations before reaching a conclusion."} and [**computational thinking**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Computational thinking is a problem-solving approach that involves breaking a problem into smaller tasks, describing logical steps, anticipating edge-cases, and testing whether a computational solution behaves as intended."}. While these forms of thinking cannot always be cleanly separated (e.g., [Kules 2016](https://doi.org/10.1002/pra2.2016.14505301092)), they provide a useful framework for deciding how AI tools can assist with data rescue projects.
 
-In this context, critical thinking includes:
+In a data rescue context, critical thinking can involve ([Haber 2020](https://doi.org/10.7551/mitpress/12081.001.0001)):
 
 - Defining a problem clearly
-- Evaluating evidence and uncertainty
-- Identifying assumptions
-- Comparing conflicting sources of information
-- Deciding what can and cannot be inferred
+- Interpreting and evaluating evidence
+- Identifying assumptions and uncertainty
+- Drawing conclusions from the available evidence
 - Explaining why a decision is defensible
+- Reconsidering and revising decisions when checks or new evidence reveal a problem
 
-Computational thinking includes:
+While computational thinking can involve ([Wing 2006](https://doi.org/10.1145/1118178.1118215)):
 
-- Breaking a problem into smaller tasks
-- Tracing how data change through a workflow
-- Anticipating unusual or invalid inputs
-- Designing checks and tests to validate outputs
-- Distinguishing the intended result from an accidental output
+- Decomposing a problem or workflow into smaller tasks
+- Organizing and representing data in useful ways
+- Identifying patterns and abstracting general rules
+- Tracing how data change throughout a process or workflow
+- Anticipating unusual inputs and possible failure points
+- Testing, debugging, and refining outputs
 
-AI may assist with parts of these processes, but it should not perform the reasoning on your behalf.
-Additionally, there is growing evidence that over-reliance on AI tools may erode these types of skills and reasoning (Macnamara et al. 2024; Kosmyna et al. 2025; Baldeo et al. 2026).
+AI tools may assist with parts of these processes, but should not perform the reasoning on your behalf.
+Additionally, there is growing evidence that over-reliance on AI tools can erode these types of skills and reasoning ([Baldeo et al. 2026](https://doi.org/10.1037/tmb0000191), [Kosmyna et al. 2025](https://doi.org/10.48550/arXiv.2506.08872), [Macnamara et al. 2024](https://doi.org/10.1186/s41235-024-00572-8)).
 
 **Key takeaway: Incorporate AI tools when it improves the quality of your work, not simply the speed of producing content.**
 
 ### Principle 3: Reproducible science requires transparency
 
-AI systems often do not provide a transparent or reproducible account of how they produced an answer.
+AI systems often do not provide a transparent or reproducible account of how an answer was produced.
 A prompt may also return different results when repeated or when used with a different model.
 
 This does not necessarily prevent responsible use, but it means that an AI output should not be treated as a reproducible record of work.
@@ -287,8 +288,6 @@ A successful command only shows that the code could be executed.
 It does not demonstrate that the code correctly represents the source data or the scientific meaning of the values.
 :::
 
-
-
 ## Documenting AI Assistance
 
 Not every minor use of AI requires an extensive disclosure.
@@ -339,15 +338,42 @@ Much like the rest of this guidebook, this chapter should be treated as a living
 
 Data rescue teams should discuss their experiences openly and update their practices as technology, institutional requirements, and understanding continue to evolve.
 
-## References 
+## References
 
-Baldeo, S. (2026). Generative artificial intelligence reliance and executive function attenuation: Behavioral evidence of cognitive offload in high-use adults. Technology, Mind, and Behavior. Advance online publication. https://doi.org/10.1037/tmb0000191
+Baldeo, S.
+(2026).
+Generative artificial intelligence reliance and executive function attenuation: Behavioral evidence of cognitive offload in high-use adults.
+*Technology, Mind, and Behavior.* Advance online publication.
+<https://doi.org/10.1037/tmb0000191>.
 
-Kosmyna, N., Hauptmann, E., Yuan, Y.T., Situ, J., Liao, X.H., Beresnitzky, A.V., Braunstein, I. and Maes, P. (2025). Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task. arXiv preprint arXiv:2506.08872, 4, 206. https://doi.org/10.48550/arXiv.2506.08872
+Haber, J. (2020). Critical thinking. MIT Press. <https://doi.org/10.7551/mitpress/12081.001.0001>.
 
-Macnamara, B.N., Berber, I., Çavuşoğlu, M.C., Krupinski, E.A., Nallapareddy, N., Nelson, N.E., Smith, P.J., Wilson-Delfosse, A.L. and Ray, S. (2024). Does using artificial intelligence assistance accelerate skill decay and hinder skill development without performers’ awareness?. Cognitive Research: Principles and Implications, 9(1), 46. https://doi.org/10.1186/s41235-024-00572-8
+Kosmyna, N., Hauptmann, E., Yuan, Y.T., Situ, J., Liao, X.H., Beresnitzky, A.V., Braunstein, I.
+and Maes, P. (2025).
+Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task.
+*arXiv preprint* arXiv:2506.08872, 4, 206.
+<https://doi.org/10.48550/arXiv.2506.08872>.
 
-National Institute of Standards and Technology, United States Department of Commerce. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0). https://doi.org/10.6028/NIST.AI.100-1
+Kules, B. (2016). Computational thinking is critical thinking: Connecting to university discourse, goals, and learning outcomes. Proceedings of the association for information science and technology, 53(1), 1-6. <https://doi.org/10.1002/pra2.2016.14505301092>.
 
-Parent-Doliner, G. (2026). Water Rangers Internal Guidance: use of artificial intelligence (AI) tools: Version 1.
+Macnamara, B.N., Berber, I., Çavuşoğlu, M.C., Krupinski, E.A., Nallapareddy, N., Nelson, N.E., Smith, P.J., Wilson-Delfosse, A.L.
+and Ray, S.
+(2024).
+Does using artificial intelligence assistance accelerate skill decay and hinder skill development without performers’ awareness?.
+*Cognitive Research: Principles and Implications*, *9*(1), 46.
+<https://doi.org/10.1186/s41235-024-00572-8>.
 
+National Institute of Standards and Technology, United States Department of Commerce.
+(2023).
+Artificial Intelligence Risk Management Framework (AI RMF 1.0).
+<https://doi.org/10.6028/NIST.AI.100-1>.
+
+Parent-Doliner, G.
+(2026).
+Water Rangers internal guidance: Use of artificial intelligence (AI) tools (Version 1) \[Internal guidance document\].
+
+Wing, J. M.
+(2006).
+Computational thinking.
+*Communications of the ACM*, *49*(3), 33-35.
+<https://doi.org/10.1145/1118178.1118215>.

@@ -1161,3 +1161,15 @@ Before moving to final data formatting and validation, make sure that the metada
 - How censored values and detection limits were handled
 - What data processing steps were performed
 - Which unresolved issues require data owner review
+
+<br>
+
+## R packages used in this chapter
+
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, Max, Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., Takahashi, K., Vaughan, D., Wilke, C., Woo, K., & Yutani, H. (2019). Welcome to the tidyverse. *Journal of Open Source Software*, *4*(43), 1686. <https://doi.org/10.21105/joss.01686>.
+
+## References in this chapter
+
+Bledsoe, E. K., Burant, J. B., Higino, G. T., Roche, D. G., Binning, S. A., Finlay, K., Pither, J., Pollock, L. S., Sunday, J. M., & Srivastava, D. S. (2022). Data rescue: Saving environmental data from extinction. Proceedings of the Royal Society B: Biological Sciences, 289(1979), Article 20220938. <https://doi.org/10.1098/rspb.2022.0938>.
+
+DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.
