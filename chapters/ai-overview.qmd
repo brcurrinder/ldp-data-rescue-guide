@@ -118,13 +118,10 @@ While considering our core principles above, the following cases may be appropri
 
 AI may assist with, but should not independently perform, tasks such as:
 
-- Mapping source fields to a repository schema
-- Interpreting unusual units or qualifiers
-- Proposing corrections to values
-- Selecting statistical methods
-- Determining whether records should be altered or removed
-- Interpreting ecological patterns
-- Drawing conclusions from scientific data
+- Interpreting scientific data, metadata, or documentation
+- Recommending corrections, exclusions, or other changes to data records
+- Selecting or justifying analytical and quality-control methods
+- Drawing scientific conclusions from the available evidence
 
 ### Uses to avoid
 
@@ -134,14 +131,11 @@ Do not rely on AI to independently:
 - Interpret scientific results
 - Produce scientific conclusions
 - Decide what data are valid
-- Invent missing metadata
 - Infer a method, unit, sample fraction, or detection limit without evidence
-- Generate citations that have not been verified
 - Alter data without a documented decision
-- Approve work for publication
 
-AI tools can produce polished technical content while still being wrong.
-Scientific interpretation and environmental claims must remain with qualified people.
+AI tools can produce technical content that appears polished while still being incorrect, or simply not aligned with our goals and standards.
+In particular, scientific interpretations and conclusions must rely on the domain expertise and judgment of humans.
 
 <br>
 
@@ -149,24 +143,18 @@ Scientific interpretation and environmental claims must remain with qualified pe
 
 Data rescue workflows are typically built on reproducible code.
 As such, AI tools may be helpful coding assistants in a data rescue project (see the [next chapter](ai-validation-example.qmd) for a worked example).
-However, AI-generated code carries particular risks when incorporated into our data rescue workflows.
+However, AI-generated code carries particular risks if incorporated into our data rescue workflows.
 
-For example, AI-generated code may:
+For example, AI-generated code often shows issues related to:
 
-- Misunderstand the structure or meaning of a dataset
-- Use the wrong field or unit
-- Perform an incorrect calculation
-- Silently drop records
-- Overwrite source values
-- Treat censored values as measured results
-- Invent package functions or arguments
-- Use outdated syntax
-- Work only for the example provided
-- Fail on missing values or unexpected inputs
-- Implement faulty logic
+- Logic and correctness
+- Hallucination (i.e., "imagining" non-existent objects, functions, libraries, etc.)
+- Silent failure (i.e., the code runs without producing an error but does not produce the intended result)
+- Failure at "edge-cases" (i.e., the code works with standard or common inputs but not with rarer or extreme inputs)
+- Readability / interpretability
 
-All AI-generated code must be reviewed, tested, and validated **by a human reviewer** against known results before it can be used in a project workflow.
-In our projects, an AI tool should not be the final authority on validating any code outputs (or any other outputs).
+While AI tools have improved in their ability to produce code, LLMs operate as giant probabilistic pattern matching machines that can mimic reasoning and logic, but they are inherently not tools of logical inference. With this and the above points in mind, any and all AI-generated code must be reviewed, tested, and validated **by a human reviewer** against known results before it can be used in a project workflow.
+Additionally, an AI tool should not be the final authority on validating any code outputs (or any other outputs).
 
 ::: callout-important
 ### Never commit code you cannot explain
@@ -183,48 +171,25 @@ Before adding AI-assisted code to a shared project, you should be able to explai
 
 ### Break large tasks into smaller steps
 
-Avoid asking an AI tool to generate an entire data rescue workflow at once.
+At this point, it should be clear that you should avoid asking an AI tool to generate an entire data rescue workflow.
 
-Instead, separate the work into smaller code snippets that you can independently test and validate.
+Instead, separate the problem you've encountered in your workflow into smaller code snippets that you can independently test and validate.
 
-Working incrementally will make it easier to identify where errors are introduced and reduces the likelihood that incorrect assumptions will be hidden inside a long script.
+Working incrementally will make it easier to identify where errors are introduced and will reduce the likelihood of hidden and incorrect assumptions.
 
 ### Use synthetic or public examples
 
-When asking for coding help, provide:
+If you are asking for help with a non-public dataset from an AI tool, provide a small synthetic dataset instead of the dataset itself. Do not paste any non-public dataset into an external AI system simply because the code depends on its structure, as this directly violates Principle 4 above.  
 
-- Invented column names and values
-- A small reproducible example
-- Publicly released data
-- A simplified description of the problem
-
-Do not paste the full project dataset into an external AI system simply because the code depends on its structure.
-
-A small synthetic example should contain enough variation to demonstrate the problem, including relevant missing values and unusual cases.
-
-### Ask for explanations and tests
-
-Useful requests include:
-
-- "Explain each transformation."
-- "List the assumptions made by this code."
-- "Identify cases where this code could fail."
-- "Write tests for missing, censored, duplicated, and malformed values."
-- "Do not remove or impute records."
-- "Show the intermediate table after each major step."
-- "Use functions and packages already used in this project."
-
-A strong explanation does not prove that the code is correct, but it makes the logic easier to inspect.
-
-<br>
+A synthetic dataset can be constructed with enough variation to demonstrate the problem, including relevant missing values and unusual cases.
 
 ## Validating AI-Generated Code
 
-Use any AI-generated code as a **draft**, not as a finished solution.
+Use any AI-generated code as a **draft**. You can use the following steps as a starting guide for working through the draft code.
 
 ### 1. Read the code line by line
 
-Check:
+For any AI-generated code, you must be able to understand what the code is doing line-by-line. For example, if you ask an AI tool to standardize several columns, join another table, and filter incomplete records from a source dataset, at a minimum you should understand:
 
 - Which input columns are used
 - Which output columns are created
@@ -235,76 +200,71 @@ Check:
 - Whether units or data types are changed
 - Whether assumptions are hidden in default values
 
-You should understand the purpose and expected effect of every major operation.
+In short, you should understand the purpose and expected effect of every operation.
 
-### 2. Test a small representative example
+### 2. Test expected and unusual cases
 
-Create a synthetic example that includes both ordinary and difficult cases:
+In any coding scenario, testing ordinary cases shows whether the code performs its main task, while testing unusual cases helps reveal hidden assumptions and situations in which the code may fail. Before applying unfamiliar code to a full dataset, you can test it using a small synthetic or representative example that includes:
 
-- Valid values
-- Missing values
-- Censored values
-- Unexpected text
+- Ordinary values that the code is expected to handle
+- Missing or censored values
+- Illogical or malformed values
 - Duplicated identifiers
-- Differences in capitalization
-- Values at expected boundaries
+- Inconsistent capitalization or formatting
+- Values near important boundaries
+- Other issues that mirror the source data
 
-### 3. Compare against known results
+For each test case, determine the expected result before running the code, then compare the actual output with that expectation.
 
-For at least a few records, determine the expected output yourself.
+For example, if code is intended to standardize site names, include both an exact name and several common variations.
+Confirm that the exact name is preserved, appropriate variations are handled as intended, and uncertain cases remain unresolved or are flagged for review.
 
-The code should reproduce those known results exactly.
+### 3. Inspect the effects on the full dataset
 
-For example, if a transformation is intended to standardize ten site names, manually confirm several of the resulting names against the site reference list.
+After the code behaves as expected on a small example, apply it to the project data and compare the inputs and outputs.
 
-### 5. Check unusual and invalid cases
+As with any data transformation, useful checks may include:
 
-A workflow that succeeds on ordinary values may fail on more unusual data records.
-Testing these cases is often more informative than testing only the expected input.
-
-### 6. Inspect summaries and visualizations
-
-After a transformation, compare the inputs and outputs using:
-
-- Row counts
+- Row and column counts
 - Missing-value counts
-- Unique values
-- Value ranges
-- Grouped summaries
-- Joins and anti-joins
-- Plots
-- Selected record-level comparisons
+- Unique values and duplicated identifiers
+- Value ranges and grouped summaries
+- Records added, removed, or left unmatched by joins
+- Plots of important variables
+- Direct comparisons of selected source and processed records
+
+These checks help identify unintended consequences such as dropped records, duplicated rows, altered units, or unexpected changes in missing values.
 
 Code may run successfully while still changing the data in an unintended way.
-Inspecting and fully understanding the output is therefore an essential part of code validation.
-
-<br>
+Validation therefore requires checking both individual examples and the broader effects of the transformation.
 
 ::: callout-note
 ### Code that runs is not necessarily correct
 
-Even if code runs without producing an error, it may not process an object correctly.
+Even if code runs without producing an error, it may not process an object as intended. This is something to consider regardless of whether your code was produced by an AI tool or a human.
 A successful command only shows that the code could be executed.
-It does not demonstrate that the code correctly represents the source data or the scientific meaning of the values.
+It does not demonstrate that the code correctly represents the source data or the scientific meaning of the values. You must validate that the inputs and outputs are behaving as intended.
+
+See the worked example in the [following chapter](ai-validation-example.qmd) for how to incorporate the `assertr` package into a validation process.
 :::
+
+<br>
 
 ## Documenting AI Assistance
 
-Not every minor use of AI requires an extensive disclosure.
-However, meaningful use should be documented when it affects project code, methods, metadata, or published outputs.
+Meaningful use of AI tools should be documented when it affects project code, methods, metadata, or any other outputs.
 
 Possible locations include:
 
 - The project README
 - The change log
-- Code comments
 - A methods or data-processing statement
 - A contribution statement
 - An internal project record
 
 A short code-related entry might say:
 
-> An AI assistant was used to suggest and explain an initial approach for parsing censored values.
+> An AI assistant (specify which assistant and model) was used to suggest and explain an initial approach for parsing censored values in R.
 > Project members reviewed and modified the code, tested it against synthetic and known cases, and documented the final treatment of censored results in the change log.
 
 ## A Practical Workflow
@@ -334,7 +294,7 @@ A general workflow to follow when incorporating AI tools can be:
 ## This Guidance Will Change
 
 AI tools, institutional policies, and accepted practices are evolving rapidly, and this guidance will be updated and revised as tools change.
-Much like the rest of this guidebook, this chapter should be treated as a living document rather than a permanent set of rules.
+Much like the rest of this guidebook, this chapter should be treated as a living document.
 
 Data rescue teams should discuss their experiences openly and update their practices as technology, institutional requirements, and understanding continue to evolve.
 
