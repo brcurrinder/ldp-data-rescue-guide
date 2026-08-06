@@ -28,7 +28,7 @@ By the end of this chapter and the [following worked example chapter](ai-validat
 
 ## Utilize your data rescue team first
 
-Remember that data rescue is inherently a **team effort**, and your team members should be your first points of contact when any questions or challenges arise. For both course assignments and the team data rescue project, the postdocs supporting the course are available to help you understand the relevant context and goals, evaluate possible approaches, and work through problems along the way. We strongly encourage you to consult a postdoc or another team member before turning to an AI tool.
+Remember that data rescue is inherently a **team effort**, and your team members should be your first points of contact when any questions or challenges arise. In particular, the postdoc team members are available to help you understand your project's relevant context and goals, evaluate possible approaches, and work through problems along the way. We strongly encourage you to consult a postdoc or another team member before turning to an AI tool.
 
 ## Core Principles
 
