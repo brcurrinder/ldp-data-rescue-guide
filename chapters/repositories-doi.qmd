@@ -1,5 +1,369 @@
 ---
-title: "Repositories & DOIs"
+title: "Data repositories and persistent identifiers"
 ---
 
-Coming soon.
+Data rescue is not complete when the data have been cleaned and organized. Rescued data also need a stable, well-documented home where they can be discovered, accessed, cited, and reused in the future.
+
+This chapter introduces **data repositories**, **persistent identifiers**, and some of the repositories that are commonly used for environmental and ecological data in Canada (and beyond).
+
+## Learning objectives
+
+By the end of this chapter, you should be able to:
+
+- Explain the role of a data repository in long-term data stewardship
+- Explain what a persistent identifier is and why digital object identifiers (DOIs) are commonly used for research data
+- Distinguish between common types of repositories used for the Living Data Project and for your own research data
+- Identify repositories that may be appropriate for different types of data
+
+## What is a data repository?
+
+A **data repository** is a service designed to store, manage, preserve, describe, and provide access to data over time.
+
+Repositories generally provide more than just storage of files. Depending on the repository, they may also provide:
+
+- A public landing page for the dataset
+- Structured metadata describing the data
+- A recommended citation
+- A persistent identifier, such as a DOI
+- Licensing and terms-of-use information
+- Version tracking
+- Search and discovery tools
+- Preservation and backup services
+- Support for discipline-specific metadata or data standards
+
+This makes a repository different from simply placing files in a shared folder, cloud-storage account, personal website, or project website.
+
+::: callout-important
+## Storage is not the same as preservation
+
+Services such as Google Drive, Dropbox, OneDrive, or a laboratory server can be useful places to **work with and share files during a project**. They are generally not, by themselves, substitutes for archiving finalized data in a repository designed for long-term preservation, discovery, and reuse.
+
+Similarly, GitHub is very useful for versioning and sharing code, but it should not automatically be treated as the long-term archive for a research dataset.
+:::
+
+## Persistent identifiers
+
+A **persistent identifier**, or **PID**, is a globally unique reference or code that remains permanently attached to a digital object, person, or organization, even if its internet location or URL changes.
+
+Different types of research objects may have different kinds of persistent identifiers. For example:
+
+| Identifier | Commonly identifies |
+|----|----|
+| DOI | Datasets, publications, software, and other research outputs |
+| ORCID iD | Researchers |
+| ROR ID | Research organizations |
+| Accession number | Records in many biological and genomic databases |
+
+For research data, the most familiar PID is usually the **Digital Object Identifier**, or **DOI**.
+
+### What is a DOI?
+
+A DOI is a unique identifier assigned to a digital or physical object. For example:
+
+``` text
+10.1234/example.5678
+```
+
+DOIs are usually displayed as resolvable links:
+
+``` text
+https://doi.org/10.1234/example.5678
+```
+
+The important feature of a DOI is that the identifier does not need to change when the location of the object changes.
+
+Instead of citing:
+
+``` text
+https://some-server.ca/projects/project27/final-data.csv
+```
+
+which could stop working if the server or website is reorganized, a dataset can be cited using its DOI. The organization responsible for the DOI can update where that identifier resolves if the location changes.
+
+::: callout-note
+## A DOI is not the data
+
+To avoid a potential misconception: A DOI does **not** preserve a dataset by itself.
+
+The repository preserves and manages the data and metadata. The DOI provides a persistent way to **identify and find the deposited dataset**.
+
+This is why we generally want both:
+
+**trustworthy repository + persistent identifier**
+:::
+
+### Why persistent identifiers matter in data rescue
+
+Persistent identifiers help rescued data become part of the scholarly record. They make it easier to:
+
+- Cite datasets consistently
+- Give credit to the people or organizations that created them
+- Connect datasets with publications, reports, code, and other research outputs
+- Distinguish between datasets or versions with similar names
+- Track reuse and citation
+- Locate a dataset even if the underlying web infrastructure changes
+
+Not every specialized database uses a DOI. Some systems use their own established persistent identifiers. For example, genetic sequence databases commonly use [**accession numbers**](https://www.ncbi.nlm.nih.gov/genbank/samplerecord/#AccessionB).
+
+With any archived dataset, our goal is to ensure that the deposited data have a **stable and globally unique identifier appropriate to the repository and research community**.
+
+## What makes a repository trustworthy?
+
+Simply calling a website a "repository" does not guarantee that data deposited there will remain available indefinitely.
+
+When choosing a repository, we should consider whether the organization has the infrastructure and commitment necessary to steward the data over the long term.
+
+### Institutional stability and governance
+
+Who operates the repository?
+
+A repository maintained by a government agency, university consortium, established nonprofit organization, or long-running disciplinary infrastructure may have a different risk profile than a website maintained by an individual research group or a short-term project.
+
+For commercial repositories, consider the same questions: What commitments have been made to preservation? What is the business model? What happens to deposited data if the service changes ownership or ceases operating?
+
+The relevant question is not simply **"Is this organization permanent?"** No organization can guarantee that.
+
+Instead we can ask:
+
+> **What structures are in place to keep the data available if people, funding, technologies, or organizations change?**
+
+### Preservation policy
+
+Look for an explicit commitment to long-term preservation. A repository should ideally describe:
+
+- How long deposited materials will be retained
+- Whether multiple copies or backups are maintained
+- How files are protected against loss or corruption
+- Whether obsolete file formats may be migrated
+- What happens if the repository itself closes or data must be removed
+
+### Persistent identifiers
+
+A repository should provide stable identifiers for deposited materials.
+
+For general research repositories, this is often a DOI. Discipline-specific repositories may instead provide established accession numbers or other identifiers.
+
+### Metadata
+
+A repository should allow enough metadata to make the dataset understandable and discoverable.
+
+As covered in the chapter on [metadata](metadata.qmd), useful metadata commonly include the following:
+
+- Title;
+- Creators and contributors
+- Description
+- Dates
+- Geographic and temporal coverage
+- Methods;
+- Keywords
+- Funding information
+- Related publications or datasets
+- Licensing
+- Version information
+- Any other information needed to interpret the files
+
+Domain repositories may also support much richer discipline-specific metadata.
+
+### Licensing and access conditions
+
+A repository should make it clear:
+
+- Who can access the data
+- What users are allowed to do with them
+- Whether a licence applies
+- Whether embargoes or restricted access are supported
+- How sensitive or controlled data are handled
+
+### Licensing and access conditions
+
+A **licence** specifies what other people are legally allowed to do with the data. Making a dataset publicly accessible does not automatically mean that others are free to reuse, modify, or redistribute it in any way they choose. A clear licence reduces this ambiguity.
+
+Common licences for research data include:
+
+- **CC0 (Creative Commons Zero)** — places the data as fully as possible into the public domain, allowing reuse without legal restrictions. Citation is still good scholarly practice even when it is not legally required.
+- **CC BY (Creative Commons Attribution)** — allows reuse, adaptation, and redistribution, including commercial use, as long as appropriate attribution is provided.
+- **CC BY-NC** — allows reuse with attribution, but restricts commercial use.
+- Other licences may be appropriate for software, databases, or data with specific legal or institutional requirements.
+
+For data rescue projects, we will work in close partnership with the data owner / steward about license options. However, it is useful to understand these options for your own research going forward.
+
+::: callout-important
+## Open access and open licensing are not the same thing
+
+A dataset can be freely downloadable but have no clear reuse licence. Conversely, a dataset can have a permissive licence but still be temporarily unavailable because of an embargo or access restriction.
+
+Ideally, a repository makes both the **access conditions** and the **reuse conditions** explicit.
+:::
+
+Repositories may also support different levels of access, such as:
+
+- **Open access** — files can be downloaded by anyone
+- **Embargoed access** — files remain unavailable until a specified date
+- **Restricted or mediated access** — users must request permission to obtain the data
+- **Metadata-only access** — the dataset record is public, but the files themselves are not openly available
+
+These options can be important when datasets contain sensitive ecological locations, personal information, Indigenous data, confidential information, or other material that cannot be released openly.
+
+### Versioning and provenance
+
+Data may need corrections after publication.
+
+Look for a repository that documents changes and makes it possible to distinguish between versions rather than silently replacing previously published data.
+
+### Community and disciplinary fit
+
+A specialized repository may offer advantages over a general purpose repository, such as:
+
+- Metadata fields tailored to the discipline
+- Support for specific file types or larger files
+- Specialized search tools
+- Taxonomic or geographic integration
+- Automated validation
+- Discipline-specific identifiers
+- Greater visibility to the researchers most likely to use the data
+
+## Repository certifications
+
+One external signal of repository trustworthiness is **CoreTrustSeal**, an international certification for trustworthy digital repositories.
+
+CoreTrustSeal evaluates repositories using requirements related to areas including technical infrastructure, sustainability, rights and responsibilities, digital object management, and security. Certification is useful evidence of repository practices, but lack of certification does not automatically mean that a repository is unsuitable. Many reliable repositories have not pursued formal certification.
+
+The important point is to evaluate the repository rather than assuming that every platform that accepts uploads provides equivalent long-term stewardship.
+
+## Repositories commonly encountered in Canadian data rescue
+
+There is no single repository that is appropriate for every dataset, but the following are particularly relevant to data rescue projects in Canada. Certain repositories may also be a preferred target of the data owner / steward.
+
+## Canadian repositories
+
+The following repositories and data platforms have been especially relevant to many Canadian data rescue projects. They differ in disciplinary scope, eligibility, stewardship model, and the types of data they are designed to support.
+
+| Repository | Stewardship / funding model | Best suited for | Persistent identifier | Notes / strengths |
+|---------------|---------------|---------------|---------------|---------------|
+| **Borealis: The Canadian Dataverse Repository** | Canadian academic-library collaboration, with technical and administrative services provided by the University of Toronto Libraries | General research datasets from Canadian academic institutions; especially small- to moderate-sized datasets without an obvious disciplinary repository | DOI | Multidisciplinary and relatively easy to use. Particularly useful for university-based research data. Deposit eligibility and support may depend on institutional participation. |
+| **Federated Research Data Repository (FRDR)** | National research infrastructure operated by the Digital Research Alliance of Canada | Large, complex, or high-volume Canadian research datasets | DOI | Designed to accommodate datasets that may be too large or technically complex for many institutional repositories. Supports large file transfers and multidisciplinary research data. |
+| **Government of Canada Open Government Portal** | Government of Canada | Data produced or stewarded by federal departments and agencies | Repository record and other identifiers depending on the dataset | Appropriate for official federal government datasets. It is not a general-purpose repository where individual researchers can independently deposit data; publication generally occurs through the responsible government organization. |
+| **NatureCounts** | Operated by Birds Canada, a national nonprofit organization, with support from government and other funding partners | Bird monitoring, survey, atlas, checklist, point-count, and related biodiversity datasets | Dataset-specific identifiers and citations | Domain-specific infrastructure with data standards and tools designed for bird and biodiversity monitoring. Often more appropriate than a general repository for legacy bird-monitoring data. |
+| **DataStream** | Canadian nonprofit freshwater data platform | Water quality and freshwater monitoring observations | Platform- and dataset-specific identifiers | Designed specifically for freshwater monitoring data and associated metadata. Covered in more detail in the [DataStream chapter](datastream-overview.qmd). |
+
+## Other repositories commonly used in environmental research
+
+The following repositories are not specific to Canada but are widely used in ecology, environmental science, biodiversity research, and related fields.
+
+| Repository | Stewardship / funding model | Best suited for | Persistent identifier | Notes / strengths |
+|---------------|---------------|---------------|---------------|---------------|
+| **Zenodo** | Operated by CERN and supported through European research infrastructure and open-science initiatives | General research outputs, including datasets, software, reports, presentations, and supplementary materials | DOI | Broadly accessible and flexible. Useful when no appropriate disciplinary repository exists. Does not provide the same discipline-specific metadata or validation as a specialized repository. |
+| **Dryad** | Independent nonprofit organization supported through institutional and publisher partnerships, membership, service charges, and other contributions | Research datasets, especially those associated with journal articles | DOI | Provides curation checks intended to improve documentation and usability. Particularly common for data accompanying publications. |
+| **Global Biodiversity Information Facility (GBIF)** | International infrastructure supported by participating governments and organizations | Species occurrence records, specimen records, observational biodiversity data, and sampling-event data | DOI | Strongly optimized for standardized biodiversity data, especially data using Darwin Core. Makes records highly discoverable and interoperable with other biodiversity datasets. |
+| **Environmental Data Initiative (EDI)** | Academic research infrastructure supported primarily through the U.S. National Science Foundation | Ecological and environmental datasets, especially long-term monitoring and well-documented tabular data | DOI | Strong emphasis on rich, machine-readable metadata, especially Ecological Metadata Language (EML), and on publishing complete data packages. |
+| **Knowledge Network for Biocomplexity (KNB)** | Academic and community infrastructure associated with NCEAS and DataONE | Ecological, environmental, and synthesis datasets | DOI or other persistent identifier | Strong emphasis on ecological metadata, discovery, and integration with the broader DataONE network. |
+| **Figshare** | Commercial research-infrastructure provider owned by Digital Science | General research outputs, including datasets, figures, software, posters, and presentations | DOI | Flexible and widely used. Also provides repository infrastructure for institutions and publishers. Useful example of a commercially operated service with formal preservation and DOI infrastructure. |
+| **GenBank / NCBI sequence repositories** | U.S. National Institutes of Health / National Library of Medicine / NCBI | Nucleotide sequence data and related genomics outputs | Accession number | GenBank is appropriate for assembled or annotated nucleotide sequences. Raw high-throughput sequencing reads are generally deposited in the Sequence Read Archive (SRA), illustrating that different outputs from the same project may require different repositories. |
+
+::: callout-note
+## Repositories are not interchangeable
+
+Repository choice should depend on the type of data, disciplinary standards, ownership and stewardship responsibilities, file size and complexity, metadata requirements, access restrictions, and funder or institutional requirements.
+
+When an established domain-specific repository exists for a particular type of data, it is often worth investigating before choosing a general-purpose repository.
+
+Repository policies, fees, deposit limits, eligibility, and services can also change over time, so always check current guidance before depositing data.
+:::
+
+<br>
+
+## How should you choose?
+
+Repository selection usually involves a combination of disciplinary fit, institutional requirements, technical needs, and long-term stewardship.
+
+A useful sequence of questions is:
+
+1.  **Is there a trusted domain-specific repository for this type of data?**
+
+2.  **Is there an organization that should logically remain responsible for the data?**
+
+    - For example, a federal government dataset may belong with the responsible government department.
+
+3.  **Are there funder, publisher, or institutional requirements?**
+
+    - Some may require or strongly recommend particular repositories.
+
+4.  **Does the repository accommodate the size and structure of the dataset?**
+
+    - Very large datasets may require specialized infrastructure such as FRDR.
+
+5.  **Does it support the metadata and standards the dataset needs?**
+
+    - For example, [Ecological Metadata Language](https://eml.ecoinformatics.org/) for ecological datasets or the [Darwin Core standard](https://dwc.tdwg.org/) for biodiversity occurrences.
+
+6.  **Does it provide appropriate persistent identification, licensing, versioning, and access controls?**
+
+7.  **Does it have credible plans for preservation and organizational continuity?**
+
+<br>
+
+## Scenarios: Where would you put it?
+
+For each dataset below, identify one or more repositories you would investigate first and consider which repository characteristics could matter most to the decision.
+
+### Scenario 1
+
+A Canadian university researcher has rescued a set of CSV files containing historical lake temperature measurements. No specialized repository is required by the funder.
+
+::: {.callout-tip collapse="true"}
+## One possible repository
+
+An institutional repository like **Borealis** could be a strong starting point because this is a relatively conventional academic dataset without an obvious specialized repository.
+
+A domain repository could still be preferable if the data fit its scope and standards.
+:::
+
+### Scenario 2
+
+A project has recovered several terabytes of remote-sensing and environmental data generated by a Canadian research collaboration.
+
+::: {.callout-tip collapse="true"}
+## One possible repository
+
+**FRDR** would be worth investigating because it is designed to accommodate large and complex Canadian research datasets.
+:::
+
+### Scenario 3
+
+Historical breeding-bird survey sheets have been digitized into structured records including species, counts, locations, dates, and survey effort.
+
+::: {.callout-tip collapse="true"}
+## One possible repository
+
+Investigate a biodiversity-specific repository such as **NatureCounts** or **GBIF**, depending on the project, data structure, ownership, and intended community of reuse.
+
+A domain repository may make the observations substantially easier to combine with other biodiversity records.
+:::
+
+### Scenario 4
+
+A genetics project includes raw Illumina reads, assembled nucleotide sequences, an R analysis pipeline, and a table of final genetic distances.
+
+::: {.callout-tip collapse="true"}
+## Multiple repositories possible
+
+There may not be a single appropriate repository for every output.
+
+For example:
+
+- raw sequencing reads → **Sequence Read Archive (SRA)**
+- assembled nucleotide sequences → **GenBank**
+- analysis code → a software repository and/or archival service like **GitHub**
+- derived research tables → an appropriate institutional, national, or general research data repository
+
+Note that repository selection can occur at the level of the **research object**, not necessarily the entire project.
+:::
+
+## Key takeaways
+
+- A **data repository** does more than store files: it supports preservation, documentation, discovery, access, and reuse.
+- A **persistent identifier** provides a stable identity for an object even if its web location changes.
+- Repository sustainability depends on governance, funding, preservation practices, technical infrastructure, and continuity planning.
+- Domain-specific repositories can be preferable when they better fit the data types, file sizes, and intended audience.
+- No single repository is appropriate for every research output, but some are more general than others.
+- Repository policies and services change, so always verify current requirements.

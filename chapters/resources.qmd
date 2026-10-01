@@ -2,6 +2,6 @@
 title: "Resources"
 ---
 
-# Resources
+Resources relevant to our work are constantly evolving. For an up-to-date collection of external resources that complement this guidebook—including tools (e.g., GitHub) and additional skills (e.g., writing loops and functions or data visualizations)—check out the linked **Curated Precourse Skills List** linked below. This resource is compiled and regularly updated by members of the Living Data Project.
 
-Coming soon.
+[Link to Curated Precourse Skills List document](https://docs.google.com/document/d/1l739A07kP_KykyVrgFAo8MN3jdnb0vT8t2g5v2Cz6UQ/edit?tab=t.0#heading=h.ch8qsqvrmn70)

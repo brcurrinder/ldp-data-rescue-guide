@@ -2,5 +2,266 @@
 title: "Open Science and Reproducible Research"
 ---
 
-Coming soon.
+# Open Science and Reproducible Research
+
+Data rescue sits within a much larger effort to make scientific research more transparent, accessible, and useful over time. Many of the practices introduced earlier in this guidebook (documenting data with metadata, preserving original files, assigning persistent identifiers, and depositing data in repositories) are also central to **open science**.
+
+This chapter steps back from the individual pieces of a data rescue project to look at how they fit together. We will introduce open science, consider what reproducibility means in practice, and discuss how data rescue contributes to both. We will also consider an important question that comes up repeatedly in this work: what information would someone else need to understand what we did and continue working with these data in the future?
+
+::: {.callout-tip}
+## Where this chapter fits
+
+The previous chapters introduced many of the building blocks needed to preserve and share research data, including metadata, digitization, repositories, and persistent identifiers.
+
+Here, we connect those pieces to the broader ideas of open science and reproducible research. The next chapter, [**Some Tools and Best Practices for Reproducible Coding in R**](chapters/coding-best_practices.qmd), moves from these ideas into practical approaches for organizing and documenting computational work.
+:::
+
+## Data rescue as open science
+
+Open science generally refers to efforts to make scientific research, its processes, and its products more accessible, transparent, reusable, and collaborative. Depending on the research, this can include publications, data, metadata, code, methods, software, educational materials, and other products created during the research process.
+
+For data rescue, the connection to open science is particularly clear when we think about why datasets become difficult to use.
+
+Imagine finding an old spreadsheet containing twenty years of plant species measurements across multiple sites. The file opens and the measurements appear to be intact, but the column headings include abbreviations that are no longer familiar. Several versions of the spreadsheet exist. No one is certain which is the final copy. Sampling locations are identified with codes that are explained in a report stored somewhere else. Some values appear to have been corrected, but there is no record of when or why.
+
+The data still *exist*. Their scientific value, however, is becoming much harder to recover.
+
+Data rescue tries to reverse that process. We identify and preserve the original materials, reconstruct their context, improve their documentation, record transformations, and prepare the resulting data so they can be found and understood in the future.
+
+In that sense, data rescue can sometimes feel a little like **scientific archaeology**. We are piecing together how a dataset came to exist from the evidence that remains. Good open science practices leave much more evidence behind for the next person.
+
+## What do we mean by open science?
+
+There is no single practice that makes research "open." Instead, open science includes a collection of approaches intended to make research processes and products easier to examine, use, and build upon.
+
+For the kinds of projects covered in this guidebook, this often means making it easier for someone else to:
+
+- Find the data
+- Understand what the data represent
+- Determine where the data came from
+- See what has been changed about the data over time
+- Understand important decisions made during processing
+- Access associated code and documentation
+- Reuse the data appropriately
+
+These goals extend beyond simply uploading a file somewhere on the internet.
+
+A spreadsheet called `final_data_v3_UPDATED.xlsx` may technically be available for download. If there is no metadata, no explanation of the variables, no information about how the file was produced, and no clear licence, its potential for future use remains fairly limited.
+
+Open science therefore depends on **context** as much as it depends on access.
+
+## Open does not always mean public
+
+An important part of open science is recognizing that greater access is not appropriate for every dataset.
+
+Research data may contain personal or confidential information. For example, ecological datasets may contain locations for threatened species or other sensitive resources. Data may also be subject to agreements, laws, or community governance that determine how they can be stored, accessed, or reused.
+
+This is particularly important when working with Indigenous data and knowledge. Indigenous Peoples may have rights and interests in how data concerning their communities, lands, resources, or knowledge are governed and used. The [CARE Principles for Indigenous Data Governance](https://www.gida-global.org/careprinciples), discussed later in this chapter, were developed in part because increasing access and reuse does not by itself address these responsibilities.
+
+A useful principle is to make research **as open as appropriate while being clear about necessary restrictions**. A dataset with restricted access can still have excellent metadata, clearly documented provenance, a persistent identifier, transparent access procedures, and a reproducible workflow.
+
+Ultimately, we should ask ourselves some variation of the following question:
+
+> Who should be able to access and reuse these data, under what conditions, and what information can we provide even when the data themselves cannot be openly shared?
+
+## Open and reproducible are related, but different
+
+Open science and reproducibility overlap substantially, but they describe somewhat different qualities of research.
+
+**Openness** concerns the ability to access research processes and products.
+
+**Reproducibility** concerns the ability to understand and reconstruct the process that produced a result or data product.
+
+A project can do well at one and poorly at the other. For example, imagine that a cleaned dataset and its analysis code are publicly available in a repository. The code begins by loading `cleaned_data.csv`, but there is no record of how the original data became `cleaned_data.csv`. The project is relatively open, but a major part of the workflow remains difficult to reproduce.
+
+The reverse can also occur. A research group working with confidential data might carefully script every transformation, document its software environment, record all decisions, and preserve complete metadata. The underlying data cannot be released publicly, but an authorized researcher could still potentially reconstruct the workflow and evaluate the steps of an associated analysis.
+
+| Situation | Open? | Reproducible? |
+|---|---|---|
+| Data, code, and documentation are publicly available and the workflow can be reconstructed | Largely yes | Largely yes |
+| Data are publicly available but poorly documented | Yes, in terms of access | Potentially not |
+| Data access is restricted, but the workflow is carefully documented | Only partly | Potentially yes for authorized users |
+| Files and decisions exist only on one person's computer | No | Usually not |
+
+In practice, open science works best when access, documentation, preservation, and reproducibility reinforce one another.
+
+## What does reproducibility mean here?
+
+Different fields use terms such as *reproducibility*, *replicability*, and *repeatability* somewhat differently. In this guidebook, we are primarily interested in whether someone can understand and reconstruct what happened to the data.
+
+For a typical data rescue project, we might imagine a path like this:
+
+```{mermaid}
+flowchart LR
+    A[Original data] --> B[Interpretation]
+    B --> C[Cleaning and restructuring]
+    C --> D[Validation]
+    D --> E[Prepared dataset]
+    E --> F[Repository or DataStream]
+
+    classDef default fill:#ffffff,stroke:#555555,color:#222222;
+```
+
+The important information is often found in the **arrows**. Why was a particular value changed? How were duplicate records handled? How were locations matched between two files? Was a date inferred from another source? Which file was treated as authoritative when two versions disagreed?
+
+A reproducible workflow leaves enough of a trail that another person can answer those questions, and ideally with minimal friction.
+
+### The recipe problem
+
+Code is an important component of open science, but code by itself does not guarantee reproducibility.
+
+Consider a cooking recipe. A beautifully written set of cooking instructions is not very useful if the recipe is missing half of the ingredients, the units of measurement are unknown, or three important preparation steps were omitted. A data workflow can have the same problem. An R script might perfectly document what happened after a dataset entered R while saying very little about where the file came from, what happened to it beforehand, or why certain decisions were made.
+
+For this reason, reproducibility can involve several pieces working together:
+
+> **Data + metadata + code + documentation + provenance + software + decisions**
+
+The exact combination will differ among projects. The goal is to preserve enough information that the workflow remains understandable rather than expecting every action to happen automatically.
+
+## Provenance: leaving a trail
+
+One idea that will appear throughout this guidebook is **data provenance**.
+
+Provenance describes the history of a dataset: where it came from, what has happened to it, and how the current version relates to earlier versions or sources.
+
+Consider two copies of the same final dataset.
+
+The first consists only of:
+
+`water_quality_final.csv`
+
+The second contains the same CSV, but it is accompanied by the original source files, a script showing how the files were combined and cleaned, metadata describing each variable, a change log describing important manual decisions, information about who produced the original data, and a README explaining the project structure.
+
+The measurements in the final CSV could be identical in both cases. The second version carries a much clearer record of how those measurements reached their current form.
+
+This becomes particularly important in data rescue because we often encounter gaps in provenance ourselves. If we cannot determine why a value was changed twenty years ago, we cannot recreate that information after the fact. We *can*, however, make sure that decisions made during the rescue process are documented for whoever works with the data next.
+
+::: {.callout-important}
+## Reproducible does not mean completely automated
+
+Data rescue frequently requires judgment.
+
+You may need to interpret an old field name, compare several versions of a spreadsheet, ask a data owner what a code means, match sampling locations across datasets, or decide how to represent an unusual record.
+
+Those steps cannot always be reduced to code. When an important decision must be made manually, document the decision, the evidence used to make it, and any remaining uncertainty.
+:::
+
+## Reproducibility has a time dimension
+
+A workflow that works today may be much harder to reconstruct five or ten years from now.
+
+People leave research groups. Computers are replaced. Websites disappear. File formats change. Software packages are updated or abandoned. Links break. Institutional storage systems are reorganized.
+
+This gives reproducibility a **time dimension** that is especially relevant to data rescue.
+
+While the person who created a project is still available, many undocumented details may seem obvious. Once they are unavailable, those details can disappear quickly. A good workflow leaves markers that allow someone else to follow the same path later.
+
+This is why practices such as repositories, persistent identifiers, clear metadata, version control, software environment documentation, and README files become valuable together. Each protects a different component of the data lifecycle.
+
+## FAIR data
+
+One of the most widely used frameworks for thinking about research data is the **FAIR Principles**. FAIR stands for:
+
+| Principle | A useful question to ask |
+|---|---|
+| **Findable** | Can someone discover that these data exist? |
+| **Accessible** | Can they determine how to obtain them? |
+| **Interoperable** | Can the data work with other data, standards, and tools? |
+| **Reusable** | Is there enough information to use the data appropriately in another context? |
+
+Notice that FAIR does **not** mean that all data must be openly downloadable. Accessibility can include clearly described conditions or procedures for obtaining data.
+
+For a data rescue project, FAIR provides a useful way to think about whether rescued data will actually be useful after we finish working with them.
+
+A DOI can improve findability. A repository can improve long-term accessibility. Standardized dates, units, identifiers, and terminology can improve interoperability. Rich metadata and provenance can improve reusability.
+
+These pieces work together.
+
+### Data that people and computers can understand
+
+FAIR also asks us to consider whether data and metadata can be interpreted by computers as well as people.
+
+Imagine a document that says:
+
+> Sampling dates are listed in column four.
+
+A person can probably understand that instruction. Now imagine that the dataset itself uses a consistently named `sample_date` field, dates follow the same format, and the repository metadata explicitly identifies the field as a date. That information is much easier for software to recognize and use.
+
+This matters increasingly as scientific information is discovered and connected through repositories, databases, search systems, and automated tools. In practice, we do not need every data rescue project to use highly technical metadata systems. Consistent structure, stable identifiers, standardized formats, and well-organized metadata already move us a long way in this direction.
+
+## FAIR is not the whole story
+
+FAIR focuses primarily on whether data can be found and reused. That is valuable, but it does not answer every question that comes with responsible data stewardship.
+
+Two additional frameworks help illustrate some of what FAIR leaves out.
+
+### CARE: considering people and purpose
+
+The **CARE Principles for Indigenous Data Governance** emphasize:
+
+- Collective benefit
+- Authority to control
+- Responsibility
+- Ethics
+
+CARE draws attention to the people, communities, rights, and relationships connected to data.
+
+This provides an important complement to FAIR. A dataset could be technically easy to find, download, combine, and reuse while still being shared or used in ways that conflict with the rights or interests of the people connected to it.
+
+For data rescue, this means that improving accessibility should never happen automatically. Before sharing data, we need to understand where they came from, what agreements or expectations govern them, and whether there are reasons access should be limited.
+
+### TRUST: considering where the data live
+
+The **TRUST Principles** shift attention from the dataset to the repository responsible for preserving it. TRUST stands for:
+
+**Transparency · Responsibility · User focus · Sustainability · Technology**
+
+This connects directly to the questions raised in the previous chapter on repositories.
+
+Consider a perfectly prepared dataset deposited on a website run by a small company. The dataset has excellent metadata and a DOI, but the company shuts down three years later and the files disappear.
+
+Preparing the dataset well did not solve the entire preservation problem.
+
+A library provides a useful comparison. Cataloguing a book carefully makes it easier to find and use, but long-term access also depends on the library continuing to maintain its collection. In the same way, preserving scientific data requires both well-prepared data and trustworthy infrastructure.
+
+When choosing a repository, we therefore care about questions such as its long-term funding, governance, preservation policies, and institutional commitments in addition to the features of the upload interface.
+
+::: {.callout-tip}
+## FAIR, CARE, and TRUST ask different questions
+
+**FAIR:** Are the data prepared so they can be found and reused?
+
+**CARE:** Have we considered the people, rights, and responsibilities connected to the data?
+
+**TRUST:** Are we relying on infrastructure that can responsibly preserve the data over time?
+:::
+
+These frameworks are complementary rather than competing. Together, they encourage us to think about the data, the people connected to them, and the systems responsible for preserving them.
+
+## Data stewardship as scientific maintenance
+
+Scientific data are often treated as though they become permanent once a project ends or a paper is published. In practice, the scientific record requires maintenance.
+
+A useful comparison is physical infrastructure. Roads, trails, buildings, and bridges remain useful because people maintain them. Scientific infrastructure also requires work: repositories need support, metadata need to remain understandable, file formats need to remain usable, and datasets sometimes need to be migrated or repaired.
+
+Data rescue is one form of this maintenance.
+
+Older datasets may have been created before current metadata standards existed, before repositories were widely available, or before researchers commonly used scripted workflows and version control. The fact that these datasets require rescue does not necessarily mean that they were poorly managed for their time. The research environment around them has changed.
+
+This perspective is useful because open science often focuses on how we should manage **new** research. Data rescue asks a related question:
+
+> What do we do with scientifically valuable information that already exists but does not yet meet current expectations for preservation, documentation, or reuse?
+
+
+## From principles to practice
+
+The ideas in this chapter provide a foundation for much of the remainder of the guidebook.
+
+Open and reproducible research depends on many small decisions made throughout a project: how files are named, whether original data are preserved, where transformations happen, how unusual cases are documented, whether code can be rerun, how software dependencies are recorded, and where the final products are archived.
+
+Taken together, these decisions help determine whether someone else can understand what happened to a dataset and continue working with it later. In data rescue projects, this is especially important because we are often working with datasets where parts of that history have already been lost.
+
+A useful way to think about the overall goal is to leave behind a clearer record than the one we inherited. That record may include well-organized files, metadata, documented decisions, code, version history, persistent identifiers, and a stable repository. Not every project will contain all of these pieces, but each one can make the dataset easier to interpret, preserve, and reuse.
+
+The next chapter focuses on several tools and practices that support this work in R, including project organization, scripted workflows, version control, and reproducible software environments. Later chapters return to these same ideas within the broader data rescue workflow as we clean and validate data, document quality-control decisions, prepare metadata, and get datasets ready for long-term preservation and sharing.
 
