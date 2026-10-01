@@ -380,9 +380,11 @@ For example:
 This path is unlikely to work on another person's computer.
 It may also stop working if the project folder is moved.
 
-The `here` package constructs paths relative to the project root:
+You can instead construct file paths relative to a project's root folder. Or you can use the `here` package to easily do it for you:
 
 ```{r relative-path}
+#| results: hide
+
 here::here(
   "data",
   "raw",
@@ -390,9 +392,15 @@ here::here(
 )
 ```
 
+Expected path:
+
+```text
+data/raw/water_quality.csv
+```
+
 As long as the project folders retain the same internal structure, this path can work regardless of where the project is stored.
 
-Use `here::here()` when reading and writing project files:
+You can alo use `here::here()` when reading and writing project files:
 
 ```{r use-here, eval=FALSE}
 water_quality_raw <- readr::read_csv(
