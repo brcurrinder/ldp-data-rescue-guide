@@ -14,7 +14,7 @@ book:
   chapters:
     - index.qmd
 
-    - part: "Introduction to Data Rescue"
+    - part: "Introduction"
       chapters:
         - chapters/introduction.qmd
         - chapters/introduction-datastream.qmd
@@ -63,3 +63,5 @@ format:
     toc: true
     number-sections: false
     include-after-body: includes/tooltips.html
+    code-fold: true
+    code-summary: "Show code"
