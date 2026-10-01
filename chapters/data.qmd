@@ -25,7 +25,7 @@ However, combining the data into a single file often results in a very **wide** 
 ::: {.callout-tip collapse="false"}
 #### DataStream Data Structure
 
-In the DataStream data format, each **observation** (monitoring result) is detailed on a separate row. Columns pertain to various **schema fields** which provide key information about a given observation (more on schema fields below). This is a "long-format" structure, in contrast to "wide-format" where each parameter measured might have its own column.
+In the DataStream data format, each **observation** (monitoring result) is detailed on a separate row. Columns pertain to various **schema fields** which provide key information about a given observation (more on schema fields below). This is a "long-format" structure, in contrast to "wide-format" where each parameter measured might have its own column. *Source: DataStream Initiative, https://datastream.org/en-ca/documentation/data-schema*
 
 ![](images/DataStructureGraphic_EN_20260326.png)
 :::
@@ -152,7 +152,7 @@ Look through your own copy of DataStream's Upload Template in [*Excel*](https://
 
 -   The **Allowed Values** tab outlines all schema fields, including which are required,optional or conditional, and how the values for each should be entered (e.g.number, free text, allowed value list). This tab also includes a list of the "allowed values" for each schema field.
 -   The **Glossary** tab describes all the schema fields (column names) and provides definitions for many of the allowed value terms.
--   The **CharacteristicName LOOKUP** tab provides a list of all the water quality parameters (characteristics) accepted on DataStream and how they should be entered. You can also see which parameters require additional information (like sample fraction, and method speciation).
+-   The **CharacteristicName LOOKUP** tab provides a list of all the water quality parameters (characteristics) accepted on DataStream and how they should be entered. You can also see which parameters require additional information (like sample fraction, and method speciation). *Source: DataStream Initiative, https://datastream.org/en-ca/documentation/data-schema*
 
 ![](images/TemplateAllowedValues_screenshot_2026-04-08.png){width="769"}
 

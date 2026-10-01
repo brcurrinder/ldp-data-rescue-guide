@@ -14,9 +14,9 @@ By the end of this chapter, you should be able to:
 - Explain how dataset-level and observation-level metadata support publication and reuse on DataStream.
 - Create a shared working table that distinguishes between known, unknown, and uncertain information about the metadata.
 - Combine information from multiple source files into a single table for inspection and metadata review.
+- Map source values and information to standardized DataStream fields, characteristics, sites, units, and methods, and document these mappings for reproducibility.
 - Use R to create [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."} and [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."} entries for common water quality metadata issues.
 - Prepare draft DataStream metadata fields and a metadata package for your team to review.
-
 
 <br>
 
@@ -32,8 +32,9 @@ For this reason, metadata preparation should begin as early as possible in the d
 
 ## Dataset-level Metadata on DataStream
 
-Contributors to DataStream enter their **dataset-level metadata** in a standardized format prior to upload by completing the fields in this [Metadata form](https://datastream.org/en-ca/documentation/prepare-metadata), summarized in the table below.
-Some metadata fields are required, some are optional, and some are automatically-generated after a dataset is uploaded:
+Contributors to DataStream prepare their **dataset-level metadata** prior to uploading their dataset by completing the fields in this [Metadata form](https://datastream.org/en-ca/documentation/dataset-metadata).
+See DataStream's documentation for the most up to date summary of these dataset-level [metadata fields](https://datastream.org/en-ca/documentation/dataset-metadata#:~:text=10.25976/xxxx%2Dxxxx.-,Dataset%2Dlevel%20metadata%20fields,-Field).
+A summary is provided below (current as of September 2026):
 
 <br>
 
@@ -79,46 +80,16 @@ We will thoroughly document all steps related to cleaning, processing, and QA/QC
 
 ## Metadata Creation in the Data Rescue Lifecycle
 
-Metadata review and updates are not always linear. You may discover new information while cleaning data, reviewing lab files, or communicating with the data owner. Still, it can help to try to have a general workflow. 
+Metadata review and updates are not always linear.
+You may discover new information while cleaning data, reviewing lab files, or communicating with the data owner.
+Still, it can help to try to have a general workflow.
 
-The diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2025](https://doi.org/10.1098/rspb.2022.0938). This chapter focuses primarily on **Step 3: Metadata creation**, where we review source files, identify metadata issues, create review tables and a change log, and draft a metadata package for review.
+The diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2022](https://doi.org/10.1098/rspb.2022.0938).
+This chapter focuses primarily on **Step 3: Metadata creation**, where we review source files, identify metadata issues, create review tables and a change log, and draft a metadata package for review. Note that Steps 3-5 are often iterative in practice as new information is uncovered.
 
-```{mermaid}
-%%| fig-cap: "DataStream example workflow within the broader data rescue lifecycle. This chapter focuses on Metadata creation."
-flowchart TD
-  S1["Data prioritization<br/><small>Identify high-value or at-risk datasets</small>"]
+![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 3: Metadata creation. Adapted from Figure 2 in Bledsoe et al. (2022).](/images/data_rescue_workflow_step3.pdf)
 
-  S2["Team creation<br/><small>Define roles and responsibilities</small>"]
-
-  S3["Metadata creation<br/><small>Review source files<br/>Create metadata issues table<br/>Create review tables and change log<br/>Draft metadata package</small>"]
-
-  S4["Data transfer & compilation<br/><small>Preserve raw files<br/>Combine source tables<br/>Create inspection table</small>"]
-
-  S5["Data cleaning & validation<br/><small>Clean data<br/>Run QA/QC<br/>Format for DataStream<br/>Run schema validation</small>"]
-
-  U["Update metadata<br/><small>as issues emerge</small>"]
-
-  R["Prepare package<br/>for data owner review<br/><small>Export final CSV, reports,<br/>validation results, and metadata</small>"]
-
-  S6["Data archiving<br/><small>Data owner uploads finalized<br/>data and metadata to DataStream</small>"]
-
-  S7["Data sharing<br/><small>Archived data are publicly<br/>available for discovery, reuse, and<br/> analysis</small>"]
-
-  S1 --> S2 --> S3 --> S4 --> S5 --> R --> S6 --> S7
-
-  S3 -. "metadata package<br/>is maintained" .-> U
-  S4 -. "source-file and<br/>compilation issues" .-> U
-  S5 -. "cleaning and validation<br/>decisions" .-> U
-  U -. "updated metadata<br/>included in review package" .-> R
-
-  classDef prior fill:#f2f2f2,stroke:#999,color:#666;
-  classDef focusData fill:#fff4e6,stroke:#fd7e14,stroke-width:3px,color:#222;
-  classDef later fill:#f8f9fa,stroke:#bbb,color:#666;
-
-  class S1,S2 prior;
-  class S3 focusData;
-  class S4,S5,S6,S7,U,R later;
-```
+<br>
 
 Know that each dataset will likely require its own specific strategy and adaptations, but the basic goal for metadata is the same: document enough context that the dataset can be understood, reused, and responsibly published.
 Let's apply this to an example dataset.
@@ -164,7 +135,8 @@ The goal of this chapter is to show how to recognize and document these common i
 After receiving and initially reviewing source files, we should start to compile what we know, what we do not know, and what is uncertain about the dataset.
 A good first step can be to create a shared working table of metadata issues.
 You can think of this as a shared project management table used by the team to track major metadata issues, current understanding, next actions, and data owner input needs.
-The table does not need to be complicated, and the format can be adapted to each dataset's context. A shared [Kanban board]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kanban is a visual method for managing work and workflows. It uses a board (physical or digital) divided into columns, where tasks are written on cards and moved from left to right as they progress (e.g., from 'To Do' to 'Doing' to 'Done')."} is one useful project management tool worth exploring with your team.
+The table does not need to be complicated, and the format can be adapted to each dataset's context.
+A shared [Kanban board]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kanban is a visual method for managing work and workflows. It uses a board (physical or digital) divided into columns, where tasks are written on cards and moved from left to right as they progress (e.g., from 'To Do' to 'Doing' to 'Done')."} is one useful project management tool worth exploring with your team.
 
 For Decent Mountains National Park, an early version of a shared working table might look like this:
 
@@ -176,10 +148,11 @@ For Decent Mountains National Park, an early version of a shared working table m
 | Field methods | Field measurements include pH, water temperature, dissolved oxygen, and specific conductance. Available notes indicate these were measured in the field, but equipment, calibration, and protocol details are incomplete. | Document available equipment, calibration, depth, and field protocol information. Note whether field methods appear consistent through time or whether method changes may affect comparability. | Internal review first. Follow up if equipment, calibration, or protocol changes cannot be resolved from method notes. |
 | Lab methods | Nutrients, ions, hardness, and heavy metal analytes were analyzed externally. Lab names and analytical methods may vary by year, analyte, or source file. | Link laboratory names, analytical method names or IDs, and method contexts to years and analytes where possible. Record where methods are missing, ambiguous, or only described generally. | Likely. Lab and method information often requires confirmation if not clearly documented in lab reports or method files. |
 | Heavy metals | Lead, cadmium, mercury, arsenic, copper, and zinc are reported from 2016–2024. Some records may require additional metadata to distinguish dissolved, total, or total recoverable results. | Check whether sample fraction, analytical method, laboratory name, detection condition, and detection-limit information are available in `DMNP_Method_Reports.pdf` or related lab files. Document unresolved sample-fraction issues separately because they affect interpretation. | Yes – needed if sample fraction information cannot be mapped to observations from source files. |
-| Detection limits | Some [censored values]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Results reported relative to a detection or reporting threshold instead of as an exact measured value, such as \<0.002, BDL (Below Detection Limit), or ND (Not Detected)."} are present, but detection-limit terminology and completeness vary across files. Values may be encoded as symbols, flags, or separate detection-condition fields. | Document how censored values are encoded, what detection-limit values and units are available, and whether limit types represent method detection limits, reporting limits, quantification limits, or another category. | Likely. Follow up if limit types or censoring conventions are not defined in lab reports or method documentation. |
+| Detection limits | Some measurements are reported as being below or above a detection limit rather than as an exact measured value. These may be encoded using symbols, flags, or separate detection-condition fields. | Document how detection-limit values are encoded, what detection-limit values and units are available, and whether limit types represent method detection limits, reporting limits, quantification limits, or another category. | Likely. Follow up if  limit types or conventions for values below or above detection limits are not defined in lab reports or method documentation. |
 | Data processing | Some data standardization will be completed in R, including harmonizing names, dates, units, characteristics, detection-limit fields, and site information. | Document all cleaning, harmonization, joins, exclusions, assumptions, and QA/QC checks in the processing notes or change log. Distinguish changes made for formatting from changes made because of scientific or metadata interpretation. | No for routine processing decisions. Yes if processing requires assumptions about unresolved metadata. |
 
-This working table is intentionally high-level as it helps the team track the major metadata areas that need attention. It is just one version of how you might manage your project with your team.
+This working table is intentionally high-level as it helps the team track the major metadata areas that need attention.
+It is just one version of how you might manage your project with your team.
 
 As we work through the source data in R, we can also create [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."} and a [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."}.
 The **review tables** will help identify specific records or files that need attention.
@@ -215,6 +188,7 @@ library(tibble)
 ```
 
 ### Create Example Data
+
 ```{r}
 #| message: false
 #| echo: true
@@ -356,6 +330,7 @@ Excel issues may need to be interpreted in concert with the data owner.
 <br>
 
 ### Use tidyverse functions to standardize and combine source data
+
 Now we will standardize the structure of the source tables so they can be combined.
 
 Here, “standardize” does not mean that we are fixing every data or metadata issue yet.
@@ -478,7 +453,8 @@ Upon inspecting this small dataset, we can now see the specific issues that we f
 
 ## Step 3: Create Review Tables and a Change Log
 
-A combined table of source data makes it easier to generate [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."}. Review tables help us identify metadata issues systematically, which can then be used to update our [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."} as the project develops.
+A combined table of source data makes it easier to generate [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."}.
+Review tables help us identify metadata issues systematically, which can then be used to update our [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."} as the project develops.
 
 First, let's create an empty change log that we will fill in as we go.
 
@@ -526,14 +502,15 @@ dmnp_with_sites <- dmnp_combined |>
 # Inspect the structure of the new table
 glimpse(dmnp_with_sites)
 ```
-<br>
-Now we can create a review table to capture common metadata issues for sites and coordinates, including:
+
+<br> Now we can create a review table to capture common metadata issues for sites and coordinates, including:
 
 - Whether site names differ from the reference site list
 - Whether observed coordinates differ across source files
 - Whether any source records are missing coordinates
 - How many coordinate pairs are associated with each site
 - Which sites should be flagged for metadata review
+
 ```{r}
 #| message: false
 #| echo: true
@@ -620,8 +597,8 @@ site_review <- dmnp_with_sites |>
 # Inspect the structure of the resulting review table
 glimpse(site_review)
 ```
-<br>
-Now add the issues raised in the review table above to the change log.
+
+<br> Now add the issues raised in the review table above to the change log.
 
 ```{r}
 #| message: false
@@ -667,7 +644,9 @@ The source data include sample times, but they do not include time zone informat
 The code below prepares a review table for time fields.
 It appends seconds for upload formatting, but it does not add a time zone as confirming the time zone for each date will require further investigation.
 
-Note that the code below uses [**Regular Expressions**](https://r4ds.hadley.nz/regexps.html), or **regex**, to detect date and time data within strings. Regex are special sequences of characters that form a search pattern used to validate, find, or replace text strings. This type of code may be unfamiliar, but is often very useful in data rescue projects! 
+Note that the code below uses [**Regular Expressions**](https://r4ds.hadley.nz/regexps.html), or **regex**, to detect date and time data within strings.
+Regex are special sequences of characters that form a search pattern used to validate, find, or replace text strings.
+This type of code may be unfamiliar, but is often very useful in data rescue projects!
 
 ```{r}
 #| message: false
@@ -739,7 +718,8 @@ glimpse(change_log)
 
 For Decent Mountains National Park, the team may be able to identify the appropriate time zone from the sampling location, sampling date, and data owner input.
 However, the time zone should be documented rather than assumed, because the source files do not explicitly provide this information.
-The important point here is that appending `:00` is a formatting step, while assigning a time zone is more of a metadata decision. Consider the differences between these types of steps for your particular project.
+The important point here is that appending `:00` is a formatting step, while assigning a time zone is more of a metadata decision.
+Consider the differences between these types of steps for your particular project.
 
 <br>
 
@@ -759,7 +739,7 @@ For each group of measurements, it is good to review:
 
 In the Decent Mountains National Park dataset, the source files use names such as `DO`, `Temp`, `SpCond`, `Pb`, and `Nitrate-N`.
 In this chapter, we will create a working interpretation of those source names so we can review metadata issues.
-In the next chapter, we will map those names to DataStream's controlled vocabulary and validate them against the DataStream schema.
+In the next chapter, we will **map** those names to DataStream's controlled vocabulary and validate them against the DataStream schema.
 
 ```{r}
 #| message: false
@@ -850,8 +830,8 @@ method_context_review <- source_name_review |>
 
 glimpse(method_context_review)
 ```
-<br>
-Now add source-name interpretation decisions and method-context issues to the change log.
+
+<br> Now add source-name interpretation decisions and method-context issues to the change log.
 
 ```{r}
 #| message: false
@@ -900,7 +880,8 @@ change_log <- bind_rows(
 glimpse(change_log)
 ```
 
-In a real project, our lookup table may grow to include many more characteristics, source synonyms, units, and notes about method context. The key point is that all mappings and other changes should be documented in an easy to interpret format.
+In a real project, our lookup table may grow to include many more characteristics, source synonyms, units, and notes about method context.
+The key point is that all mappings and other changes should be documented in an easy to interpret format.
 
 <br>
 
@@ -1066,7 +1047,9 @@ If your code fills in a value, maps a name, flags a method detection limit, etc.
 
 ## Step 7: Prepare a Metadata Package
 
-The end goal is to prepare a clear metadata package that the data owner can review alongside the final formatted dataset. We will continue to update this package as we process the source files through cleaning and validation (next chapter). We can also publish the scripts that created the review tables and change log (e.g., on GitHub) and can link to them in the dataset-level metadata published on DataStream.
+The end goal is to prepare a clear metadata package that the data owner can review alongside the final formatted dataset.
+We will continue to update this package as we process the source files through cleaning and validation (next chapter).
+We can also publish the scripts that created the review tables and change log (e.g., on GitHub) and can link to them in the dataset-level metadata published on DataStream.
 
 A useful metadata package may include finalized versions of:
 
@@ -1166,10 +1149,21 @@ Before moving to final data formatting and validation, make sure that the metada
 
 ## R packages used in this chapter
 
-Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, Max, Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., Takahashi, K., Vaughan, D., Wilke, C., Woo, K., & Yutani, H. (2019). Welcome to the tidyverse. *Journal of Open Source Software*, *4*(43), 1686. <https://doi.org/10.21105/joss.01686>.
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, Max, Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., Takahashi, K., Vaughan, D., Wilke, C., Woo, K., & Yutani, H.
+(2019).
+Welcome to the tidyverse.
+*Journal of Open Source Software*, *4*(43), 1686.
+<https://doi.org/10.21105/joss.01686>.
 
 ## References in this chapter
 
-Bledsoe, E. K., Burant, J. B., Higino, G. T., Roche, D. G., Binning, S. A., Finlay, K., Pither, J., Pollock, L. S., Sunday, J. M., & Srivastava, D. S. (2022). Data rescue: Saving environmental data from extinction. Proceedings of the Royal Society B: Biological Sciences, 289(1979), Article 20220938. <https://doi.org/10.1098/rspb.2022.0938>.
+Bledsoe, E. K., Burant, J. B., Higino, G. T., Roche, D. G., Binning, S. A., Finlay, K., Pither, J., Pollock, L. S., Sunday, J. M., & Srivastava, D. S.
+(2022).
+Data rescue: Saving environmental data from extinction.
+Proceedings of the Royal Society B: Biological Sciences, 289(1979), Article 20220938.
+<https://doi.org/10.1098/rspb.2022.0938>.
 
-DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.
+DataStream Initiative.
+2021.
+The DataStream Learning Centre.
+<https://datastream.org/en-ca/documentation>.

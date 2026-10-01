@@ -17,9 +17,17 @@ By the end of this chapter, you should be able to:
 - Clean the combined table of source data
 - Document data cleaning decisions in a change log
 - Perform basic scientific validation checks on water quality data
-- Format a cleaned water quality dataset into the DataStream data schema
+- **Map** source data and values to standardized DataStream fields and values and format the cleaned dataset to match the DataStream data schema
 - Run a pre-upload validation check using the [JSON]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="JSON, or JavaScript Object Notation, is a simple way to write down and organize information using plain text, but that works with almost any computer language. Think of it like a digital label or a neat list that computers use to talk to each other."} version of DataStream's data schema
 - Export a CSV and validation report for your team to review
+
+::: callout-tip
+### What is a mapping?
+
+In the DataStream workflow, **mapping** is the process of connecting data fields from one system or database to the matching fields in DataStream. For example, a dataset might use TP, Total P, and Total Phosphorus to mean the same thing. A mapping records that all three should be treated as DataStream’s standard characteristic, Total Phosphorus.
+
+Mappings can also be used to standardize site names, units, methods, and other information in a dataset.
+:::
 
 **This chapter is designed primarily as a reference workflow in R.**
 You do not need to memorize every function or code block, but can instead focus on understanding the overall sequence and return to the chapter as needed throughout your project.
@@ -87,50 +95,15 @@ You can think of the validation checks in this chapter as a way to identify issu
 
 ## Data Compilation, Cleaning, and Validation in the Data Rescue Lifecycle
 
-As in the previous chapter, the diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2025](https://doi.org/10.1098/rspb.2022.0938). This chapter focuses on Data Transfer & Compilation, Data Cleaning & Validation, and Updating metadata as issues emerge.
+As in the previous chapter, the diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2025](https://doi.org/10.1098/rspb.2022.0938). This chapter focuses on Steps 4 and 5: Data Transfer & Compilation and Data Cleaning & Validation, but with references to Step 3: Metadata creation since we will update the metadata as new issues and information emerge.
 
-```{mermaid}
-%%| fig-cap: "DataStream example workflow within the broader data rescue lifecycle. This chapter focuses on highlighted boxes: Data transfer & compilation, data cleaning & validation, metadata updates, and preparing outputs for data owner review."
-flowchart TD
-  S1["Data prioritization<br/><small>Identify high-value or at-risk datasets</small>"]
-
-  S2["Team creation<br/><small>Define roles and responsibilities</small>"]
-
-  S3["Metadata creation<br/><small>Review source files<br/>Create metadata issues table<br/>Create review tables and change log<br/>Draft metadata package</small>"]
-
-  S4["Data transfer & compilation<br/><small>Preserve raw files<br/>Combine source tables<br/>Create inspection table</small>"]
-
-  S5["Data cleaning & validation<br/><small>Clean data<br/>Run QA/QC<br/>Format for DataStream<br/>Run schema validation</small>"]
-
-  U["Update metadata<br/>as issues emerge"]
-
-  R["Prepare package<br/>for data owner review<br/><small>Export final CSV, reports,<br/>validation results, and metadata</small>"]
-
-  S6["Data archiving<br/><small>Data owner uploads finalized<br/>data and metadata to DataStream</small>"]
-
-  S7["Data sharing<br/><small>Archived data are publicly<br/>available for discovery, reuse, and<br/> analysis</small>"]
-
-  S1 --> S2 --> S3 --> S4 --> S5 --> R --> S6 --> S7
-
-  S3 -. "metadata package<br/>is maintained" .-> U
-  S4 -. "source-file and<br/>compilation issues" .-> U
-  S5 -. "cleaning and validation<br/>decisions" .-> U
-  U -. "updated metadata<br/>included in review package" .-> R
-
-  classDef prior fill:#f2f2f2,stroke:#999,color:#666;
-  classDef focusData fill:#fff4e6,stroke:#fd7e14,stroke-width:3px,color:#222;
-  classDef later fill:#f8f9fa,stroke:#bbb,color:#666;
-
-  class S1,S2,S3 prior;
-  class S4,S5,U,R focusData;
-  class S6,S7 later;
-```
+![Example workflow for preparing datasets for DataStream. This chapter focuses on Steps 4 and 5: Data Transfer & Compilation and Data Cleaning & Validation. Adapted from Figure 2 in Bledsoe et al. (2022).](/images/data_rescue_workflow_steps_4_5.pdf)
 
 <br>
 
 ## Step 1: Load Packages and Create Project Folders
 
-The code in this chapter is meant to be run in your own RStudio session or project environment. You can quickly copy code and paste it into your R session by clicking on the small clipboard in the top right of each code chunk. 
+The code in this chapter is meant to be run in your own RStudio session or project environment. You can quickly copy code and paste it into your R session by clicking on the small clipboard in the top right of each code chunk. Code chunks can also be expanded or minimized.
 
 First load the packages that we will need for this chapter.
 
@@ -342,6 +315,13 @@ These steps are not exhaustive, but they are meant to illustrate the types of ac
 
 In the previous chapter, we used working names to interpret source-file terms.
 Here, we carry those interpretations forward and begin mapping them to the characteristic names that DataStream uses in their schema.
+
+:::
+What is a mapping?
+In the DataStream workflow, a mapping is a documented correspondence between information in a source dataset and the standardized values or fields used by DataStream. For example, a source dataset might use TP, Total P, and Total Phosphorus for the same characteristic. A mapping records that each of these source values corresponds to DataStream’s standardized characteristic Total Phosphorus. Mappings may also be used for sites, units, methods, and other standardized fields.
+
+
+
 In the code chunk below, we create a table listing:
 
 1.  The characteristic name used in the source data
@@ -396,7 +376,7 @@ glimpse(characteristic_lookup)
 The pipe below takes the following steps to clean and update our working data table:
 
 - Create a new table called `dmnp_clean` by joining the combined data table with the site reference list (originally from `DMNP_Site_List.xlsx`) and our lookup table from above for characteristic names (`characteristic_lookup`)
-- Change site names and coordinates by mapping to the site reference list
+- Standardize site names and coordinates by mapping each source site to the corresponding site in the reference list
 - Use the `lubridate` package to standardize date and time values
 - Update time zone values
 - Identify and assign censored values to a consistent detection condition
