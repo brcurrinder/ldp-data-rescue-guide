@@ -44,16 +44,18 @@ For our purposes, metadata primarily exist at two levels. Some metadata describe
 
 **Sounds straightforward, right?** Unfortunately, creating high-quality metadata is often one of the most challenging parts of a data rescue project. Unlike the data, metadata often exist in scattered field or lab notebooks, reports, emails, or (quite commonly) in the memories of the original researchers. As a result, documenting metadata often requires careful investigation, synthesis, and occasionally a bit of detective work. High-quality metadata transform an otherwise uninterpretable collection of files into a reusable scientific dataset, making them one of the most valuable products of any data rescue effort.
 
+Even when environmental data are publicly available, missing or ambiguous metadata can make them difficult to combine, interpret, and use to understand broader environmental patterns. For example, [Sprague et al. (2017)](https://doi.org/10.1016/j.watres.2016.12.024) examined more than 25 million water quality records collected by 488 organizations across the United States and found that nearly 14.5 million contained missing or ambiguous information for at least one key metadata element. Resolving these ambiguities can be time-consuming and uncertain, and different assumptions about poorly documented data can ultimately lead researchers to different conclusions about environmental patterns. 
+
 <br>
 
 ## FAIR Principles {#sec-FAIR-principles}
 
-High-quality metadata does much more than describe a dataset; it helps ensure that the data remain useful long after the rescue project is complete. The **FAIR Principles** provide an internationally recognized framework for making research data easier to discover, understand, and reuse. FAIR stands for **Findable, Accessible, Interoperable, and Reusable**. These principles are a useful guide for creating high-quality metadata, and therefore improve research transparency and reproducibility while supporting long-term preservation and data sharing. Importantly, **FAIR does not necessarily mean open**. Datasets containing sensitive or restricted information can still be FAIR if their metadata clearly describe how the data can be accessed.
+High-quality metadata does much more than describe a dataset; it helps ensure that the data remain useful long after the rescue project is complete. The **FAIR Principles** provide an internationally recognized framework for making research data easier to discover, understand, and reuse. FAIR stands for **Findable, Accessible, Interoperable, and Reusable**. These principles are a useful guide for creating high-quality metadata, and therefore improve research transparency and reproducibility while supporting long-term preservation and data sharing. Importantly, **FAIR does not necessarily mean open**. Datasets containing sensitive or restricted information can still be FAIR if their metadata provide justification for how open or closed the dataset must be.
 
 <br>
 
 | Principle | How metadata helps |
-|-------------------|-----------------------------------------------------|
+|---------------------|---------------------------------------------------|
 | Findable | Includes descriptive titles, keywords, creators, and persistent identifiers (such as DOIs) so datasets can be discovered through repository searches. |
 | Accessible | Documents how the data can be obtained, including any access restrictions, embargoes, or licensing requirements. Metadata should remain available even if the data themselves cannot be openly shared. |
 | Interoperable | Uses standardized formats, controlled vocabularies, and community standards so datasets can be combined with other data and understood by both people and computers. |
@@ -200,7 +202,7 @@ Lover, L. (2026). Summer Water Quality Monitoring... DOI...
 Surface water samples were collected at approximately 0.5 m depth using a calibrated YSI ProDSS multiparameter sonde.
 
 | Variable | Description | Units | Notes |
-|-----------------|---------------------|-----------------|-----------------|
+|------------------|--------------------|------------------|------------------|
 | `site_id` | Unique identifier for each sampling location; matches site metadata table | --- | e.g., `LAKE01` |
 | `lake_name` | Official or locally used lake name | --- | Names standardized where possible |
 | `sample_date` | Date of sample collection | --- | ISO 8601 format: YYYY-MM-DD |
@@ -269,12 +271,12 @@ Although every repository has its own metadata requirements, most request simila
 
 DataStream uses a number of required, optional, or automatically generated fields to create comprehensive dataset-level metadata (table below).
 
-Contributors to DataStream enter their metadata in a standardized format prior to upload by completing this [Metadata form](*https://datastream.org/en-ca/documentation/prepare-metadata*).
+Contributors to DataStream enter their metadata in a standardized format prior to upload by completing this [Metadata form](*https://datastream.org/en-ca/documentation/dataset-metadata*).
 
 <br>
 
 | Field | Required | Description |
-|------------------|------------------|------------------------------------|
+|-------------------|-------------------|-----------------------------------|
 | Dataset Name | Yes | A short self-explanatory title of the dataset. |
 | Data Steward Email | Yes | Email address publicly associated with the dataset. |
 | Data Upload Organization | Yes | The organization (or researcher) uploading the dataset to DataStream. |
@@ -304,3 +306,5 @@ Contributors to DataStream enter their metadata in a standardized format prior t
 ## References in this chapter
 
 DataStream Initiative. 2021. The DataStream Learning Centre. <https://datastream.org/en-ca/documentation>.
+
+Sprague, L. A., Oelsner, G. P., & Argue, D. M. (2017). Challenges with secondary use of multi-source water-quality data in the United States. Water Research, 110, 252–261. https://doi.org/10.1016/j.watres.2016.12.024
