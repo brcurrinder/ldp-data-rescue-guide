@@ -10,17 +10,16 @@ After we have prepared a cleaned and validated data package, **your team will al
 Instead, your role is to prepare the final data package for the data owner to review.
 This package should include the cleaned and validated dataset, complete metadata, documentation of cleaning decisions, and any supporting files needed to understand or reproduce the workflow.
 
-![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 6: Data Transfer & Compilation and Data Cleaning & Validation. Adapted from Figure 2 in Bledsoe et al. (2022).](/images/data_rescue_workflow_step6.pdf)]
+![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 6: Data archiving. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step6.png)
 
 After reviewing and approving the package, **the data owner will upload the dataset to DataStream.** If needed, DataStream Data Specialists can also help data owners troubleshoot questions or issues that arise during the upload process.
 
 While we will not directly upload the final dataset package, it will still be helpful to be familiar with the process that data owners will follow to upload their datasets to DataStream.
 [You can see DataStream's full documentation on data upload here](https://datastream.org/en-ca/documentation/upload-data).
-To upload **new datasets** to Datastream, data owners will upload two required items along with optional documentation:
+To upload **new datasets** to Datastream, data owners will upload two **required** items:
 
-- **(Required)** Dataset-level metadata
-  - All fields correspond directly to the [DataStream Metadata Form](https://datastream.org/en-ca/documentation/data-upload-resources#dataset-metadata-form)
-- **(Required)** A single CSV file containing all observations
+-  Dataset-level metadata, with all fields corresponding directly to those found in the [DataStream Metadata Form](https://datastream.org/en-ca/documentation/data-upload-resources#dataset-metadata-form)
+- A single CSV file containing all observations
   - *This CSV file must adhere to the DataStream data schema*
 
 If we have correctly formatted the dataset to adhere to the DataStream data schema and provided all metadata documentation, the data owner should encounter minimal to no friction during the upload process.
