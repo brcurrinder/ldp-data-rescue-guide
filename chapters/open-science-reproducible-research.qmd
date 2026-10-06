@@ -2,8 +2,6 @@
 title: "Open Science and Reproducible Research"
 ---
 
-# Open Science and Reproducible Research
-
 Data rescue sits within a much larger effort to make scientific research more transparent, accessible, and useful over time. Many of the practices introduced earlier in this guidebook (documenting data with metadata, preserving original files, assigning persistent identifiers, and depositing data in repositories) are also central to **open science**.
 
 This chapter steps back from the individual pieces of a data rescue project to look at how they fit together. We will introduce open science, consider what reproducibility means in practice, and discuss how data rescue contributes to both. We will also consider an important question that comes up repeatedly in this work: what information would someone else need to understand what we did and continue working with these data in the future?
@@ -93,11 +91,11 @@ For a typical data rescue project, we might imagine a path like this:
 
 ```{mermaid}
 flowchart LR
-    A[Original data] --> B[Interpretation]
-    B --> C[Cleaning and restructuring]
+    A[Original<br/>data] --> B[Interpretation]
+    B --> C[Cleaning<br/>and restructuring]
     C --> D[Validation]
-    D --> E[Prepared dataset]
-    E --> F[Repository or DataStream]
+    D --> E[Prepared<br/>dataset]
+    E --> F[Repository]
 
     classDef default fill:#ffffff,stroke:#555555,color:#222222;
 ```
@@ -160,22 +158,20 @@ This is why practices such as repositories, persistent identifiers, clear metada
 
 ## FAIR data
 
-One of the most widely used frameworks for thinking about research data is the **FAIR Principles**. FAIR stands for:
+One of the most widely used frameworks for thinking about research data is the **FAIR Principles**. We introduced FAIR principles in more detail during the [Introduction to Metadata](metadata.qmd) chapter. As a brief review, FAIR stands for:
 
 | Principle | A useful question to ask |
 |---|---|
-| **Findable** | Can someone discover that these data exist? |
-| **Accessible** | Can they determine how to obtain them? |
-| **Interoperable** | Can the data work with other data, standards, and tools? |
-| **Reusable** | Is there enough information to use the data appropriately in another context? |
+| Findable | Can someone discover that these data exist? |
+| Accessible | Can they determine how to obtain them? |
+| Interoperable | Can the data work with other data, standards, and tools? |
+| Reusable | Is there enough information to use the data appropriately in another context? |
 
 Notice that FAIR does **not** mean that all data must be openly downloadable. Accessibility can include clearly described conditions or procedures for obtaining data.
 
 For a data rescue project, FAIR provides a useful way to think about whether rescued data will actually be useful after we finish working with them.
 
-A DOI can improve findability. A repository can improve long-term accessibility. Standardized dates, units, identifiers, and terminology can improve interoperability. Rich metadata and provenance can improve reusability.
-
-These pieces work together.
+A DOI can improve findability. A repository can improve long-term accessibility. Standardized dates, units, identifiers, and terminology can improve interoperability. Rich metadata and provenance can improve reusability. All of these pieces work together to increase the openness and transparency of our data and our science.
 
 ### Data that people and computers can understand
 
@@ -264,4 +260,21 @@ Taken together, these decisions help determine whether someone else can understa
 A useful way to think about the overall goal is to leave behind a clearer record than the one we inherited. That record may include well-organized files, metadata, documented decisions, code, version history, persistent identifiers, and a stable repository. Not every project will contain all of these pieces, but each one can make the dataset easier to interpret, preserve, and reuse.
 
 The next chapter focuses on several tools and practices that support this work in R, including project organization, scripted workflows, version control, and reproducible software environments. Later chapters return to these same ideas within the broader data rescue workflow as we clean and validate data, document quality-control decisions, prepare metadata, and get datasets ready for long-term preservation and sharing.
+
+## References in this chapter
+
+- Carroll, S. R., Garba, I., Figueroa-Rodríguez, O. L., et al. (2020). The CARE Principles for Indigenous Data Governance. *Data Science Journal, 19*, 43. [https://doi.org/10.5334/dsj-2020-043](https://doi.org/10.5334/dsj-2020-043)
+- Lin, D., Crabtree, J., Dillo, I., et al. (2020). The TRUST Principles for digital repositories. *Scientific Data, 7*, 144. [https://doi.org/10.1038/s41597-020-0486-7](https://doi.org/10.1038/s41597-020-0486-7)
+- Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. *Scientific Data, 3*, 160018. [https://doi.org/10.1038/sdata.2016.18](https://doi.org/10.1038/sdata.2016.18)
+
+### Additional resources
+
+- [CARE Principles for Indigenous Data Governance](https://www.gida-global.org/careprinciples) — Global Indigenous Data Alliance
+- [CoreTrustSeal](https://www.coretrustseal.org/) — Certification and requirements for trustworthy digital repositories
+- [Creative Commons](https://creativecommons.org/share-your-work/cclicenses/) — Information about standardized licences for sharing and reuse
+- [DataCite](https://www.datacite.org/) — Information about DOIs, metadata, and persistent identification of research outputs
+- [DOI Foundation](https://www.doi.org/) — Information about the DOI system
+- [ORCID](https://orcid.org/) — Persistent identifiers for researchers and contributors
+- [re3data](https://www.re3data.org/) — Global registry for finding and comparing research data repositories
+- [Research Organization Registry (ROR)](https://ror.org/) — Persistent identifiers for research organizations
 

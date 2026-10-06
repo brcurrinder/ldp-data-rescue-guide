@@ -23,7 +23,7 @@ Anita has noticed that location names are not always recorded consistently and m
 The project's source data files include a site reference table containing the official site names and identifiers.
 Anita wants to compare the site names in the main data table with this reference table to find potential matches, but they have not previously used [**regular expressions (regex)**]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Regular expressions are text patterns used to identify, extract, or replace strings (i.e., text data). For example, finding values that begin with a symbol, contain certain characters, or follow a specific format."} notation (you can read more about [regex here](https://r4ds.hadley.nz/regexps.html)) or any type of matching for string data in R.
 
-Anita understands the intended data-cleaning workflow but is unsure how to implement it in R. Because they can clearly describe the desired output and will evaluate whether the results follow those rules, they decide that an AI tool could be appropriate for helping develop and understand a code snippet.
+Anita understands the intended data cleaning workflow but is unsure how to implement it in R. Because they can clearly describe the desired output and will evaluate whether the results follow those rules, they decide that an AI tool could be appropriate for helping develop and understand a code snippet.
 
 Before prompting the AI tool, Anita considers the following:
 
@@ -514,6 +514,10 @@ ai_use_log <- tibble::tribble(
 
 dplyr::glimpse(ai_use_log)
 ```
+## References in this chapter
+
+Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Regular expressions. In R for data science (2nd ed.). O'Reilly Media. <https://r4ds.hadley.nz/regexps.html>.
+
 ## R packages used in this chapter
 
 Fischetti, T. (2024). *assertr: Assertive Programming for R Analysis Pipelines*. R package version 3.0.1. <https://github.com/ropensci/assertr>.

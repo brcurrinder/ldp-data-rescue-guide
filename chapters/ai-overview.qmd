@@ -302,7 +302,7 @@ Much like the rest of this guidebook, this chapter should be treated as a living
 
 Data rescue teams should discuss their experiences openly and update their practices as technology, institutional requirements, and understanding continue to evolve.
 
-## References
+## References in this chapter
 
 Baldeo, S.
 (2026).

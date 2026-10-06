@@ -1,5 +1,5 @@
 ---
-title: "Data repositories and persistent identifiers"
+title: "Repositories and Persistent Identifiers"
 ---
 
 Data rescue is not complete when the data have been cleaned and organized. Rescued data also need a stable, well-documented home where they can be discovered, accessed, cited, and reused in the future.
@@ -367,3 +367,40 @@ Note that repository selection can occur at the level of the **research object**
 - Domain-specific repositories can be preferable when they better fit the data types, file sizes, and intended audience.
 - No single repository is appropriate for every research output, but some are more general than others.
 - Repository policies and services change, so always verify current requirements.
+
+
+## References and resources
+
+### Persistent identifiers, repositories, and licensing
+
+- [DataCite: DOI Basics](https://support.datacite.org/docs/doi-basics) — Introduction to Digital Object Identifiers (DOIs) and their role as persistent identifiers
+- [DOI Foundation](https://www.doi.org/) — Information about the DOI system and its governance
+- [ORCID](https://orcid.org/) — Persistent identifiers for researchers and contributors
+- [Research Organization Registry (ROR)](https://ror.org/) — Persistent identifiers for research organizations
+- [CoreTrustSeal](https://www.coretrustseal.org/) — Certification and requirements for trustworthy digital repositories
+- [Creative Commons Licenses](https://creativecommons.org/share-your-work/cclicenses/) — Guidance on Creative Commons licences and CC0
+- [re3data](https://www.re3data.org/) — Registry for finding and comparing research data repositories
+
+### Canadian repositories and data platforms
+
+- [Borealis: The Canadian Dataverse Repository](https://borealisdata.ca/) — Multidisciplinary Canadian research data repository
+- [Federated Research Data Repository (FRDR)](https://www.frdr-dfdr.ca/) — Canadian national repository for research data, including large and complex datasets
+- [Government of Canada Open Government Portal](https://open.canada.ca/en/open-data) — Portal for data published by federal departments and agencies
+- [NatureCounts](https://naturecounts.ca/) — Birds Canada platform for bird monitoring and other biodiversity data
+- [DataStream](https://datastream.org/) — Canadian platform for sharing freshwater monitoring data
+
+### Other repositories discussed in this chapter
+
+- [Zenodo](https://zenodo.org/) — General-purpose repository for research data, software, publications, and other research outputs
+- [Dryad](https://datadryad.org/) — Curated repository for research datasets
+- [Global Biodiversity Information Facility (GBIF)](https://www.gbif.org/) — International infrastructure for biodiversity data
+- [Environmental Data Initiative (EDI)](https://edirepository.org/) — Repository for ecological and environmental data
+- [Knowledge Network for Biocomplexity (KNB)](https://knb.ecoinformatics.org/) — Repository for ecological, environmental, and synthesis data
+- [Figshare](https://figshare.com/) — General-purpose repository for research outputs
+- [GenBank](https://www.ncbi.nlm.nih.gov/genbank/) — Repository for nucleotide sequence data
+- [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) — Repository for raw high-throughput sequencing data
+
+### Metadata and data standards
+
+- [Ecological Metadata Language (EML)](https://eml.ecoinformatics.org/) — Metadata standard designed for ecological and environmental research data
+- [Darwin Core](https://dwc.tdwg.org/) — Data standard for sharing biodiversity information
