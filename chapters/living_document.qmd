@@ -2,6 +2,6 @@
 title: "Living Document"
 ---
 
-# Living Document
+This guidebook is intended to be a living document that evolves alongside the needs and scope of the Living Data Project. If you have feedback or suggestions, please share them by using the *Report an issue* link on the right side of any page, just below the chapter table of contents.
 
-Coming soon.
+We welcome feedback that can help keep the guidebook useful, clear, and up to date.

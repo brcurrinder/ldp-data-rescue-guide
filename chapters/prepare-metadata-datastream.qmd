@@ -9,14 +9,20 @@ editor:
 Datasets published to DataStream are accompanied by metadata that help others understand, interpret, and reuse the data.
 This includes [**dataset-level metadata**](metadata.qmd#sec-what-is-metadata), such as an abstract, data license, data collection organization, and data processing descriptions, as well as [**observation-level metadata**](metadata.qmd#sec-what-is-metadata), such as sampling locations, dates, methods, units, laboratory information, [sample fractions]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A sample fraction defines which portion of a sample is being analyzed, such as filtered, unfiltered, dissolved, total, or total recoverable."}, and [method detection limits]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A method detection limit (MDL) is the lowest concentration of a chemical or element that an instrument can reliably measure and distinguish from a blank sample."}.
 
+These two kinds of metadata ultimately serve different purposes in the DataStream workflow.
+**Dataset-level metadata** describe the dataset as a whole and are entered through DataStream's metadata form.
+**Observation-level metadata** provide the context needed to interpret individual measurements and are represented within the DataStream-formatted data file.
+
+This chapter addresses both, but keeps them distinct: we first consider the dataset-level metadata that need to be assembled, then use the source files to investigate observation-level metadata that will be carried forward into data formatting in the next chapter.
+
 By the end of this chapter, you should be able to:
 
 - Explain how dataset-level and observation-level metadata support publication and reuse on DataStream.
-- Create a shared working table that distinguishes between known, unknown, and uncertain information about the metadata.
-- Combine information from multiple source files into a single table for inspection and metadata review.
-- Map source values and information to standardized DataStream fields, characteristics, sites, units, and methods, and document these mappings for reproducibility.
+- Create shared working tables that distinguish between known, unknown, and uncertain dataset-level and observation-level metadata.
+- Combine information from multiple source files into a single table for inspection and observation-level metadata review.
+- Interpret source names, sites, units, methods, and laboratory information needed for later mapping to the DataStream schema.
 - Use R to create [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."} and [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."} entries for common water quality metadata issues.
-- Prepare draft DataStream metadata fields and a metadata package for your team to review.
+- Prepare draft DataStream dataset-level metadata and an observation-level metadata review package for your team to review.
 
 <br>
 
@@ -28,13 +34,26 @@ Metadata are especially important in data rescue projects because historical dat
 Important context may be scattered across field sheets, lab reports, file names, emails, meeting notes, data dictionaries, or the memories of the data owner.
 For this reason, metadata preparation should begin as early as possible in the data rescue workflow.
 
+::: callout-note
+### Metadata updates are continuous
+
+Metadata preparation is not finished when this chapter ends.
+Cleaning and formatting the data may reveal new questions about sites, methods, units, sample fractions, detection limits, or the history of the monitoring program.
+
+When new information emerges, return to the metadata documentation, review tables, and change log rather than treating metadata preparation as a one-time step.
+:::
+
 <br>
 
 ## Dataset-level Metadata on DataStream
 
-Contributors to DataStream prepare their **dataset-level metadata** prior to uploading their dataset by completing the fields in this [Metadata form](https://datastream.org/en-ca/documentation/dataset-metadata).
+Contributors to DataStream prepare their **dataset-level metadata** prior to uploading their dataset by completing DataStream's metadata form, available through the [data upload resources](https://datastream.org/en-ca/documentation/data-upload-resources).
 See DataStream's documentation for the most up to date summary of these dataset-level [metadata fields](https://datastream.org/en-ca/documentation/dataset-metadata#:~:text=10.25976/xxxx%2Dxxxx.-,Dataset%2Dlevel%20metadata%20fields,-Field).
-A summary is provided below (current as of September 2026):
+A summary is provided below (current as of September 2026).
+
+Field names, requirements, and available options may change over time, so always use the current DataStream form and documentation as the source of truth.
+Also note that **character limits may apply to some dataset-level metadata fields**.
+When drafting longer text such as the Abstract, Data Collection Information, or Data Processing fields, check the current form before finalizing the text.
 
 <br>
 
@@ -73,7 +92,6 @@ In our projects, we will likely need to concentrate our efforts on the **Data Co
 In the **Data Collection Information** field, relevant information may be scattered throughout the initial files that we receive from the data owners / data stewards, or the information may live only in their heads!
 Gathering this information may require some detective work and additional correspondence with the data owners / data stewards.
 
-The information relevant to the **Data Processing** field will be under more of our control.
 We will thoroughly document all steps related to cleaning, processing, and QA/QC in a reproducible workflow.
 
 <br>
@@ -87,7 +105,7 @@ Still, it can help to try to have a general workflow.
 The diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2022](https://doi.org/10.1098/rspb.2022.0938).
 This chapter focuses primarily on **Step 3: Metadata creation**, where we review source files, identify metadata issues, create review tables and a change log, and draft a metadata package for review. Note that Steps 3-5 are often iterative in practice as new information is uncovered.
 
-![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 3: Metadata creation. Adapted from Figure 2 in Bledsoe et al. (2022).](/images/data_rescue_workflow_step3.pdf)
+![Example Living Data Project workflow for preparing (meta)data for DataStream within the broader data rescue lifecycle. This chapter focuses on Step 3: Metadata creation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step3.png){width=90% fig-align="center"}
 
 <br>
 
@@ -130,68 +148,98 @@ The goal of this chapter is to show how to recognize and document these common i
 
 <br>
 
-## Step 1: Create a Shared Working Table of Metadata Issues
+## Step 1: Create Shared Working Tables of Metadata Issues
 
 After receiving and initially reviewing source files, we should start to compile what we know, what we do not know, and what is uncertain about the dataset.
-A good first step can be to create a shared working table of metadata issues.
-You can think of this as a shared project management table used by the team to track major metadata issues, current understanding, next actions, and data owner input needs.
-The table does not need to be complicated, and the format can be adapted to each dataset's context.
+A good first step can be to create shared working tables of metadata issues.
+You can think of these as project management tables used by the team to track major metadata issues, current understanding, next actions, and data owner input needs.
+
+Because **dataset-level metadata** and **observation-level metadata** serve different purposes on DataStream, it is useful to distinguish them from the beginning.
+The tables do not need to be complicated, and the format can be adapted to each dataset's context.
 A shared [Kanban board]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kanban is a visual method for managing work and workflows. It uses a board (physical or digital) divided into columns, where tasks are written on cards and moved from left to right as they progress (e.g., from 'To Do' to 'Doing' to 'Done')."} is one useful project management tool worth exploring with your team.
 
-For Decent Mountains National Park, an early version of a shared working table might look like this:
+<br>
 
-| Metadata area | Current understanding | Next metadata action | Owner input status |
+### Dataset-level metadata issues
+
+For Decent Mountains National Park, an early dataset-level metadata table might look like this:
+
+| Dataset-level metadata area | Current understanding | Next metadata action | Owner input status |
 |------------------|------------------|-------------------|------------------|
-| Dataset purpose | Monitoring objectives appear to have changed through time. Field measurements and lab chemistry were collected from 2012–2024, while heavy metal data were collected from 2016–2024. | Clarify whether the monitoring design or goals changed between 2012 and 2024, or whether heavy metal analytes were simply added to an otherwise consistent monitoring program. | Yes – needed for objectives as part of abstract. Current documentation about monitoring objectives is insufficient. |
-| Sites and locations | Site names and coordinates are available, but some coordinates differ across files. Some differences may reflect rounding or GPS precision, while others may indicate conflicting location information. | Identify authoritative site IDs, site names, coordinates, and coordinate reference system. Map or summarize the scale of coordinate differences for each sampling location, then document whether differences are minor rounding issues or require review. | Internal review first. Ask the data owner only if coordinate differences are large enough to affect site interpretation. |
+| Dataset purpose | Monitoring objectives appear to have changed through time. Field measurements and lab chemistry were collected from 2012–2024, while heavy metal data were collected from 2016–2024. | Clarify whether the monitoring design or goals changed between 2012 and 2024, or whether heavy metal analytes were simply added to an otherwise consistent monitoring program. | Yes – needed for objectives as part of the Abstract. Current documentation about monitoring objectives is insufficient. |
+| Data Collection Information | Broad information about field measurements and laboratory analyses is available, but equipment, calibration, sampling protocols, and changes through time are incompletely documented. | Compile available sampling methods, equipment, calibration, laboratory, and QA/QC information from field sheets, method reports, and other source files. | Likely. Follow up where methods or protocol changes cannot be resolved from source documentation. |
+| Data Processing | Some data standardization will be completed in R, including harmonizing names, dates, units, characteristics, detection-limit fields, and site information. | Document cleaning, harmonization, joins, exclusions, assumptions, and QA/QC checks as the workflow develops. | No for routine processing decisions. Yes if processing requires assumptions about unresolved metadata. |
+
+These issues will eventually inform the **dataset-level metadata form**, particularly the Abstract, Data Collection Information, and Data Processing fields.
+
+<br>
+
+### Observation-level metadata issues
+
+A separate working table can focus on metadata needed to interpret and format individual observations:
+
+| Observation-level metadata area | Current understanding | Next metadata action | Owner input status |
+|------------------|------------------|-------------------|------------------|
+| Sites and locations | Site names and coordinates are available, but some coordinates differ across files. Some differences may reflect rounding or GPS precision, while others may indicate conflicting location information. | Identify authoritative site IDs, site names, coordinates, and coordinate reference system. Map or summarize the scale of coordinate differences for each monitoring location, then determine whether differences represent the same functional location or require review. | Internal review first. Ask the data owner if differences affect how a unique monitoring location should be represented. |
 | Dates and times | Sample dates are available. All times are recorded as `hh:mm`, and some records are missing time zones. | Document what each time field represents, such as sample collection time, field measurement time, or lab analysis time. Confirm whether missing time zones can be inferred from sampling location and date. If needed for final formatting, append seconds to `hh:mm` values as `:00`, while documenting that seconds were not present in the source data. | Likely. Time zones may be inferred internally, but interpretation should be reviewed if source files do not clearly define source time conventions. |
 | Field methods | Field measurements include pH, water temperature, dissolved oxygen, and specific conductance. Available notes indicate these were measured in the field, but equipment, calibration, and protocol details are incomplete. | Document available equipment, calibration, depth, and field protocol information. Note whether field methods appear consistent through time or whether method changes may affect comparability. | Internal review first. Follow up if equipment, calibration, or protocol changes cannot be resolved from method notes. |
 | Lab methods | Nutrients, ions, hardness, and heavy metal analytes were analyzed externally. Lab names and analytical methods may vary by year, analyte, or source file. | Link laboratory names, analytical method names or IDs, and method contexts to years and analytes where possible. Record where methods are missing, ambiguous, or only described generally. | Likely. Lab and method information often requires confirmation if not clearly documented in lab reports or method files. |
-| Heavy metals | Lead, cadmium, mercury, arsenic, copper, and zinc are reported from 2016–2024. Some records may require additional metadata to distinguish dissolved, total, or total recoverable results. | Check whether sample fraction, analytical method, laboratory name, detection condition, and detection-limit information are available in `DMNP_Method_Reports.pdf` or related lab files. Document unresolved sample-fraction issues separately because they affect interpretation. | Yes – needed if sample fraction information cannot be mapped to observations from source files. |
-| Detection limits | Some measurements are reported as being below or above a detection limit rather than as an exact measured value. These may be encoded using symbols, flags, or separate detection-condition fields. | Document how detection-limit values are encoded, what detection-limit values and units are available, and whether limit types represent method detection limits, reporting limits, quantification limits, or another category. | Likely. Follow up if  limit types or conventions for values below or above detection limits are not defined in lab reports or method documentation. |
-| Data processing | Some data standardization will be completed in R, including harmonizing names, dates, units, characteristics, detection-limit fields, and site information. | Document all cleaning, harmonization, joins, exclusions, assumptions, and QA/QC checks in the processing notes or change log. Distinguish changes made for formatting from changes made because of scientific or metadata interpretation. | No for routine processing decisions. Yes if processing requires assumptions about unresolved metadata. |
+| Heavy metals | Lead, cadmium, mercury, arsenic, copper, and zinc are reported from 2016–2024. Some records require additional metadata to distinguish dissolved, total, total recoverable, or other sample fractions. | Check whether sample fraction, analytical method, laboratory name, detection condition, and detection-limit information are available in `DMNP_Method_Reports.pdf` or related lab files. Document unresolved sample-fraction issues separately because they affect interpretation and later characteristic mapping. | Yes – needed if sample fraction information cannot be associated with observations from source files. |
+| Detection limits | Some measurements are reported as being below or above a detection or reporting limit rather than as an exact measured value. These may be encoded using symbols, flags, or separate detection-condition fields. | Document how these results are encoded, what detection-limit values and units are available, and whether limit types represent method detection limits, reporting limits, quantification limits, or another category. | Likely. Follow up if limit types or conventions for results below or above limits are not defined in lab reports or method documentation. |
 
-This working table is intentionally high-level as it helps the team track the major metadata areas that need attention.
-It is just one version of how you might manage your project with your team.
+These working tables are intentionally high-level.
+They help the team track the major metadata areas that need attention without mixing dataset-wide questions with issues attached to individual observations.
 
 As we work through the source data in R, we can also create [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."} and a [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."}.
 The **review tables** will help identify specific records or files that need attention.
 The **change log** records decisions, assumptions, unresolved issues, and next steps.
 
-In practice, the working table and change log should be updated together.
-The working table summarizes the current state of the project, while the change log preserves the evidence behind all individual decisions.
+In practice, the working tables and change log should be updated together.
+The working tables summarize the current state of the project, while the change log preserves the evidence behind individual decisions.
 
 <br>
 
-## Step 2: Combine Source Files Into One Table
+## Step 2: Combine Source Files for Observation-level Metadata Review
 
-Whenever possible, we want to bring as much information from separate source files into a single table for further inspection.
+Typically, we want to bring as much information from separate source files into a single table for further inspection.
 
-In a real data rescue project, these (potentially large) files would be imported from Excel workbooks, CSV files, PDFs, and other source documents.
+In a real data rescue project, these (potentially large) files would be imported from Excel workbooks, CSV files, and other source files.
 For this example, we will create just a subset of the source data tables (just 10 rows of observations) directly in R.
 
 The first goal here is to demonstrate how to create one combined table for reviewing metadata issues across multiple types of water quality data.
 
+To follow along in R, reveal the code chunk below to see the required R packages for the rest of this chapter.
+
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: false
 # Load packages used for review tables - note that they are all tidyverse packages
 # Use install.packages() in your local R environment if you have not installed these packages
 # dplyr is used for filtering, joining, grouping, and summarizing data
 # stringr is used to detect text patterns such as "<", "BDL", or capitalization differences
 # tibble is used to create small example tables that print cleanly
+# knitr is used to display selected review tables cleanly in the rendered chapter
 
 library(dplyr)
 library(stringr)
 library(tibble)
+library(knitr)
 ```
 
 ### Create Example Data
 
+Let's now create the example data that you can import into your own R script.
+
+Note that the `SampleFraction` and `SpeciationMethod` values shown in these example tables should be understood as information recovered from the source files, laboratory reports, or method documentation during metadata review. They are not values that we are assigning from the DataStream schema at this stage. Missing values represent information that has not yet been found or confirmed. 
+
+Reveal the following code chunks below to be able to copy/paste and inspect our dataset.
+
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: false
 # Create an example field data table
 # In a real project, this would be imported from DMNP_Field_2012_2024.xlsx
@@ -218,6 +266,7 @@ dmnp_field_raw <- tibble::tribble(
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: false
 # Create an example lab-chemistry table
 # In a real project, this would be imported from DMNP_Lab_Chemistry_2012_2024.csv
@@ -250,6 +299,7 @@ dmnp_lab_raw <- tibble::tribble(
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: false
 # Create an example heavy metals table
 # In a real project, this would be imported from DMNP_Metals_2016_2024.xlsx
@@ -279,6 +329,7 @@ dmnp_metals_raw <- tibble::tribble(
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: false
 # Create an example site list
 # This represents site-level metadata from DMNP_Site_List.xlsx
@@ -343,6 +394,10 @@ To combine these files into one table, we add a blank `LaboratoryName` column to
 Similarly, most field and general chemistry records do not have a sample fraction, but heavy metal records may.
 We add a blank `SampleFraction` column where it is missing so that all three source tables can be stacked into one inspection table.
 
+At this stage, `SampleFraction`, `SpeciationMethod`, `LaboratoryName`, and `AnalyticalMethod` represent **source-reported observation-level metadata**.
+We are preserving and reviewing those fields here, not yet assigning the DataStream values that will appear in the final upload file.
+That mapping and formatting occurs in the next chapter.
+
 We also add `SourceFile` and `DataGroup` columns before combining the data.
 These columns preserve [data provenance]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Information that helps trace a data record back to its source file, original context, and processing history."} by telling us where each row came from and what kind of measurement it represents.
 
@@ -365,10 +420,13 @@ In the code chunks below, note where and how the following tidyverse functions a
 - `stringr::str_detect()`, `stringr::str_remove()`, `stringr::str_to_lower()`, `stringr::str_squish()`
 :::
 
+Here we will standardize the field table before combining files.
+
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Standardize the field table before combining files
 # SourceFile preserves provenance so every record can be traced back to its original file
 # DataGroup records the broad measurement context, which helps distinguish field and lab results later
@@ -404,13 +462,13 @@ metals_standard <- dmnp_metals_raw |>
     SpeciationMethod = NA_character_
   )
 
-# View the structure of one standardized table as an example
-glimpse(field_standard)
 ```
 
+And now combine the standardized source tables into one inspection table.
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: true
 # Combine the standardized source tables into one inspection table
 # bind_rows stacks the rows from each source table into one long table
@@ -428,8 +486,17 @@ dmnp_combined <- bind_rows(
     SampleFraction, SpeciationMethod, LaboratoryName, AnalyticalMethod
   )
 
-# Inspect the structure of the combined table
-glimpse(dmnp_combined)
+# Display a compact overview of the combined inspection table
+# We show only a few key fields here; inspect dmnp_combined locally to view all columns
+
+dmnp_combined |>
+  select(
+    SourceFile, SiteID, SourceCharacteristic,
+    ResultRaw, UnitRaw, SampleFraction
+  ) |>
+  knitr::kable(
+    caption = "Selected fields from the combined inspection table"
+  )
 ```
 
 ::: callout-note
@@ -446,12 +513,12 @@ Upon inspecting this small dataset, we can now see the specific issues that we f
 - Source names such as `DO`, `Temp`, `SpCond`, `Pb`, and `Nitrate-N` need to be interpreted.
 - Field pH and lab pH both appear and may require method context.
 - Some heavy metal records are missing sample fraction.
-- Some censored values are recorded as `<0.002` or `BDL`.
+- Some results reported relative to a detection or reporting limit are recorded as `<0.002` or `BDL`.
 :::
 
 <br>
 
-## Step 3: Create Review Tables and a Change Log
+## Step 3: Create Observation-level Review Tables and a Change Log
 
 A combined table of source data makes it easier to generate [review tables]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="In this context, a review table is a working table that summarizes selected parts of a dataset to help identify issues, document decisions, and guide cleaning or metadata follow-up."}.
 Review tables help us identify metadata issues systematically, which can then be used to update our [change log]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A working record that tracks metadata issues, processing decisions, evidence, actions taken, and items needing review."} as the project develops.
@@ -461,7 +528,8 @@ First, let's create an empty change log that we will fill in as we go.
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Create an empty change log
 # The change log is project documentation, not part of the final upload table
 # Each row will describe a metadata issue, decision, or unresolved question
@@ -477,13 +545,26 @@ change_log <- tibble::tibble(
   status = character()
 )
 
-# The change log is currently empty but will be populated as we proceed
-glimpse(change_log)
 ```
+
+::: callout-note
+### This change log is not the DataStream Changelog
+
+In this guidebook, the **change log** is a Living Data Project working document used to record data rescue questions, decisions, evidence, processing actions, and unresolved issues.
+
+Note that is a slightly different concept from the **Changelog** shown on DataStream dataset and DOI pages, which documents changes among published versions of a dataset.
+:::
 
 <br>
 
 ### Review site names and coordinates
+
+A DataStream monitoring location should represent a **meaningfully unique monitoring location**, rather than automatically treating every slightly different coordinate recorded during sampling as a different site.
+For example, a GPS device or automated logger may record slightly different coordinates on repeated visits even when observations are functionally from the same monitoring location.
+
+For this reason, the coordinates in a site reference table may sometimes better represent the intended monitoring location than the coordinates attached to each individual observation.
+Reference coordinates may therefore be appropriate even when observation-level coordinates are present, not only when coordinates are missing.
+The important step is to determine what constitutes a unique monitoring location for the dataset, identify the best-supported site representation, and document that decision rather than applying a blanket rule.
 
 Next, join the combined observations (`dmnp_combined`) to the site list (`dmnp_site_list`).
 This will allow us to compare coordinates and site names from the source observation files against the reference site list (from `DMNP_Site_List.xlsx`).
@@ -491,7 +572,8 @@ This will allow us to compare coordinates and site names from the source observa
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Join the combined observations to the site list
 # The site list acts as the current reference for site names, coordinates, coordinate system, and waterbody type
 # Joining allows us to compare what appears in the source observation files against the site-level metadata
@@ -499,8 +581,6 @@ This will allow us to compare coordinates and site names from the source observa
 dmnp_with_sites <- dmnp_combined |>
   left_join(dmnp_site_list, by = "SiteID")
 
-# Inspect the structure of the new table
-glimpse(dmnp_with_sites)
 ```
 
 <br> Now we can create a review table to capture common metadata issues for sites and coordinates, including:
@@ -514,6 +594,7 @@ glimpse(dmnp_with_sites)
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: true
 # Create a site review table
 # This table summarizes possible location metadata issues by SiteID
@@ -594,8 +675,20 @@ site_review <- dmnp_with_sites |>
     metadata_issue = if_else(metadata_issue == "", NA_character_, metadata_issue)
   )
 
-# Inspect the structure of the resulting review table
-glimpse(site_review)
+# Display the fields most useful for reviewing site metadata issues
+
+site_review |>
+  select(
+    SiteID,
+    observed_site_names,
+    reference_site_name,
+    observed_coordinates,
+    reference_coordinates,
+    metadata_issue
+  ) |>
+  knitr::kable(
+    caption = "Site and location metadata review"
+  )
 ```
 
 <br> Now add the issues raised in the review table above to the change log.
@@ -603,7 +696,8 @@ glimpse(site_review)
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Convert site review issues into change log entries
 # transmute creates a new table with only the fields needed for the change log
 # Each affected record is summarized at the SiteID level because these are site-level issues
@@ -620,7 +714,7 @@ site_log <- site_review |>
       "| Observed coordinates:", observed_coordinates,
       "| Reference coordinates:", reference_coordinates
     ),
-    action_taken = "Review site metadata before final formatting",
+    action_taken = "Determine the appropriate unique monitoring location and reference site metadata before final formatting",
     status = "Needs review"
   )
 
@@ -631,8 +725,6 @@ change_log <- bind_rows(change_log, site_log) |>
   mutate(log_id = row_number()) |>
   select(log_id, everything())
 
-# View the now updated change log
-glimpse(change_log)
 ```
 
 <br>
@@ -651,6 +743,7 @@ This type of code may be unfamiliar, but is often very useful in data rescue pro
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: true
 # Review sample times
 # Source times are recorded as hh:mm, but DataStream expects hh:mm:ss
@@ -681,16 +774,27 @@ time_review <- dmnp_combined |>
     formatting_note, metadata_issue
   )
 
-# Inspect the date and time review table
-glimpse(time_review)
+# Display the fields most useful for reviewing time metadata
+
+time_review |>
+  select(
+    SiteID, SampleDate, SampleTime,
+    SampleTimeForUpload, TimeZoneForUpload
+  ) |>
+  knitr::kable(
+    caption = "Sample time metadata review"
+  )
 ```
 
-Now a summarized time-zone issue to the change log.
+<br>
+
+Now add a summarized time zone issue to the change log.
 
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Add one summarized time-zone issue to the change log
 # We summarize this issue once because it affects the dataset broadly
 # n counts the number of records with sample times in the time_review table
@@ -712,8 +816,6 @@ change_log <- bind_rows(change_log, time_log) |>
   mutate(log_id = row_number()) |>
   select(log_id, everything())
 
-# View the updated change log
-glimpse(change_log)
 ```
 
 For Decent Mountains National Park, the team may be able to identify the appropriate time zone from the sampling location, sampling date, and data owner input.
@@ -723,7 +825,7 @@ Consider the differences between these types of steps for your particular projec
 
 <br>
 
-## Step 4: Review Source Names, Units, Methods, and Labs
+## Step 4: Review Observation-level Source Names, Units, Methods, and Labs
 
 Each DataStream observation needs enough context to understand what was measured and how the result should be interpreted.
 
@@ -741,10 +843,23 @@ In the Decent Mountains National Park dataset, the source files use names such a
 In this chapter, we will create a working interpretation of those source names so we can review metadata issues.
 In the next chapter, we will **map** those names to DataStream's controlled vocabulary and validate them against the DataStream schema.
 
+::: callout-note
+### Working interpretation versus DataStream mapping
+
+Here, we use a simple working interpretation such as `Pb` → `Lead` to understand the source data.
+
+A DataStream **mapping** is more specific: it records how source information corresponds to the standardized fields and allowed values used by DataStream.
+For some characteristics, the complete mapping also depends on fields such as sample fraction and method speciation.
+For example, a source field such as `Nitrate-N` may require the characteristic, the fact that it is reported *as N*, and the appropriate sample fraction to be considered together.
+
+We will build those DataStream mappings in the [Preparing Data for DataStream](prepare-data-datastream.qmd) chapter rather than assigning them here.
+:::
+
 ```{r}
 #| message: false
 #| echo: true
-#| output: false
+#| code-fold: true
+#| output: true
 # Create a lookup table for source characteristic names
 # Note that this is a working interpretation table, not a direct mapping to the DataStream schema (this will come later)
 # The notes document why each source name is interpreted the way it is
@@ -779,12 +894,18 @@ source_name_lookup <- tibble::tribble(
   "Hardness", "Hardness",
   "Interpreted from source lab name"
 )
+
+knitr::kable(
+  source_name_lookup,
+  caption = "Working interpretations of source characteristic names"
+)
 ```
 
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Join the source-name lookup table to the combined observations
 # left_join keeps all observations and adds our working interpretation where available
 # This makes source-name decisions visible instead of hiding them in later cleaning steps
@@ -799,8 +920,6 @@ source_name_review <- dmnp_combined |>
     LaboratoryName, AnalyticalMethod, source_name_note
   )
 
-# Inspect the table of observation data and the now added source name lookup table
-glimpse(source_name_review)
 ```
 
 Some issues are not just about the source name.
@@ -810,6 +929,7 @@ That may be acceptable, but the method context should be documented.
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: true
 # Check whether the same working characteristic appears in more than one data group
 # This helps identify cases where method context may affect interpretation
@@ -828,7 +948,10 @@ method_context_review <- source_name_review |>
     metadata_issue = "Working characteristic appears in more than one data group; document method context before comparing results"
   )
 
-glimpse(method_context_review)
+knitr::kable(
+  method_context_review,
+  caption = "Characteristics appearing in more than one measurement context"
+)
 ```
 
 <br> Now add source-name interpretation decisions and method-context issues to the change log.
@@ -836,7 +959,8 @@ glimpse(method_context_review)
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Add source-name interpretation decisions to the change log
 # These entries document interpretation decisions rather than validation errors
 
@@ -876,12 +1000,10 @@ change_log <- bind_rows(
   mutate(log_id = row_number()) |>
   select(log_id, everything())
 
-# View the updated change log
-glimpse(change_log)
 ```
 
 In a real project, our lookup table may grow to include many more characteristics, source synonyms, units, and notes about method context.
-The key point is that all mappings and other changes should be documented in an easy to interpret format.
+The key point is that these source interpretations should be documented in an easy-to-interpret format so they can support the formal DataStream mappings in the next chapter.
 
 <br>
 
@@ -897,14 +1019,20 @@ For these records, we would review the source files to understand:
 - Which laboratory analyzed the sample
 - Which analytical method was used
 - Whether detection limits changed through time
-- Whether censored values are represented consistently
+- Whether results reported relative to detection or reporting limits are represented consistently
 - Whether units are consistent across years or labs
 
-The code below creates a focused review table for heavy metal records and censored values.
+These pieces of information should not always be reviewed independently when they jointly define what was measured.
+For example, dissolved copper and total copper may need different interpretation and later validation.
+Similarly, a nutrient reported *as N* is not fully described by the characteristic name alone.
+The next chapter will carry these fields forward together when creating DataStream mappings.
+
+The code below creates a focused review table for heavy metal records and results reported relative to detection or reporting limits.
 
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: true
 # Define the heavy metal names we expect in this example
 # These are working names used for metadata review, not schema validation
@@ -912,9 +1040,10 @@ The code below creates a focused review table for heavy metal records and censor
 heavy_metal_names <- c("Lead", "Cadmium", "Mercury", "Arsenic", "Copper", "Zinc") # We include all dataset heavy metals here,
 # but note that our subsetted data just includes lead, cadmium, and copper for simplicity
 
-# Review heavy metal records and censored values
+# Review heavy metal records and results reported relative to detection or reporting limits
 # The goal is to flag records needing metadata review
 # coalesce replaces NA values with "" so str_detect can safely search ResultRaw
+# has_detection_qualifier flags source values such as <0.002, BDL, Below, or ND
 # str_remove extracts the numeric part only when a value is written like "<0.002"
 
 metal_detection_review <- dmnp_combined |>
@@ -922,7 +1051,7 @@ metal_detection_review <- dmnp_combined |>
   mutate(
     is_heavy_metal = WorkingCharacteristic %in% heavy_metal_names,
 
-    is_censored = str_detect(
+    has_detection_qualifier = str_detect(
       coalesce(ResultRaw, ""),
       "^<|BDL|Below|ND"
     ),
@@ -945,10 +1074,10 @@ metal_detection_review <- dmnp_combined |>
         ""
       ),
       case_when(
-        is_censored & is.na(detection_limit_value) ~
-          "Censored result has no explicit numeric detection-limit value.",
-        is_censored ~
-          "Censored result needs detection-limit type review.",
+        has_detection_qualifier & is.na(detection_limit_value) ~
+          "Result reported relative to a limit has no explicit numeric detection-limit value.",
+        has_detection_qualifier ~
+          "Result reported relative to a limit needs detection-limit type review.",
         TRUE ~ ""
       )
     )),
@@ -959,15 +1088,24 @@ metal_detection_review <- dmnp_combined |>
       metadata_issue
     )
   ) |>
-  filter(is_heavy_metal | is_censored) |>
+  filter(is_heavy_metal | has_detection_qualifier) |>
   select(
     SourceFile, SiteID, WorkingCharacteristic, ResultRaw, UnitRaw,
     SampleFraction, LaboratoryName, AnalyticalMethod,
     detection_limit_value, metadata_issue
   )
 
-# Inspect the resulting review table
-glimpse(metal_detection_review)
+# Display the fields most useful for metadata review
+
+metal_detection_review |>
+  select(
+    SiteID, WorkingCharacteristic, ResultRaw,
+    SampleFraction, AnalyticalMethod,
+    detection_limit_value, metadata_issue
+  ) |>
+  knitr::kable(
+    caption = "Heavy-metal and detection-limit metadata review"
+  )
 ```
 
 Now add heavy metal and detection-limit issues to the change log.
@@ -975,7 +1113,8 @@ Now add heavy metal and detection-limit issues to the change log.
 ```{r}
 #| message: false
 #| echo: true
-#| output: true
+#| code-fold: true
+#| output: false
 # Add heavy metal and detection-limit issues to the change log
 # Each affected record is identified using site, working characteristic, and raw result
 
@@ -999,8 +1138,6 @@ change_log <- bind_rows(change_log, metal_detection_log) |>
   mutate(log_id = row_number()) |>
   select(log_id, everything())
 
-# View the updated change log
-glimpse(change_log)
 ```
 
 The code above can flag that a result is missing corresponding sample fraction data, but it cannot tell us how that result was analyzed (e.g., is the observation from a dissolved, total, or total recoverable sample fraction?).
@@ -1010,24 +1147,32 @@ That information must come from source files, method reports, lab documentation,
 
 ## Step 6: Summarize Unresolved Metadata Issues
 
-After reviewing the source files and the R-generated review tables, update the metadata inventory and change log.
+After reviewing the source files and the R-generated review tables, update the dataset-level metadata notes, observation-level review materials, and change log.
 
-For the Decent Mountains National Park dataset, unresolved issues might include:
+For the Decent Mountains National Park dataset, unresolved issues can again be separated by metadata type.
+
+**Dataset-level metadata questions** might include:
 
 - Whether monitoring objectives or other protocols changed when heavy metal analytes were added in 2016
-- Which coordinate pair should be treated as authoritative for sites with multiple coordinate pairs
+- Whether available documentation is sufficient to describe field and laboratory methods in the Data Collection Information field
+- Which limitations should be summarized in the Abstract or Data Processing field
+
+**Observation-level metadata questions** might include:
+
+- Which reference coordinates should represent unique monitoring locations where source coordinates vary
 - Whether missing time zones can be inferred from sampling location and date
 - Whether times represent sample collection time, field measurement time, or another event
 - Whether field pH and lab pH should be treated as separate method contexts
 - Whether heavy metal records are dissolved, total, total recoverable, or another sample fraction
 - Which analytical methods and laboratories apply to each year and analyte
-- How censored values such as `<0.002`, `BDL`, and `Below RL` should be represented
+- How results such as `<0.002`, `BDL`, and `Below RL` should be represented, including the applicable detection condition, limit value, and limit type
 
 The change log can be summarized by metadata area and status to see what still needs attention.
 
 ```{r}
 #| message: false
 #| echo: true
+#| code-fold: true
 #| output: true
 # Summarize the change log by metadata area and status
 # count tallies the number of entries in each metadata area and status group
@@ -1037,23 +1182,37 @@ change_log_summary <- change_log |>
   count(metadata_area, status, name = "n_entries") |>
   arrange(metadata_area, status)
 
-# View the summarized change log
-glimpse(change_log_summary)
+# Display a compact summary of unresolved and documented metadata issues
+
+knitr::kable(
+  change_log_summary,
+  caption = "Change log summary by metadata area and status"
+)
 ```
+
+<br>
 
 If your code fills in a value, maps a name, flags a method detection limit, etc., the issue and decision should be traceable in the metadata inventory, processing notes, or change log.
 
 <br>
 
-## Step 7: Prepare a Metadata Package
+## Step 7: Prepare Dataset-level and Observation-level Metadata for Review
 
-The end goal is to prepare a clear metadata package that the data owner can review alongside the final formatted dataset.
-We will continue to update this package as we process the source files through cleaning and validation (next chapter).
-We can also publish the scripts that created the review tables and change log (e.g., on GitHub) and can link to them in the dataset-level metadata published on DataStream.
+The end goal is to prepare clear metadata materials that the data owner can review alongside the final formatted dataset.
+We will continue to update these materials as we process the source files through cleaning and validation in the next chapter.
+Where relevant supporting documentation or code is available online, links can be included in the appropriate dataset-level metadata field on DataStream.
 
-A useful metadata package may include finalized versions of:
+A useful metadata package may include two related groups of materials.
 
-- The metadata inventory
+For **dataset-level metadata**:
+
+- Draft DataStream dataset-level metadata fields
+- A data processing summary
+- A list of unresolved dataset-level questions that require data owner review
+
+For **observation-level metadata and supporting documentation**:
+
+- The observation-level metadata inventory
 - The change log
 - A site/location review table
 - A dates, times, and time zones review table
@@ -1061,12 +1220,10 @@ A useful metadata package may include finalized versions of:
 - A methods and laboratory review
 - A heavy metals metadata review
 - A detection-limit review
-- A data processing summary
-- A list of unresolved metadata issues
-- Draft dataset-level metadata, when enough evidence has been gathered
+- A list of unresolved observation-level metadata issues
 
 For Decent Mountains National Park, the package would likely note that some information is well documented, such as the broad monitoring period and major measurement groups.
-It would also note that several issues remain unresolved, including missing time zones, uncertain sample fractionsß for some heavy metal results, incomplete analytical method information, and unclear detection-limit terminology.
+It would also note that several issues remain unresolved, including missing time zones, uncertain sample fractions for some heavy metal results, incomplete analytical method information, and unclear detection-limit terminology.
 
 <br>
 
@@ -1094,7 +1251,7 @@ The examples below are written as if the Decent Mountains National Park dataset 
 > Heavy metal results, including lead, cadmium, mercury, arsenic, copper, and zinc, are available from 2016 to 2024.
 >
 > Sampling frequency, analyte coverage, and available method documentation vary through time.
-> Some metadata are incomplete in the available source files, including time zone information for sample times, complete field equipment and calibration records for all years, analytical method information for some laboratory records, sample fraction for some heavy metal results, and detection-limit terminology for some censored values.
+> Some metadata are incomplete in the available source files, including time zone information for sample times, complete field equipment and calibration records for all years, analytical method information for some laboratory records, sample fraction for some heavy metal results, and detection-limit terminology for some results reported below a detection or reporting limit.
 > These limitations should be considered when interpreting temporal trends, comparing sites, or combining measurements across data groups.
 
 **Data Collection Information**
@@ -1121,14 +1278,14 @@ The examples below are written as if the Decent Mountains National Park dataset 
 > Sample fraction is documented for some heavy metal records but missing for others.
 > Where sample fraction is missing, results should not be assumed to represent dissolved, total, or total recoverable concentrations unless supported by other documentation.
 >
-> Censored values indicate when a result was reported below a threshold, but the source files do not always define whether the threshold represents a method detection limit, reporting limit, quantification limit, or another limit type.
+> Some source results indicate that a measurement was reported below a threshold, but the source files do not always define whether that threshold represents a method detection limit, reporting limit, quantification limit, or another limit type.
 > Detection-limit metadata are included where available, and incomplete detection-limit terminology is documented as a limitation of the dataset.
 
 **Data Processing**
 
 > Source files were reviewed and prepared for publication through a reproducible workflow in R.
-> The R scripts used to process the source data are published and available on GitHub (with included DOI link!).
-> Key processing decisions, assumptions, and unresolved issues are also summarized in an accompanying change log.
+> The R scripts used to process the source data will be preserved with the final data rescue package and linked from the appropriate dataset-level metadata field when publicly available.
+> Key processing decisions, assumptions, and unresolved issues are also summarized in an accompanying Living Data Project change log.
 >
 > <br>
 
@@ -1136,13 +1293,14 @@ The examples below are written as if the Decent Mountains National Park dataset 
 
 Before moving to final data formatting and validation, make sure that the metadata package documents:
 
-- What the dataset represents
+- What the dataset represents at the dataset level
 - Which files were used as sources
-- Which metadata are known, unknown, or uncertain
-- How site names and coordinates were interpreted
+- Which dataset-level and observation-level metadata are known, unknown, or uncertain
+- How unique monitoring locations, site names, and coordinates were interpreted
 - How field measurements, lab chemistry, nutrients, and heavy metals were interpreted
-- How censored values and detection limits were handled
-- What data processing steps were performed
+- Which source fields still require formal DataStream mapping
+- How results reported relative to detection or reporting limits were interpreted and how detection-limit metadata were handled
+- What data processing steps were performed or still need to be documented
 - Which unresolved issues require data owner review
 
 <br>
@@ -1154,6 +1312,12 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
 Welcome to the tidyverse.
 *Journal of Open Source Software*, *4*(43), 1686.
 <https://doi.org/10.21105/joss.01686>.
+
+Xie, Y.
+(2026).
+*knitr: A General-Purpose Package for Dynamic Report Generation in R*.
+R package version 1.52.4.
+<https://yihui.org/knitr/>.
 
 ## References in this chapter
 
