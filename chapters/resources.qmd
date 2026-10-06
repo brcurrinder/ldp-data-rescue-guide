@@ -2,6 +2,13 @@
 title: "Resources"
 ---
 
-Resources relevant to our work are constantly evolving. For an up-to-date collection of external resources that complement this guidebook—including tools (e.g., GitHub) and additional skills (e.g., writing loops and functions or data visualizations)—check out the linked **Curated Precourse Skills List** linked below. This resource is compiled and regularly updated by members of the Living Data Project.
+Resources relevant to data rescue and reproducible science are constantly evolving. 
+
+For an up-to-date collection of external resources that complement this guidebook—including tools and additional skills (e.g., writing loops and functions or data visualizations)—check out the **Curated Precourse Skills List** linked below. This resource is compiled and regularly updated by members of the Living Data Project.
 
 [Link to Curated Precourse Skills List document](https://docs.google.com/document/d/1l739A07kP_KykyVrgFAo8MN3jdnb0vT8t2g5v2Cz6UQ/edit?tab=t.0#heading=h.ch8qsqvrmn70)
+
+
+For a step-by-step guide on how to set up a repository in GitHub, troubleshooting, and performing other common tasks on GitHub relevant to collaborative coding and version control, check out the GitHub Repo Setup guide linked below. This guide was created by Living Data Project member Laura Lardinois.
+
+[Link to GitHub Repo Setup guide](https://docs.google.com/document/d/1sx-sCr_1JnpqwuM2S9MbNbTFKgRIByHKzx9Ehpb2mag/edit?usp=sharing)
