@@ -1,0 +1,5 @@
+row,MonitoringLocationID,CharacteristicName,issue,status
+8,DMNP-LK-01,Lead,Required sample fraction is unresolved,Must resolve
+10,DMNP-ST-02,Copper,Required sample fraction is unresolved,Must resolve
+8,DMNP-LK-01,Lead,Analytical method is missing for a lab-analyzed result,Must resolve
+8,DMNP-LK-01,Lead,Detection-limit metadata are incomplete,Must resolve
