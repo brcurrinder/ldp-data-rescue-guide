@@ -46,7 +46,7 @@ book:
         - chapters/prepare-data-datastream.qmd
         - chapters/uploading-datastream.qmd
         
-    - part: "Additional Tasks"
+    - part: "Additional Tasks and Feedback"
       chapters:
         - chapters/internship_tasks.qmd
         - chapters/living_document.qmd

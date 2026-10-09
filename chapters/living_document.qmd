@@ -1,5 +1,5 @@
 ---
-title: "Living Document"
+title: "Feedback for a Living Document"
 ---
 
 This guidebook is intended to be a living document that evolves alongside the needs and scope of the Living Data Project. If you have feedback or suggestions, please share it via this [*form*](https://docs.google.com/forms/d/e/1FAIpQLSdmcFFeUgWePw-cDXmHQ-8ZIjcxanSvCp8Re_PPOMmLtjiKXQ/viewform?usp=publish-editor). You can also use this [*Report an issue*](https://github.com/brcurrinder/ldp-data-rescue-guide/issues/new) link, which can also be found on the right side of any page, just below the chapter table of contents. Note a reported issue will be publicly viewable in the associated GitHub repository.
