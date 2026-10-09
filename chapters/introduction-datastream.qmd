@@ -56,7 +56,7 @@ For data rescue projects intended for DataStream, it is useful to distinguish be
 |------------------------------------|------------------------------------|
 | Data steward | Provides source files, confirms dataset context, reviews unresolved issues, approves final content, creates and maintains data steward account, and uploads and publishes the dataset on DataStream. |
 | Living Data Project team | Reviews source files, documents metadata, cleans and validates data, formats files for DataStream, prepares reports, and creates a review package for the data owner. Liaises with data stewards. |
-| DataStream team | Supports scoping and prioritizing candidate datasets. Operates the repository platform and publication infrastructure. Maintains the schema and provides documentation, upload tools, data specialist mentorship and technical support, and publication infrastructure. |
+| DataStream team | Supports scoping and prioritizing candidate datasets. Operates the repository platform and publication infrastructure. Maintains the schema and provides documentation, upload tools, data specialist guidance and technical support, and publication infrastructure. |
 
 Your role as part of a data rescue team does **not** necessarily include uploading and publishing a dataset to DataStream.
 Instead, you will work with your team to prepare a clear and reproducible package that the data owner can review and use for upload onto DataStream.
