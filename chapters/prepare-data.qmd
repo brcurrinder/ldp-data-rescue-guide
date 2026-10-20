@@ -48,7 +48,7 @@ A data cleaning workflow will rarely proceed perfectly from left to right, but i
 
 ## Returning to the Dirty Data Duck Observatory
 
-In the previous chapter on [Preparing Metadata](prepare-metadata.qmd), we resolved several questions about the Dirty Data Duck Observatory bird surveys. In particular, historical documentation and conversations with the data owner confirmed that:
+In the previous chapter on [Preparing Metadata](prepare-metadata.qmd), we resolved several questions about the Dirty Data Duck Observatory bird surveys. In particular, historical documentation and conversations with the data contributor confirmed that:
 
 - `OWWA` was a historical species code for Ovenbird
 - `PC`, `point count`, and `Point count` refer to the same survey method
@@ -311,7 +311,7 @@ surveys_clean |>
   knitr::kable()
 ```
 
-This is a useful example of why metadata work comes before many cleaning decisions. We can easily convert `"PC"` to `"Point count"` or replace a missing effort value with `10`, but without metadata review we cannot always determine whether those transformations are justified. That information came from the historical protocols and data owner.
+This is a useful example of why metadata work comes before many cleaning decisions. We can easily convert `"PC"` to `"Point count"` or replace a missing effort value with `10`, but without metadata review we cannot always determine whether those transformations are justified. That information came from the historical protocols and data contributor.
 
 <br>
 
@@ -482,7 +482,7 @@ Outlier screening helps identify observations that deserve closer review, but da
 
 A flagged value may reflect a transcription error, a real but rare biological event, an undocumented change in sampling, or something that cannot be resolved with certainty. In those cases, the goal is to make the decision best supported by the available evidence.
 
-Before removing, correcting, or retaining an unusual observation, consider the source material, related variables, field notes, sampling context, and input from the data owner when available.
+Before removing, correcting, or retaining an unusual observation, consider the source material, related variables, field notes, sampling context, and input from the data contributor when available.
 
 Whatever decision is made, document the rationale, the evidence used, and any remaining uncertainty. Sometimes the most defensible decision is to leave the value unchanged and explicitly note that it was reviewed.
 :::
@@ -825,7 +825,7 @@ A map can reveal problems that are difficult to identify from a table alone. For
 - A site whose recorded location changes through time
 - Overlap between mapped coordinates and geographic features (e.g., is a sampling site for a lake actually located on the lake?)
 
-As with unusual numerical values, a suspicious coordinate should be **investigated rather than automatically corrected**. Field notes, maps, historical documentation, related records, or information from the data owner may be needed to determine what happened.
+As with unusual numerical values, a suspicious coordinate should be **investigated rather than automatically corrected**. Field notes, maps, historical documentation, related records, or information from the data contributor may be needed to determine what happened.
 
 A visual check is a great start, but we can also encode geographic expectations in the workflow. Suppose documentation for the Dirty Data Duck Observatory indicates that all survey sites should fall approximately within the following geographic extent:
 
@@ -1003,7 +1003,7 @@ For example:
 
 | ID | Area | Issue or decision | Evidence | Action | Status |
 |---|---|---|---|---|---|
-| D001 | Survey methods | `PC` and `Point count` represent the same method | Historical protocol and data owner confirmation | Standardize to `Point count` | Resolved |
+| D001 | Survey methods | `PC` and `Point count` represent the same method | Historical protocol and data contributor confirmation | Standardize to `Point count` | Resolved |
 | D002 | Survey effort | Pre-2003 blank effort values represent fixed 10-minute surveys | Historical protocol | Fill missing effort with 10 minutes | Resolved |
 | D003 | Bird counts | American Robin count of `-2` is a transcription error | Original field sheet records `2` | Correct value to `2` | Resolved |
 | D004 | Bird counts | Mallard count of `425` is unusually high | Original field sheet confirms large flock | Retain original count | Resolved |
@@ -1137,7 +1137,7 @@ By the end of data preparation, the source data should still be preserved and un
 
 The next chapter focuses on [**Archiving and Uploading**](archiving-uploading.qmd).
 
-There, we will assemble the cleaned data, metadata, scripts, change log, README, and other relevant material into a final data package, review that package with the data owner, and prepare it for long-term preservation in an appropriate repository.
+There, we will assemble the cleaned data, metadata, scripts, change log, README, and other relevant material into a final data package, review that package with the data contributor, and prepare it for long-term preservation in an appropriate repository.
 
 
 ## R packages used in this chapter

@@ -10,16 +10,16 @@ Before cleaning data or filling out metadata, it is worth taking some time to un
 
 Historical datasets rarely arrive as a single tidy table with complete documentation.
 You may receive several spreadsheets, reports, field notes, maps, data dictionaries, scripts, or different versions of the same file.
-Some parts of the dataset may be easy to interpret, while others depend on context that only the data owner or steward can provide.
+Some parts of the dataset may be easy to interpret, while others depend on context that only the data contributor can provide.
 
 The early stages of a data rescue project are therefore about **preserving the source material, becoming familiar with the dataset, and developing a plan for the work ahead**.
 
 By the end of this chapter, you should be able to:
 
 - Preserve the original source files and establish a reproducible project structure
-- Inventory and explore the materials provided by the data owner
+- Inventory and explore the materials provided by the data contributor
 - Identify the basic structure and relationships among data tables
-- Prepare for an initial meeting with the data owner or steward
+- Prepare for an initial meeting with the data contributor
 - Begin tracking questions, decisions, and unresolved issues that will carry forward through the project
 
 <br>
@@ -32,7 +32,7 @@ At this stage, the emphasis is on understanding and organizing the source materi
 
 ![General data rescue workflow. This chapter focuses primarily on Step 2: Team Creation and the early project setup that prepares the team for Step 3: Metadata Creation.](../images/data_rescue_workflow_step2.png){width="90%" fig-align="center"}
 
-Note that questions uncovered during compilation or cleaning may send you back to the source documentation or to the data owner, while new metadata may change how you interpret or structure the data.
+Note that questions uncovered during compilation or cleaning may send you back to the source documentation or to the data contributor, while new metadata may change how you interpret or structure the data.
 
 Keeping a clear record of these connections will become increasingly important as the project develops.
 
@@ -268,7 +268,7 @@ Then:
 **Decide what, if anything, should be done about it**
 
 The first task can often be automated.
-The second may require documentation, outside information, or discussion with the data owner.
+The second may require documentation, outside information, or discussion with the data contributor.
 :::
 
 <br>
@@ -343,7 +343,7 @@ This choice will also depend on the nature of the repository used for archiving.
 
 The files themselves aren't likely to contain everything needed to interpret a historical dataset.
 
-Before the first meeting with the data owner or steward, review the available documentation and make a list of what you already understand and what remains uncertain.
+Before the first meeting with the data contributor, review the available documentation and make a list of what you already understand and what remains uncertain.
 
 For the Dirty Data Duck Observatory dataset, some questions could be answered from the files before contacting anyone.
 Others may require knowledge that was never written down.
@@ -359,16 +359,16 @@ A useful preparation table might look like this:
 | Coordinates | Coordinates are available for all current sites | Whether the outlying location is an error or a historical site |
 | Data entry | Recent surveys appear to have been entered electronically | How older paper records were transcribed and checked |
 
-Doing this work beforehand makes the conversation with the data owner much more useful.
+Doing this work beforehand makes the conversation with the data contributor much more useful.
 It also avoids asking questions that could have been answered by reading the material already provided.
 
 <br>
 
-## Meet with the data owner or steward
+## Meet with the data contributor
 
 The first meeting should help establish the history and intended future of the dataset.
 
-For long-running datasets, the data owner / organization may have spent years or decades collecting, organizing, and interpreting the information.
+For long-running datasets, the data contributor / organization may have spent years or decades collecting, organizing, and interpreting the information.
 Approach the rescue as a collaborative process, particularly when decisions could affect how the data are represented or shared.
 
 Rather than working through a very long checklist, try to understand a few broad areas during the first conversation.
@@ -379,7 +379,7 @@ Rather than working through a very long checklist, try to understand a few broad
 | History | Did sampling locations, methods, equipment, personnel, or objectives change through time? |
 | Source files | Which files should be considered authoritative when versions disagree? |
 | Known issues | Are there years, variables, sites, or records that require special interpretation? |
-| Future use | How does the data owner hope the rescued dataset will be used? |
+| Future use | How does the data contributor hope the rescued dataset will be used? |
 | Sharing | Are there ethical, legal, licensing, sensitivity, or ownership concerns that affect publication? |
 | Documentation | Are there additional reports, notebooks, codebooks, field sheets, or files that would help interpret the data? |
 
@@ -402,9 +402,9 @@ At this stage, the record can be quite simple:
 
 | ID | Area | Question or issue | Evidence | Status |
 |---------------|---------------|---------------|---------------|---------------|
-| Q001 | Survey methods | What survey method was used before 2005? | Earliest available protocol is dated 2005 | Ask data owner |
+| Q001 | Survey methods | What survey method was used before 2005? | Earliest available protocol is dated 2005 | Ask data contributor |
 | Q002 | Species codes | What species does `YRWA` represent in the 1999 file? | Code absent from current species list | Needs review |
-| Q003 | Locations | Is the coordinate for site `DDD-07` correct? | Site plots approximately 35 km from other locations | Ask data owner |
+| Q003 | Locations | Is the coordinate for site `DDD-07` correct? | Site plots approximately 35 km from other locations | Ask data contributor |
 
 Later, some of these questions will become metadata additions, cleaning decisions, or entries in a more formal change log.
 
@@ -429,7 +429,7 @@ At this stage, the goal is simply to identify any requirements that could affect
 
 ## Before moving on
 
-After meeting the project postdoc, data owner / steward, and any other team members, you should have a much clearer picture of both the dataset and the work ahead.
+After meeting the project postdoc, data contributor, and any other team members, you should have a much clearer picture of both the dataset and the work ahead.
 
 | Project component | What should exist at this point |
 |------------------------------------|------------------------------------|
@@ -438,7 +438,7 @@ After meeting the project postdoc, data owner / steward, and any other team memb
 | File inventory | A basic record of what was received and what each file appears to contain |
 | Initial exploration | A preliminary understanding of variables, values, missingness, and obvious inconsistencies |
 | Data structure | An understanding of what each table represents and how the tables relate |
-| Data-owner context | Initial information about why and how the data were collected and managed |
+| Data contributor context | Initial information about why and how the data were collected and managed |
 | Questions | A shared record of unresolved issues and next steps |
 
 You will almost certainly revise some of this understanding as the project continues.

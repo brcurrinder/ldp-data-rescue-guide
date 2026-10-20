@@ -96,7 +96,7 @@ Meaningful AI assistance should be disclosed when appropriate, especially when i
 Do not share confidential, personal, sensitive, or unpublished information unless the tool has been explicitly approved for that use.
 This includes unpublished datasets, private communications, partner information, personal information, access credentials, draft results, internal reports, and confidential community or Indigenous knowledge.
 
-Sharing this information with AI tools may violate privacy laws and erodes trust with our partners and data owners.
+Sharing this information with AI tools may violate privacy laws and erodes trust with our partners and data contributors.
 
 In a prompt for an AI tool, consider describing the problem you are hoping to solve in general terms or create a small synthetic example instead of sharing any non-public information.
 For example, instead of uploading an unpublished dataset CSV file to an AI tool, you could create a small fictional table that reproduces the relevant column types and table structure.

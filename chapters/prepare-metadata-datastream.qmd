@@ -31,7 +31,7 @@ By the end of this chapter, you should be able to:
 A lack of high-quality metadata is an all-too-common bottleneck for publishing any dataset.
 Metadata are especially important in data rescue projects because historical datasets were often not created with future publication in mind.
 
-Important context may be scattered across field sheets, lab reports, file names, emails, meeting notes, data dictionaries, or the memories of the data owner.
+Important context may be scattered across field sheets, lab reports, file names, emails, meeting notes, data dictionaries, or the memories of the data contributor.
 For this reason, metadata preparation should begin as early as possible in the data rescue workflow.
 
 ::: callout-note
@@ -89,8 +89,8 @@ When drafting longer text such as the Abstract, Data Collection Information, or 
 As covered in the [Introduction to Metadata](metadata.qmd) chapter, high-quality metadata is an essential component of a dataset's **reusability**.
 In service to this, we will aim to complete DataStream's required and optional metadata fields as thoroughly as possible.
 In our projects, we will likely need to concentrate our efforts on the **Data Collection Information** field and the **Data Processing** fields.
-In the **Data Collection Information** field, relevant information may be scattered throughout the initial files that we receive from the data owners / data stewards, or the information may live only in their heads!
-Gathering this information may require some detective work and additional correspondence with the data owners / data stewards.
+In the **Data Collection Information** field, relevant information may be scattered throughout the initial files that we receive from the data contributor, or the information may live only in their heads!
+Gathering this information may require some detective work and additional correspondence with the data contributor.
 
 We will thoroughly document all steps related to cleaning, processing, and QA/QC in a reproducible workflow.
 
@@ -99,7 +99,7 @@ We will thoroughly document all steps related to cleaning, processing, and QA/QC
 ## Metadata Creation in the Data Rescue Lifecycle
 
 Metadata review and updates are not always linear.
-You may discover new information while cleaning data, reviewing lab files, or communicating with the data owner.
+You may discover new information while cleaning data, reviewing lab files, or communicating with the data contributor.
 Still, it can help to try to have a general workflow.
 
 The diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2022](https://doi.org/10.1098/rspb.2022.0938).
@@ -152,7 +152,7 @@ The goal of this chapter is to show how to recognize and document these common i
 
 After receiving and initially reviewing source files, we should start to compile what we know, what we do not know, and what is uncertain about the dataset.
 A good first step can be to create shared working tables of metadata issues.
-You can think of these as project management tables used by the team to track major metadata issues, current understanding, next actions, and data owner input needs.
+You can think of these as project management tables used by the team to track major metadata issues, current understanding, next actions, and data contributor input needs.
 
 Because **dataset-level metadata** and **observation-level metadata** serve different purposes on DataStream, it is useful to distinguish them from the beginning.
 The tables do not need to be complicated, and the format can be adapted to each dataset's context.
@@ -164,7 +164,7 @@ A shared [Kanban board]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data
 
 For Decent Mountains National Park, an early dataset-level metadata table might look like this:
 
-| Dataset-level metadata area | Current understanding | Next metadata action | Owner input status |
+| Dataset-level metadata area | Current understanding | Next metadata action | Data contributor input status |
 |------------------|------------------|-------------------|------------------|
 | Dataset purpose | Monitoring objectives appear to have changed through time. Field measurements and lab chemistry were collected from 2012–2024, while heavy metal data were collected from 2016–2024. | Clarify whether the monitoring design or goals changed between 2012 and 2024, or whether heavy metal analytes were simply added to an otherwise consistent monitoring program. | Yes – needed for objectives as part of the Abstract. Current documentation about monitoring objectives is insufficient. |
 | Data Collection Information | Broad information about field measurements and laboratory analyses is available, but equipment, calibration, sampling protocols, and changes through time are incompletely documented. | Compile available sampling methods, equipment, calibration, laboratory, and QA/QC information from field sheets, method reports, and other source files. | Likely. Follow up where methods or protocol changes cannot be resolved from source documentation. |
@@ -178,9 +178,9 @@ These issues will eventually inform the **dataset-level metadata form**, particu
 
 A separate working table can focus on metadata needed to interpret and format individual observations:
 
-| Observation-level metadata area | Current understanding | Next metadata action | Owner input status |
+| Observation-level metadata area | Current understanding | Next metadata action | Data contributor input status |
 |------------------|------------------|-------------------|------------------|
-| Sites and locations | Site names and coordinates are available, but some coordinates differ across files. Some differences may reflect rounding or GPS precision, while others may indicate conflicting location information. | Identify authoritative site IDs, site names, coordinates, and coordinate reference system. Map or summarize the scale of coordinate differences for each monitoring location, then determine whether differences represent the same functional location or require review. | Internal review first. Ask the data owner if differences affect how a unique monitoring location should be represented. |
+| Sites and locations | Site names and coordinates are available, but some coordinates differ across files. Some differences may reflect rounding or GPS precision, while others may indicate conflicting location information. | Identify authoritative site IDs, site names, coordinates, and coordinate reference system. Map or summarize the scale of coordinate differences for each monitoring location, then determine whether differences represent the same functional location or require review. | Internal review first. Ask the data contributor if differences affect how a unique monitoring location should be represented. |
 | Dates and times | Sample dates are available. All times are recorded as `hh:mm`, and some records are missing time zones. | Document what each time field represents, such as sample collection time, field measurement time, or lab analysis time. Confirm whether missing time zones can be inferred from sampling location and date. If needed for final formatting, append seconds to `hh:mm` values as `:00`, while documenting that seconds were not present in the source data. | Likely. Time zones may be inferred internally, but interpretation should be reviewed if source files do not clearly define source time conventions. |
 | Field methods | Field measurements include pH, water temperature, dissolved oxygen, and specific conductance. Available notes indicate these were measured in the field, but equipment, calibration, and protocol details are incomplete. | Document available equipment, calibration, depth, and field protocol information. Note whether field methods appear consistent through time or whether method changes may affect comparability. | Internal review first. Follow up if equipment, calibration, or protocol changes cannot be resolved from method notes. |
 | Lab methods | Nutrients, ions, hardness, and heavy metal analytes were analyzed externally. Lab names and analytical methods may vary by year, analyte, or source file. | Link laboratory names, analytical method names or IDs, and method contexts to years and analytes where possible. Record where methods are missing, ambiguous, or only described generally. | Likely. Lab and method information often requires confirmation if not clearly documented in lab reports or method files. |
@@ -375,7 +375,7 @@ Those details can be lost if the file is imported without review.
 
 For the Decent Mountains National Park dataset, this could be relevant for `DMNP_Field_2012_2024.xlsx` and `DMNP_Metals_2016_2024.xlsx`.
 Before importing those files into R, check whether any metadata are stored in formatting, comments, hidden sheets, or file-level notes.
-Excel issues may need to be interpreted in concert with the data owner.
+Excel issues may need to be interpreted in concert with the data contributor.
 :::
 
 <br>
@@ -818,7 +818,7 @@ change_log <- bind_rows(change_log, time_log) |>
 
 ```
 
-For Decent Mountains National Park, the team may be able to identify the appropriate time zone from the sampling location, sampling date, and data owner input.
+For Decent Mountains National Park, the team may be able to identify the appropriate time zone from the sampling location, sampling date, and data contributor input.
 However, the time zone should be documented rather than assumed, because the source files do not explicitly provide this information.
 The important point here is that appending `:00` is a formatting step, while assigning a time zone is more of a metadata decision.
 Consider the differences between these types of steps for your particular project.
@@ -1141,7 +1141,7 @@ change_log <- bind_rows(change_log, metal_detection_log) |>
 ```
 
 The code above can flag that a result is missing corresponding sample fraction data, but it cannot tell us how that result was analyzed (e.g., is the observation from a dissolved, total, or total recoverable sample fraction?).
-That information must come from source files, method reports, lab documentation, or data owner review.
+That information must come from source files, method reports, lab documentation, or data contributor review.
 
 <br>
 
@@ -1198,7 +1198,7 @@ If your code fills in a value, maps a name, flags a method detection limit, etc.
 
 ## Step 7: Prepare Dataset-level and Observation-level Metadata for Review
 
-The end goal is to prepare clear metadata materials that the data owner can review alongside the final formatted dataset.
+The end goal is to prepare clear metadata materials that the data contributor can review alongside the final formatted dataset.
 We will continue to update these materials as we process the source files through cleaning and validation in the next chapter.
 Where relevant supporting documentation or code is available online, links can be included in the appropriate dataset-level metadata field on DataStream.
 
@@ -1208,7 +1208,7 @@ For **dataset-level metadata**:
 
 - Draft DataStream dataset-level metadata fields
 - A data processing summary
-- A list of unresolved dataset-level questions that require data owner review
+- A list of unresolved dataset-level questions that require data contributor review
 
 For **observation-level metadata and supporting documentation**:
 
@@ -1301,7 +1301,7 @@ Before moving to final data formatting and validation, make sure that the metada
 - Which source fields still require formal DataStream mapping
 - How results reported relative to detection or reporting limits were interpreted and how detection-limit metadata were handled
 - What data processing steps were performed or still need to be documented
-- Which unresolved issues require data owner review
+- Which unresolved issues require data contributor review
 
 <br>
 

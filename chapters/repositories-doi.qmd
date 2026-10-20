@@ -185,7 +185,7 @@ Common licences for research data include:
 - **CC BY-NC** — allows reuse with attribution, but restricts commercial use.
 - Other licences may be appropriate for software, databases, or data with specific legal or institutional requirements.
 
-For data rescue projects, we will work in close partnership with the data owner / steward about license options. However, it is useful to understand these options for your own research going forward.
+For data rescue projects, we will work in close partnership with the data contributor about license options. However, it is useful to understand these options for your own research going forward.
 
 ::: callout-important
 ## Open access and open licensing are not the same thing
@@ -232,7 +232,7 @@ The important point is to evaluate the repository rather than assuming that ever
 
 ## Repositories commonly encountered in Canadian data rescue
 
-There is no single repository that is appropriate for every dataset, but the following are particularly relevant to data rescue projects in Canada. Certain repositories may also be a preferred target of the data owner / steward.
+There is no single repository that is appropriate for every dataset, but the following are particularly relevant to data rescue projects in Canada. Certain repositories may also be a preferred target of the data contributor.
 
 ## Canadian repositories
 

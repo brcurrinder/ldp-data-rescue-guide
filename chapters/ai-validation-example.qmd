@@ -449,7 +449,7 @@ Before accepting a suggested site match, Anita and the team should compare it wi
 - Sampling dates
 - Field sheets
 - Site descriptions
-- Confirmation from the data owner
+- Confirmation from the data contributor
 
 The absence of an approximate match also does not prove that two names represent different locations.
 It only shows that the selected text-matching method and threshold were not sufficient to link them.

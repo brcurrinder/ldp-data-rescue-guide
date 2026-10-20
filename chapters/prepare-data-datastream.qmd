@@ -9,7 +9,7 @@ editor:
 After preparing metadata for a dataset, we also need to prepare the data itself for publication on DataStream.
 
 In our data rescue projects, the original files we receive will not already follow DataStream's data schema (see the [Data schemas section in the Introduction to Data Chapter](data.qmd#data-schemas) for more information on what a data schema is).
-Furthermore, a data owner may provide multiple spreadsheets or CSV files with different column names, inconsistent site names, mixed date formats, non-standard units, results reported relative to detection or reporting limits, and/or values that require scientific review.
+Furthermore, a data contributor may provide multiple spreadsheets or CSV files with different column names, inconsistent site names, mixed date formats, non-standard units, results reported relative to detection or reporting limits, and/or values that require scientific review.
 
 In this chapter, we will continue working with the Decent Mountains National Park example from the previous chapter.
 By the end of this chapter, you should be able to:
@@ -41,7 +41,7 @@ In this guide, the workflow is presented in the following sequence: first we pre
 
 In a real data rescue project, these steps are iterative.
 Cleaning the data often reveals new metadata questions and updates.
-When those issues are discovered, they should be added back to the metadata documentation, change log, or list of questions for the data owner.
+When those issues are discovered, they should be added back to the metadata documentation, change log, or list of questions for the data contributor.
 
 Metadata should be updated throughout the project as new issues and decisions emerge.
 We perform our own update to the example metadata at the end of this chapter.
@@ -55,8 +55,8 @@ DataStream uses a standardized data format based on the WQX (Water Quality Excha
 This allows different groups to share results in a common format and increases a dataset's **Interoperability** and **Reusability**, (i.e., the I and R in [FAIR principles](metadata.qmd#sec-FAIR-principles)).
 
 The source data that we receive will almost certainly not already adhere to the DataStream data schema.
-In a reproducible data rescue workflow, we want to use R to transform the original files into a table that adheres to the DataStream data schema.
-We then export that table as a CSV, which the relevant data owner will upload to DataStream.
+In a reproducible data rescue workflow, we want to use R to transform cleaned data files into a table that adheres to the DataStream data schema.
+We then export that table as a CSV, which the data contributor will upload to DataStream.
 
 ### Upload templates and pre-upload checks
 
@@ -70,10 +70,10 @@ Because DataStream's schema evolves over time, always work from the current temp
 The template contains several particularly useful sheets:
 
 | Sheet | How we use it |
-|---|---|
+|----|----|
 | `Allowed Values-Valeurs` | Review DataStream fields, whether they are required, optional, or conditional, expected field types, examples, and allowed values |
 | `Glossary-Glossaire` | Look up definitions for schema fields and many allowed values |
-| `CharacteristicName LOOKUP` | Identify accepted `CharacteristicName` values and additional fields, such as sample fraction or method speciation, that may be needed for a characteristic |
+| `CharacteristicName LOOKUP` | Identify accepted `CharacteristicName` values and additional fields, such as [`SampleFraction`]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A sample fraction defines which portion of a sample is being analyzed, such as filtered, unfiltered, dissolved, total, or total recoverable."} or [`ResultMethodSpeciation`]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Method speciation refers to the chemical speciation identified as a part of an analysis (e.g., Ammonium may be measured as N or NH4)."}, that may be needed for a characteristic |
 | `ResultUnit LOOKUP` | Identify accepted `ResultUnit` values |
 
 DataStream also provides guidance for particular data types, including [nutrients](https://datastream.org/en-ca/documentation/nutrient-data-guidance) and [metal-series data](https://datastream.org/en-ca/documentation/metal-series-data-guidance).
@@ -457,7 +457,7 @@ dmnp_clean <- dmnp_combined |>
       SampleTime
     ),
 
-    # In this fictional example, the data owner confirmed the source time zone
+    # In this fictional example, the data contributor confirmed the source time zone
     # Do not assign a time zone without supporting evidence in a real project
     SampleTimeZoneClean = "-04:00",
 
@@ -563,7 +563,7 @@ cleaning_log <- tibble::tribble(
   "Dates and times",
   "Source files did not include time zone values",
   "All records with SampleTime",
-  "Assigned -04:00 after fictional data owner confirmation that source times represent Atlantic Daylight Time",
+  "Assigned -04:00 after fictional data contributor confirmation that source times represent Atlantic Daylight Time",
   "Documented decision",
 
   "Characteristics",
@@ -597,12 +597,12 @@ For a data rescue project, it is still useful to perform basic checks that can i
 
 Here we will use three complementary approaches:
 
-1. Data bounds
-2. Graphical review
-3. Spatial validation
+1.  Data bounds
+2.  Graphical review
+3.  Spatial validation
 
 These are **screening steps**.
-A flagged value should be investigated using the source files, field or lab notes, and input from the project team or data owner rather than automatically removed or changed.
+A flagged value should be investigated using the source files, field or lab notes, and input from the project team or data contributor rather than automatically removed or changed.
 
 ### Data bounds
 
@@ -1178,7 +1178,7 @@ preupload_issues <- dplyr::bind_rows(
 knitr::kable(preupload_issues)
 ```
 
-In this fictional example, these records should be returned to the source documentation and/or data owner before the candidate file is considered ready for final DataStream validation.
+In this fictional example, these records should be returned to the source documentation and/or data contributor before the candidate file is considered ready for final DataStream validation.
 The corrections should be made upstream in the mapping or cleaning workflow and the checks rerun.
 
 ::: callout-important
@@ -1188,7 +1188,7 @@ Passing the checks above means that the file satisfies the assumptions we explic
 It does **not** establish full DS-WQX compliance.
 
 DataStream's current upload process applies additional schema logic, allowed-value rules, conditional requirements, and warnings.
-For Living Data Project projects, the final candidate CSV should therefore be tested through DataStream's current validation process by the project lead and/or a DataStream Data Specialist before it is handed off for publication.
+For Living Data Project projects, the final candidate CSV should therefore be tested through DataStream's current validation process by the project lead and/or a DataStream Data Specialist before it is handed off to the data contributor.
 :::
 
 <br>
@@ -1263,7 +1263,7 @@ For Decent Mountains National Park, the metadata package should now document tha
 - `DMNP_Site_List.xlsx` was used as the reference representation of unique monitoring locations
 - Source coordinates were retained for provenance, but reference site coordinates were used in the DataStream candidate file
 - Sample times were reformatted from `HH:MM` to `HH:MM:SS`
-- The time zone was assigned as `-04:00` after data owner confirmation
+- The time zone was assigned as `-04:00` after data contributor confirmation
 - Source characteristic names, units, sample fractions, and method speciations were mapped to DataStream fields where supported by the source metadata
 - Results reported relative to detection or reporting limits were represented using detection-condition and limit fields without inventing an undocumented limit type
 - Sample fraction remains unresolved for selected lead and copper records
@@ -1296,12 +1296,12 @@ metadata_change_log_updates <- tibble::tribble(
 
   "Heavy metals",
   "Sample fraction remains unresolved for selected lead and copper records",
-  "Return to source documentation and/or data owner before final DataStream validation",
+  "Return to source documentation and/or data contributor before final DataStream validation",
   "Must resolve",
 
   "Lab methods",
   "Analytical method information remains unresolved for one laboratory result",
-  "Return to source method files and/or data owner before final DataStream validation",
+  "Return to source method files and/or data contributor before final DataStream validation",
   "Must resolve",
 
   "Scientific QA/QC",
@@ -1328,7 +1328,7 @@ When either type of issue reveals a problem in our preparation workflow, make th
 ## Review: What These Checks Do and Do Not Do
 
 | Question | Addressed in this chapter? |
-|---|---|
+|----|----|
 | Were source files combined in a reproducible way? | Yes |
 | Were cleaning and mapping decisions documented? | Yes |
 | Were monitoring locations standardized using a documented reference? | Yes |
@@ -1340,7 +1340,7 @@ When either type of issue reveals a problem in our preparation workflow, make th
 | Does this reproduce DataStream's full validator? | No |
 | Does passing these checks prove every value is scientifically correct? | No |
 
-The goal is to create a candidate dataset that is reproducible, well documented, internally checked, and ready for authoritative DataStream validation and data owner review.
+The goal is to create a candidate dataset that is reproducible, well documented, internally checked, and ready for authoritative DataStream validation and data contributor review.
 
 <br>
 

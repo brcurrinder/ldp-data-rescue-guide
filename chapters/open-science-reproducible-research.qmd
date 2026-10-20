@@ -139,7 +139,7 @@ This becomes particularly important in data rescue because we often encounter ga
 
 Data rescue frequently requires judgment.
 
-You may need to interpret an old field name, compare several versions of a spreadsheet, ask a data owner what a code means, match sampling locations across datasets, or decide how to represent an unusual record.
+You may need to interpret an old field name, compare several versions of a spreadsheet, ask a data contributor what a code means, match sampling locations across datasets, or decide how to represent an unusual record.
 
 Those steps cannot always be reduced to code. When an important decision must be made manually, document the decision, the evidence used to make it, and any remaining uncertainty.
 :::

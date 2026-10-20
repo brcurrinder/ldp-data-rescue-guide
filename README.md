@@ -21,7 +21,7 @@ The guidebook is designed to help readers:
 - Understand data structure, tidy data, and relationships among tables
 - Use reproducible workflows for data cleaning and validation
 - Document decisions, assumptions, and unresolved issues
-- Work collaboratively with data owners and data stewards
+- Work collaboratively with data contributors
 - Prepare data and metadata for long-term archiving and publication
 - Understand FAIR, CARE, and related principles of responsible data stewardship
 - Prepare ecological datasets for publication on data repositories
@@ -113,7 +113,7 @@ These chapters use fictional and simplified example datasets to demonstrate comm
 - Preparing data that follow the DataStream data schema
 - Reviewing detection-limit information
 - Performing basic QA/QC and pre-upload checks
-- Preparing files for review by data owners and data stewards
+- Preparing files for review by data contributors
 
 These examples are intended as reference workflows rather than universal instructions. DataStream requirements and guidance may change over time, so users should also consult DataStream's current documentation when preparing datasets for publication.
 

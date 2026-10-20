@@ -6,7 +6,7 @@ editor:
     wrap: sentence
 ---
 
-Now that we've cleaned and validated the data, the rescued data still need to be packaged with enough documentation to understand and reuse them, reviewed by the data owner, and deposited somewhere that can preserve them over the long term.
+Now that we've cleaned and validated the data, the rescued data still need to be packaged with enough documentation to understand and reuse them, reviewed by the data contributor, and deposited somewhere that can preserve them over the long term.
 
 This final stage brings together much of the work completed in the previous chapters. For our example, we will distinguish between two related products: a **primary data archive** containing the cleaned data and documentation needed to understand and reuse them, and a **reproducibility archive** containing the original source files and scripts used to produce the cleaned data.
 
@@ -17,7 +17,7 @@ By the end of this chapter, you should be able to:
 - Determine which source materials and scripts should be preserved separately for reproducibility
 - Prepare metadata for entry into a repository
 - Consider licensing, access, and sensitivity before publication
-- Prepare a complete package for data owner review and upload
+- Prepare a complete package for data contributor review and upload
 - Check the published archive to confirm that the deposit worked as intended
 
 <br>
@@ -138,7 +138,7 @@ This helps create a clear separation between the **cleaned data products intende
 
 The Borealis record should link to the archived reproducibility record (e.g., in the README file) so that users can trace the cleaned data back to the source material and processing workflow. Once the Borealis dataset is published, its DOI can also be added to the current GitHub README and, where appropriate, to the metadata associated with the archived reproducibility record.
 
-Before making source files publicly available, confirm that the data owner has permission to redistribute them and that they do not contain sensitive, confidential, or otherwise restricted information. If source files cannot be shared publicly, their preservation location and any access restrictions can still be documented.
+Before making source files publicly available, confirm that the data contributor has permission to redistribute them and that they do not contain sensitive, confidential, or otherwise restricted information. If source files cannot be shared publicly, their preservation location and any access restrictions can still be documented.
 
 The exact arrangement will vary among projects, but the important goal is to preserve a traceable path from the original source material to the final archived dataset. Ask clarifying questions about this plan with your postdoc and data rescue team! 
 :::
@@ -249,7 +249,7 @@ For the Dirty Data Duck Observatory, our deposit worksheet might include:
 | Repository field | Draft information |
 |---|---|
 | **Title** | Long term breeding season bird surveys at the Dirty Data Duck Observatory, 1998–2024 |
-| **Author / creator** | Data owners and other appropriate dataset creators |
+| **Author / creator** | Data contributors and other appropriate dataset creators |
 | **Affiliation** | Institutional affiliations of the creators |
 | **ORCID** | ORCID identifiers where available |
 | **Contact** | Person or group responsible for questions about the dataset |
@@ -262,7 +262,7 @@ For the Dirty Data Duck Observatory, our deposit worksheet might include:
 | **Data processing** | Summary of data rescue, cleaning, standardization, validation, and restructuring |
 | **Related materials** | DOI and link for the reproducibility archive, along with relevant reports, publications, protocols, or related datasets |
 | **Funding information** | Funding agency and award information where appropriate |
-| **Licence** | Licence selected by the data owner |
+| **Licence** | Licence selected by the data contributor |
 | **Access conditions** | Public, restricted, embargoed, or other conditions as appropriate |
 
 The exact fields available or required may differ among Borealis institutional collections.
@@ -280,7 +280,7 @@ If we reach the archive stage and have to reconstruct the methods, dates, variab
 
 ## Decide on licence and access conditions
 
-Before publication, the data owner must decide how the archived data can be accessed and reused.
+Before publication, the data contributor must decide how the archived data can be accessed and reused.
 
 For a dataset that can be shared openly, this includes selecting an appropriate licence.
 The [Repositories and Persistent Identifiers](repositories-doi.qmd) chapter discusses licensing and repository access conditions in more detail.
@@ -293,20 +293,20 @@ Before upload, your team will consider whether the files contain:
 - Sensitive ecological locations
 - Species locations that should not be publicly disclosed
 - Indigenous data subject to governance or sovereignty considerations
-- Third party data that the owner does not have permission to redistribute
+- Third party data that the contributor does not have permission to redistribute
 - Contractual, ethical, or legal restrictions
 
 For bird data, precise locations of sensitive species are one example that may require additional consideration. These questions apply to both the primary data archive and the reproducibility archive. In some projects, the cleaned data may be appropriate for public sharing while the original source files contain information that cannot be redistributed openly.
 
-The rescue team should identify and document potential concerns, but decisions about access, licensing, and publication should be made with the data owner and, where appropriate, the relevant organization or repository staff.
+The rescue team should identify and document potential concerns, but decisions about access, licensing, and publication should be made with the data contributor and, where appropriate, the relevant organization or repository staff.
 
 Borealis supports mechanisms such as restricted or embargoed files when open publication is not appropriate.
 
 <br>
 
-## Review the complete package with the data owner
+## Review the complete package with the data contributor
 
-Before anything is published, the data owner should review the package as a whole. This is different from reviewing individual cleaning decisions during the project. Levels of interest in knowing the complete details of data cleaning will differ substantially among data owners.
+Before anything is published, the data contributor should review the package as a whole. This is different from reviewing individual cleaning decisions during the project. Levels of interest in knowing the complete details of data cleaning will differ substantially among data contributors.
 
 A final review can confirm:
 
@@ -319,11 +319,11 @@ A final review can confirm:
 | Processing | Are important cleaning and rescue decisions documented? |
 | Reproducibility | Are the source files and processing scripts preserved appropriately, and does the primary archive link to the reproducibility archive? |
 | Credit | Are the appropriate creators, contributors, organizations, and funders represented? |
-| Licence | Has the data owner approved the proposed licence? |
+| Licence | Has the data contributor approved the proposed licence? |
 | Access | Have sensitivity, privacy, and other access concerns been resolved for both archives? |
 | Completeness | Are any important files or pieces of context still missing? |
 
-This is also a useful point for the data owner to confirm that any remaining uncertainties are represented honestly in the documentation.
+This is also a useful point for the data contributor to confirm that any remaining uncertainties are represented honestly in the documentation.
 
 <br>
 
@@ -331,7 +331,7 @@ This is also a useful point for the data owner to confirm that any remaining unc
 
 For Living Data Project rescue projects, the student team will generally prepare the final materials rather than publishing them directly.
 
-In addition to the completed repository metadata worksheet and any notes about licensing, access, or unresolved questions, the data owner will now receive:
+In addition to the completed repository metadata worksheet and any notes about licensing, access, or unresolved questions, the data contributor will now receive:
 
 ```text
 README.txt
@@ -370,7 +370,7 @@ documentation/
 
 Where these materials can be shared publicly, they can be maintained in a version controlled repository such as GitHub and archive to create a persistent reproducibility record. The primary data archive should include the link or DOI for that reproducibility record.
 
-The data owner can then review the material and upload the approved data and documentation files to the appropriate Borealis collection. This handoff is important! Publishing creates a persistent scholarly record, so the final decision about what is released and under what conditions ultimately belongs to the data owner.
+The data contributor can then review the material and upload the approved data and documentation files to the appropriate Borealis collection. This handoff is important! Publishing creates a persistent scholarly record, so the final decision about what is released and under what conditions ultimately belongs to the data contributor.
 
 <br>
 
@@ -430,7 +430,7 @@ Where appropriate, the relationship between the primary data archive and the arc
 An archive should provide a persistent record, but that does not mean mistakes can never be corrected.
 
 Repositories such as Borealis support dataset versioning.
-If an error is discovered or documentation needs to be improved, the data owner can create an updated version while preserving the history of the archived dataset.
+If an error is discovered or documentation needs to be improved, the data contributor can create an updated version while preserving the history of the archived dataset.
 
 The same principle applies to the reproducibility archive. If the processing workflow changes in a way that affects the published data, the updated code and any relevant source documentation should also be preserved in a new archived version or release.
 
@@ -481,8 +481,8 @@ By the end of the archiving stage, the project should contain a reviewed and doc
 | Change log | Documentation of important rescue and cleaning decisions |
 | Reproducibility archive | Source files, scripts, and supporting materials preserved separately where appropriate |
 | Repository metadata | Completed descriptive information for the primary archive record |
-| Licence and access | Decisions reviewed and approved by the data owner |
-| Data owner review | Confirmation that the package accurately represents the dataset |
+| Licence and access | Decisions reviewed and approved by the data contributor |
+| Data contributor review | Confirmation that the package accurately represents the dataset |
 | Primary data archive | Dataset deposited in an appropriate long term repository |
 | Persistent identifiers | DOI or other identifiers used to cite and connect the archived records |
 

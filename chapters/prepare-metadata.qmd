@@ -10,7 +10,7 @@ editor:
     wrap: sentence
 ---
 
-In the previous chapter, we preserved the original files, created an initial inventory of the material provided by the data owner, explored the structure of the dataset, and began recording questions about its history and interpretation.
+In the previous chapter, we preserved the original files, created an initial inventory of the material provided by the data contributor, explored the structure of the dataset, and began recording questions about its history and interpretation.
 
 Now we can start turning that information into metadata.
 
@@ -27,7 +27,7 @@ By the end of this chapter, you should be able to:
 - Develop or improve a data dictionary
 - Use the data themselves to identify metadata questions
 - Document metadata decisions, evidence, and unresolved issues
-- Work with the data owner to review and improve the metadata
+- Work with the data contributor to review and improve the metadata
 
 <br>
 
@@ -117,11 +117,11 @@ Column names can provide helpful context about what is being measured, but the n
 
 In the [Getting Started](getting-started.qmd) chapter, we began recording unresolved questions. We can now expand that into a more structured working table for metadata.
 
-The primary purpose of this table is as a project management tool. This type of table, or another similar resource, simply helps the team distinguish between information that is already documented, information that needs to be found, and information that requires input from the data owner. While this table is just one simple example of how to do this, you will want to find a method that keeps everyone on your team on the same page about progress and tasks.
+The primary purpose of this table is as a project management tool. This type of table, or another similar resource, simply helps the team distinguish between information that is already documented, information that needs to be found, and information that requires input from the data contributor. While this table is just one simple example of how to do this, you will want to find a method that keeps everyone on your team on the same page about progress and tasks.
 
 For the Dirty Data Duck Observatory, an early version of our table might look like this:
 
-| Metadata area | Current understanding | Next action | Data owner input? |
+| Metadata area | Current understanding | Next action | Data contributor input? |
 |---|---|---|---|
 | Dataset purpose | Long-term surveys appear to track breeding-season bird communities | Review reports and confirm whether monitoring objectives changed through time | Yes |
 | Survey methods | Recent surveys use point counts; older protocol information is incomplete | Compare protocol documents and determine when methods changed | Likely |
@@ -138,7 +138,7 @@ More specific questions and decisions can be recorded in [review tables]{.toolti
 
 ## Search the source material before asking
 
-Many metadata questions can be answered without immediately contacting the data owner. Start with your powers of investigation to first look through and understand the material you received as best as you can.
+Many metadata questions can be answered without immediately contacting the data contributor. Start with your powers of investigation to first look through and understand the material you received as best as you can.
 
 Some projects will include more documentation than others, but useful sources can include:
 
@@ -316,7 +316,7 @@ This table would immediately raise a useful question:
 Did the monitoring program change from transects to point counts, or did the terminology used to describe the same method simply change?
 
 The table cannot answer that question.
-It gives us a focused piece of evidence to bring to the documentation or the data owner.
+It gives us a focused piece of evidence to bring to the documentation or to the data contributor.
 
 <br>
 
@@ -357,8 +357,8 @@ For example:
 | ID | Area | Issue or decision | Evidence | Action | Status |
 |---|---|---|---|---|---|
 | M001 | Species codes | `OWWA` interpreted as Ovenbird | 2001 field protocol | Add mapping to species reference table | Resolved |
-| M002 | Survey methods | `PC` may represent point count | Appears only from 2005-2007 | Confirm with data owner before standardizing | Needs review |
-| M003 | Sites | Coordinates for `DDD-07` differ from other records | `sites.csv` and 2004 map disagree | Compare historical maps and ask data owner | Needs review |
+| M002 | Survey methods | `PC` may represent point count | Appears only from 2005-2007 | Confirm with data contributor before standardizing | Needs review |
+| M003 | Sites | Coordinates for `DDD-07` differ from other records | `sites.csv` and 2004 map disagree | Compare historical maps and ask data contributor | Needs review |
 | M004 | Survey effort | Meaning of blank `effort_minutes` values is unclear before 2003 | Early protocol does not mention survey duration | Ask whether duration was fixed or unrecorded | Needs review |
 
 The change log is primarily a record for people working on or reviewing the project.
@@ -428,9 +428,9 @@ That allows us to improve present-day interpretability without losing the connec
 
 <br>
 
-## Return to the data owner with focused questions
+## Return to the data contributor with focused questions
 
-After reviewing the source material and creating targeted review tables, it could be appropriate to return to the data owner with a targeted set of questions that could not be resolved internally. This is guaranteed to be more productive than sending a long list of every irregularity found in the dataset. You can work closely with your LDP postdoc to help facilitate and strategize an effective approach for this.
+After reviewing the source material and creating targeted review tables, it could be appropriate to return to the data contributor with a targeted set of questions that could not be resolved internally. This is guaranteed to be more productive than sending a long list of every irregularity found in the dataset. You can work closely with your LDP postdoc to help facilitate and strategize an effective approach for this.
 
 For the Dirty Data Duck Observatory example, a focused set of questions might include:
 
@@ -444,13 +444,13 @@ For the Dirty Data Duck Observatory example, a focused set of questions might in
 
 <br>
 
-The questions you bring to a data owner should be distilled, but still provide enough context to make them easy to answer. Explain what prompted the question, how you arrived at your current understanding of the issue, and what specific point you need them to clarify or investigate further.
+The questions you bring to a data contributor should be distilled, but still provide enough context to make them easy to answer. Explain what prompted the question, how you arrived at your current understanding of the issue, and what specific point you need them to clarify or investigate further.
 
 <br>
 
 ## Update the metadata as decisions are made
 
-Suppose your data owner contact at the Dirty Data Duck Observatory provides the following information:
+Suppose your data contributor contact at the Dirty Data Duck Observatory provides the following information:
 
 - `OWWA` was the historical field code for Ovenbird
 - `PC` stands for point count and used the same protocol later written as `Point count`
@@ -494,11 +494,11 @@ For the Dirty Data Duck Observatory, that might eventually include information s
 
 > Bird surveys were conducted during the breeding season at established monitoring locations associated with the Dirty Data Duck Observatory. Each survey event was assigned a survey identifier and linked to a monitoring site. Species observed during each survey were recorded using field species codes, together with the number of individuals observed.
 >
-> From 1998–2004, surveys were conducted using transect-based methods. Beginning in 2005, the monitoring program transitioned to fixed-duration point counts. Historical documentation and consultation with the data owner confirmed that records labeled `PC`, `point count`, and `Point count` refer to the same point-count method, while `Transect` represents the earlier and methodologically distinct survey approach. Surveys conducted before 2003 followed a fixed 10-minute duration, although survey effort was not consistently entered in the original digital records.
+> From 1998–2004, surveys were conducted using transect-based methods. Beginning in 2005, the monitoring program transitioned to fixed-duration point counts. Historical documentation and consultation with the data contributor confirmed that records labeled `PC`, `point count`, and `Point count` refer to the same point-count method, while `Transect` represents the earlier and methodologically distinct survey approach. Surveys conducted before 2003 followed a fixed 10-minute duration, although survey effort was not consistently entered in the original digital records.
 >
 > Survey locations were identified using site codes and associated coordinates. Site histories were reviewed during data rescue because some locations and identifiers changed through time. Where historical site relocations were documented, these were treated as changes in monitoring location rather than automatically correcting one coordinate to match another.
 >
-> Species codes and names were reviewed against the available species reference information and historical documentation. Historical codes were retained or standardized only where their interpretation could be supported by source documentation or data-owner input. Bird counts of zero represent surveyed-for species that were not observed, whereas blank count values represent missing or unknown information.
+> Species codes and names were reviewed against the available species reference information and historical documentation. Historical codes were retained or standardized only where their interpretation could be supported by source documentation or data-contributor input. Bird counts of zero represent surveyed-for species that were not observed, whereas blank count values represent missing or unknown information.
 >
 > The rescued dataset was prepared using a reproducible R workflow. Processing included standardizing dates, identifiers, survey-method terminology, and species names; checking relationships among site, survey, and observation tables; investigating invalid or unusual values; and validating cleaned outputs against documented expectations. Original source files were preserved separately, and important processing decisions were recorded in the accompanying change log.
 
@@ -524,7 +524,7 @@ At this point, however, you should generally have:
 | Methods context | A basic understanding of how, where, and why the data were collected |
 | Review tables | Focused summaries of metadata questions that need investigation |
 | Change log | A record of important interpretations, evidence, decisions, and unresolved issues |
-| Data-owner input | Answers to the most important questions that could not be resolved internally |
+| Data-contributor input | Answers to the most important questions that could not be resolved internally |
 | Dataset-level metadata | A draft description of the dataset, its purpose, methods, history, and limitations |
 
 <br>

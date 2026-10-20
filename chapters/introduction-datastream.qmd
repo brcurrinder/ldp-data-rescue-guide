@@ -15,7 +15,7 @@ These data hubs are delivered in collaboration with [regional monitoring network
 
 For the Living Data Project, DataStream serves as a key partner and repository for rescuing and publishing freshwater datasets.
 Many of the freshwater datasets we will work with have scientific, management, or public value, but they may not yet be organized, documented, or formatted for long-term reuse.
-Publishing these datasets in partnership with DataStream and data stewards will help make them more findable, interpretable, and reusable.
+Publishing these datasets in partnership with DataStream and data contributors will help make them more findable, interpretable, and reusable.
 
 In addition to their role as a repository, DataStream also features easy-to-use data visualization and mapping tools designed to be used by everyone, as well as [integrations](https://datastream.org/en-ca/documentation/integrations) with multiple other platforms that improve data import, dataset discoverability, and data use.
 
@@ -50,20 +50,20 @@ In short, DataStream provides:
 
 ## DataStream Data Rescue Project Roles
 
-For data rescue projects intended for DataStream, it is useful to distinguish between the roles of the data owner, the Living Data Project team, and DataStream.
+For data rescue projects intended for DataStream, it is useful to distinguish between the roles of the data contributor, the Living Data Project team, and DataStream.
 
 | Role | Main responsibilities |
 |------------------------------------|------------------------------------|
-| Data steward | Provides source files, confirms dataset context, reviews unresolved issues, approves final content, creates and maintains data steward account, and uploads and publishes the dataset on DataStream. |
-| Living Data Project team | Reviews source files, documents metadata, cleans and validates data, formats files for DataStream, prepares reports, and creates a review package for the data owner. Liaises with data stewards. |
+| Data contributor | Provides source files, confirms dataset context, reviews unresolved issues, approves final content, creates and maintains data contributor account, and uploads and publishes the dataset on DataStream. |
+| Living Data Project team | Reviews source files, documents metadata, cleans and validates data, formats files for DataStream, prepares reports, and creates a review package for the data contributor. Liaises with data contributors. |
 | DataStream team | Supports scoping and prioritizing candidate datasets. Operates the repository platform and publication infrastructure. Maintains the schema and provides documentation, upload tools, data specialist guidance and technical support, and publication infrastructure. |
 
 Your role as part of a data rescue team does **not** necessarily include uploading and publishing a dataset to DataStream.
-Instead, you will work with your team to prepare a clear and reproducible package that the data owner can review and use for upload onto DataStream.
+Instead, you will work with your team to prepare a clear and reproducible package that the data contributor can review and use for upload onto DataStream.
 
-Even so, it can be helpful to be familiar with the process that data stewards will follow to upload their dataset.
+Even so, it can be helpful to be familiar with the process that data contributors will follow to upload their dataset.
 [See DataStream's full documentation on data upload here](https://datastream.org/en-ca/documentation/upload-data).
-In short, data stewards uploading new datasets to DataStream will upload two key items:
+In short, data contributors uploading new datasets to DataStream will upload two key items:
 
 - (Required) Dataset-level metadata corresponding to the [DataStream Metadata Form](https://datastream.org/en-ca/documentation/data-upload-resources#dataset-metadata-form) (entered through an online form)
 - (Required) A single CSV file containing all observations in the DS-WQX format (see more below about the DataStream Data Schema)
@@ -111,7 +111,7 @@ Dataset-level metadata helps users understand the dataset’s purpose, ownership
 [DataStream dataset-level metadata](https://datastream.org/en-ca/documentation/dataset-metadata) includes information such as:
 
 - Dataset title and abstract
-- Data steward contact information
+- Data contributor contact information
 - Data collection organization
 - Data upload organization
 - Data collection methods
@@ -132,7 +132,7 @@ DataStream supports data publication, and can complement but does not replace th
 DataStream performs schema checks during upload and may provide warnings for values outside expected ranges.
 However, DataStream does not typically perform full quality control beyond compliance to their data schema.
 
-This means the data rescue team and data owner are responsible for reviewing issues such as:
+This means the data rescue team and data contributor are responsible for reviewing issues such as:
 
 - Possible transcription errors
 - Implausible values
@@ -158,7 +158,7 @@ In these chapters, you will:
 6.  Perform scientific validation and QA/QC checks
 7.  Format the dataset into the DataStream schema
 8.  Run pre-upload validation checks
-9.  Export a review package for the data owner
+9.  Export a review package for the data contributor
 
 The workflow presented in this guidebook is not meant to imply that every DataStream project will follow exactly the same steps.
 Instead, it is one example of the kinds of decisions, documentation, and checks that commonly arise when preparing water quality data for publication.
