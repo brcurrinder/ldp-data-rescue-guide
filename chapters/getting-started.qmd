@@ -30,7 +30,7 @@ The diagram below situates this chapter within the broader data rescue workflow 
 
 At this stage, the emphasis is on understanding and organizing the source material before substantial metadata reconstruction, data cleaning, or restructuring begins.
 
-![General data rescue workflow. This chapter focuses primarily on Step 2: Team Creation and the early project setup that prepares the team for Step 3: Metadata Creation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step2.png){width="90%" fig-align="center"}
+![General data rescue workflow. This chapter focuses primarily on Step 2: Team Creation and the early project setup that prepares the team for Step 3: Metadata Creation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step2.png){fig-align="center"}
 
 Note that questions uncovered during compilation or cleaning may send you back to the source documentation or to the data contributor, while new metadata may change how you interpret or structure the data.
 

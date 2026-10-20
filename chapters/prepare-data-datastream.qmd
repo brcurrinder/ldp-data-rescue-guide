@@ -70,7 +70,7 @@ Because DataStream's schema evolves over time, always work from the current temp
 The template contains several particularly useful sheets:
 
 | Sheet | How we use it |
-|----|----|
+|------------------------------------|------------------------------------|
 | `Allowed Values-Valeurs` | Review DataStream fields, whether they are required, optional, or conditional, expected field types, examples, and allowed values |
 | `Glossary-Glossaire` | Look up definitions for schema fields and many allowed values |
 | `CharacteristicName LOOKUP` | Identify accepted `CharacteristicName` values and additional fields, such as [`SampleFraction`]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="A sample fraction defines which portion of a sample is being analyzed, such as filtered, unfiltered, dissolved, total, or total recoverable."} or [`ResultMethodSpeciation`]{.tooltip-term tabindex="0" data-bs-toggle="tooltip" data-bs-title="Method speciation refers to the chemical speciation identified as a part of an analysis (e.g., Ammonium may be measured as N or NH4)."}, that may be needed for a characteristic |
@@ -101,7 +101,7 @@ The final candidate file should still be tested through DataStream's current val
 As in the previous chapter, the diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2022](https://doi.org/10.1098/rspb.2022.0938).
 This chapter focuses on Steps 4 and 5: Data Transfer & Compilation and Data Cleaning & Validation, but with references to Step 3: Metadata creation since we will update the metadata as new issues and information emerge.
 
-![Example workflow for preparing datasets for DataStream. This chapter focuses on Steps 4 and 5: Data Transfer & Compilation and Data Cleaning & Validation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_steps_4_5.png){width="90%" fig-align="center"}
+![Example workflow for preparing datasets for DataStream. This chapter focuses on Steps 4 and 5: Data Transfer & Compilation and Data Cleaning & Validation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_steps_4_5.png){fig-align="center"}
 
 <br>
 
@@ -1328,7 +1328,7 @@ When either type of issue reveals a problem in our preparation workflow, make th
 ## Review: What These Checks Do and Do Not Do
 
 | Question | Addressed in this chapter? |
-|----|----|
+|------------------------------------|------------------------------------|
 | Were source files combined in a reproducible way? | Yes |
 | Were cleaning and mapping decisions documented? | Yes |
 | Were monitoring locations standardized using a documented reference? | Yes |

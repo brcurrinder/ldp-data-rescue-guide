@@ -10,7 +10,7 @@ After we have prepared a cleaned and validated data package, **your team will al
 Instead, your role is to prepare the final data package for the data contributor to review.
 This package should include the cleaned and validated dataset, complete metadata, documentation of cleaning decisions, and any supporting files needed to understand or reproduce the workflow.
 
-![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 6: Data archiving. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step6.png)
+![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 6: Data archiving. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step6.png){fig-align="center"}
 
 After reviewing and approving the package, **the data contributor will upload the dataset to DataStream.** If needed, DataStream Data Specialists can also help data contributors troubleshoot questions or issues that arise during the upload process.
 

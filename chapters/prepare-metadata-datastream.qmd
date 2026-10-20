@@ -105,7 +105,7 @@ Still, it can help to try to have a general workflow.
 The diagram below situates this chapter within the broader data rescue lifecycle, derived from [Figure 2 in Bledsoe et al. 2022](https://doi.org/10.1098/rspb.2022.0938).
 This chapter focuses primarily on **Step 3: Metadata creation**, where we review source files, identify metadata issues, create review tables and a change log, and draft a metadata package for review. Note that Steps 3-5 are often iterative in practice as new information is uncovered.
 
-![Example Living Data Project workflow for preparing (meta)data for DataStream within the broader data rescue lifecycle. This chapter focuses on Step 3: Metadata creation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step3.png){width=90% fig-align="center"}
+![Example workflow for preparing datasets for DataStream. This chapter focuses on Step 3: Metadata creation. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step3.png){fig-align="center"}
 
 <br>
 

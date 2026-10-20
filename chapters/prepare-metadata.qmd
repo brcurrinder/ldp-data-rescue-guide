@@ -37,7 +37,7 @@ The diagram below situates this chapter within the broader data rescue workflow.
 
 This chapter focuses primarily on **metadata creation**, although updates to the metadata will continue during data cleaning, validation, and publication.
 
-![General data rescue workflow. This chapter focuses primarily on Step 3: metadata creation and reconstruction. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step3.png){width="100%" fig-align="center"}
+![General data rescue workflow. This chapter focuses primarily on Step 3: metadata creation and reconstruction. Adapted from Figure 2 in Bledsoe et al. (2022).](../images/data_rescue_workflow_step3.png){fig-align="center"}
 
 Metadata preparation is rarely completed in a single pass. You may discover an unexplained species code while cleaning a table, notice a change in survey methods while plotting the data, or learn during a meeting with the data steward that a sampling site was moved several hundred meters. Each of these discoveries likely requires an update to the metadata.
 
